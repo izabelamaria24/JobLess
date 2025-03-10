@@ -5,16 +5,30 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    
+
     useEffect(() => {
-        const loggedUser = localStorage.getItem("user");
-        if (loggedUser) setUser(JSON.parse(loggedUser));
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) setUser(JSON.parse(storedUser));
     }, []);
 
     const login = async (credentials) => {
-        const res = await axios.post("/api/login", credentials);
-        setUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, credentials);
+            setUser(res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+        } catch (error) {
+            console.error("Login failed:", error.response.data);
+        }
+    };
+
+    const register = async (credentials) => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/register`, credentials);
+            setUser(res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+        } catch (error) {
+            console.error("Registration failed:", error.response.data);
+        }
     };
 
     const logout = () => {
@@ -23,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
