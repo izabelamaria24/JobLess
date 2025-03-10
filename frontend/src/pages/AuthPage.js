@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import "../design/AuthPage.css"; 
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -16,12 +17,11 @@ const AuthPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-
         try {
             if (isLogin) {
-                await login(formData);  
+                await login(formData);
             } else {
-                await register(formData); 
+                await register(formData);
             }
             navigate("/dashboard");
         } catch (err) {
@@ -30,17 +30,35 @@ const AuthPage = () => {
     };
 
     return (
-        <div>
-            <h2>{isLogin ? "Login" : "Register"}</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-                <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <button type="submit">{isLogin ? "Login" : "Register"}</button>
-            </form>
-            <button onClick={() => setIsLogin(!isLogin)}>
-                {isLogin ? "Need an account? Register" : "Already have an account? Login"}
-            </button>
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2 className="auth-title">{isLogin ? "Welcome Back!" : "Create an Account"}</h2>
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleChange}
+                        required
+                        className="auth-input"
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        onChange={handleChange}
+                        required
+                        className="auth-input"
+                    />
+                    {error && <p className="auth-error">{error}</p>}
+                    <button type="submit" className="auth-button">
+                        {isLogin ? "Login" : "Register"}
+                    </button>
+                </form>
+                <button onClick={() => setIsLogin(!isLogin)} className="auth-toggle">
+                    {isLogin ? "Need an account? Register" : "Already have an account? Login"}
+                </button>
+            </div>
         </div>
     );
 };
