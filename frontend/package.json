@@ -18,7 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:all": "concurrently \"npm start\" \"dotnet run --project ./JobLess\""
   },
   "eslintConfig": {
     "extends": [
@@ -37,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "proxy": "http://localhost:5000"
 }
