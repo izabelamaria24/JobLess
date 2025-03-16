@@ -1,0 +1,17 @@
+.applications-page {
+    padding: 3%;
+}
+  
+.job-application {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+  
+.job-application h3 {
+    margin: 0;
+}
+  
+.job-application p {
+    margin: 5px 0;
+}
