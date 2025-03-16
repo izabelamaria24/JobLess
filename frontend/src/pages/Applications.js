@@ -1,6 +1,8 @@
+// filepath: /home/izabelamaria/Coding/JobLess/frontend/src/pages/Applications.js
 import React, { useState } from 'react';
 import JobApplication from '../components/JobApplication';
 import JobApplicationForm from '../components/JobApplicationForm';
+import Modal from '../components/Modal';
 import "../design/Applications.css"; 
 
 const initialApplications = [
@@ -51,13 +53,13 @@ const Applications = () => {
   return (
     <div className="applications-page">
       <h1>Job Applications</h1>
-      <button onClick={() => setIsFormVisible(true)}>Add New Job Application</button>
-      {isFormVisible && (
+      <button onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
+      <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
         <JobApplicationForm
           onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
           initialData={currentApplication}
         />
-      )}
+      </Modal>
       {applications.map((app, index) => (
         <div key={index}>
           <JobApplication
