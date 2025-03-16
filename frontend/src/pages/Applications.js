@@ -1,38 +1,17 @@
-// filepath: /home/izabelamaria/Coding/JobLess/frontend/src/pages/Applications.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import JobApplication from '../components/JobApplication';
 import JobApplicationForm from '../components/JobApplicationForm';
 import Modal from '../components/Modal';
+import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import "../design/Applications.css"; 
 
-const initialApplications = [
-  {
-    company: 'Company A',
-    link: 'https://companya.com',
-    date: '2025-03-01',
-    status: 'Applied'
-  },
-  {
-    company: 'Company B',
-    link: 'https://companyb.com',
-    date: '2025-03-05',
-    status: 'Online Assessment'
-  },
-  {
-    company: 'Company C',
-    link: 'https://companyc.com',
-    date: '2025-03-10',
-    status: 'Interview'
-  }
-];
-
 const Applications = () => {
-  const [applications, setApplications] = useState(initialApplications);
+  const { applications, addApplication, updateApplication } = useContext(JobApplicationsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
 
   const handleAddApplication = (application) => {
-    setApplications([...applications, application]);
+    addApplication(application);
     setIsFormVisible(false);
   };
 
@@ -42,10 +21,7 @@ const Applications = () => {
   };
 
   const handleUpdateApplication = (updatedApplication) => {
-    const updatedApplications = applications.map((app, index) =>
-      index === currentApplication.index ? updatedApplication : app
-    );
-    setApplications(updatedApplications);
+    updateApplication(currentApplication.index, updatedApplication);
     setIsFormVisible(false);
     setCurrentApplication(null);
   };
