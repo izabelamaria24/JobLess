@@ -1,0 +1,91 @@
+.job-application {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    transition: transform 0.2s;
+  }
+  
+  .job-application:hover {
+    transform: translateY(-5px);
+  }
+  
+  .job-application h3 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+    color: #333;
+  }
+  
+  .job-application p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .job-application a {
+    color: #1e88e5;
+    text-decoration: none;
+  }
+  
+  .job-application a:hover {
+    text-decoration: underline;
+  }
+  
+  .progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+  }
+  
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+  }
+  
+  .progress-step::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: -1;
+  }
+  
+  .progress-step:first-child::before {
+    display: none;
+  }
+  
+  .progress-step.completed .step-number {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  
+  .step-number:hover {
+    transform: scale(1.2);
+  }
+  
+  .step-label {
+    font-size: 0.9em;
+    text-align: center;
+    color: #333;
+  }
