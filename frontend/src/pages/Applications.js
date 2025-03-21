@@ -40,6 +40,9 @@ const Applications = () => {
         <div key={index}>
           <JobApplication
             company={app.company}
+            title={app.title}
+            availability={app.availability}
+            location={app.location}
             link={app.link}
             date={app.date}
             status={app.status}
