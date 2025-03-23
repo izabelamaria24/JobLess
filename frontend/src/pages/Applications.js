@@ -29,7 +29,7 @@ const Applications = () => {
   return (
     <div className="applications-page">
       <h1>Job Applications</h1>
-      <button onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
+      <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
       <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
         <JobApplicationForm
           onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
@@ -46,8 +46,10 @@ const Applications = () => {
             link={app.link}
             date={app.date}
             status={app.status}
+            onlineAssessmentDeadline={app.onlineAssessmentDeadline}
+            interviewDate={app.interviewDate}
+            onEdit={() => handleEditApplication(index)}
           />
-          <button onClick={() => handleEditApplication(index)}>Edit</button>
         </div>
       ))}
     </div>

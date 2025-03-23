@@ -1,24 +1,59 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 const JobApplicationsContext = createContext();
 
 const JobApplicationsProvider = ({ children }) => {
-  const [applications, setApplications] = useState([]);
+  const mockApplications = [
+    {
+      company: 'Company A',
+      title: 'Software Engineer',
+      location: 'New York',
+      link: 'https://companya.com',
+      date: '2023-10-01',
+      availability: 'On site',
+      status: 'Applied',
+      onlineAssessmentDeadline: '2023-10-10',
+      interviewDate: '2023-10-15'
+    },
+    {
+      company: 'Company B',
+      title: 'Data Scientist',
+      location: 'San Francisco',
+      link: 'https://companyb.com',
+      date: '2023-09-15',
+      availability: 'Remote',
+      status: 'Online Assessment',
+      onlineAssessmentDeadline: '2023-09-25',
+      interviewDate: ''
+    },
+    {
+      company: 'Company C',
+      title: 'Product Manager',
+      location: 'Chicago',
+      link: 'https://companyc.com',
+      date: '2023-08-20',
+      availability: 'Hybrid',
+      status: 'Interview',
+      onlineAssessmentDeadline: '',
+      interviewDate: '2023-09-05'
+    }
+  ];
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const response = await axios.get('/api/applications');
-        setApplications(response.data);
-      } catch (error) {
-        console.error('Error fetching job applications:', error);
-      }
-    };
+  const [applications, setApplications] = useState(mockApplications);
 
-    fetchApplications();
-  }, []);
+  // useEffect(() => {
+  //   const fetchApplications = async () => {
+  //     try {
+  //       const response = await axios.get('/api/applications');
+  //       setApplications(response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching job applications:', error);
+  //     }
+  //   };
+
+  //   fetchApplications();
+  // }, []);
 
   const addApplication = async (application) => {
     try {
