@@ -15,3 +15,31 @@
 .job-application p {
     margin: 5px 0;
 }
+
+.add-application-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.add-application-button:hover {
+  background-color: #45a049;
+}
+
+.edit-application-button {
+  background-color: #008CBA;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.edit-application-button:hover {
+  background-color: #007bb5;
+}
