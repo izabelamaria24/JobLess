@@ -8,7 +8,7 @@ const Dashboard = () => {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Home />} />
                 <Route path="/applications" element={<Applications />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/statistics" element={<Statistics />} />
