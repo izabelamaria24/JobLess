@@ -1,0 +1,38 @@
+# Visual Studio specific
+.vs/
+*.user
+*.suo
+
+# Build artifacts
+bin/
+obj/
+
+# Configuration
+appsettings.Development.json
+appsettings.Local.json
+appsettings.json
+
+# User-specific files
+*.rsuser
+*.user
+*.lock.json
+
+# IDE settings
+*.vscode/
+*.code-workspace
+
+# Testing output
+TestResults/
+Coverage/
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# Large files
+.cache/
+.m2/
+.jdks/.m2/repository
+.cache/huggingface
+.jdks/openjdk-22.0.1/lib/modules
