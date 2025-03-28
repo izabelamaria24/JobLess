@@ -36,8 +36,18 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
     };
 
+    const updateUser = async (updatedData) => {
+        try {
+            const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/users/${user.id}`, updatedData);
+            setUser(res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+        } catch (error) {
+            console.error("Update failed:", error.response.data);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, register, logout }}>
+        <AuthContext.Provider value={{ user, login, register, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
