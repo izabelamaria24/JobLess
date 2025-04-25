@@ -13,13 +13,15 @@ namespace JoblessAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AccountController(UserManager<User> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _roleManager = roleManager;
         }
 
         [HttpPost("register")]
@@ -28,11 +30,24 @@ namespace JoblessAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var user = new User { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
+
+            var roleExist = await _roleManager.RoleExistsAsync("User");
+            if (!roleExist)
+            {
+                var role = new IdentityRole("User");  // Create "User" role if it doesn't exist
+                await _roleManager.CreateAsync(role);
+            }
+
+            // Assign the "User" role to the newly created user
+            var roleAssignResult = await _userManager.AddToRoleAsync(user, "User");
+
+            if (!roleAssignResult.Succeeded)
+                return BadRequest(roleAssignResult.Errors);
 
             return Ok(new { Message = "User registered successfully" });
         }
@@ -64,6 +79,5 @@ namespace JoblessAPI.Controllers
             return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
-
 
 }

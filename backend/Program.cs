@@ -9,6 +9,12 @@ using System;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
+using JoblessAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+
+
 
 
 
@@ -44,7 +50,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -67,6 +74,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+
+
 
 
 builder.Services.AddSwaggerGen(option =>
@@ -114,6 +123,12 @@ builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
+
 app.UseCors("AllowReactApp"); // Use CORS policy
 
 // Configure the HTTP request pipeline.
@@ -127,11 +142,14 @@ if (app.Environment.IsDevelopment())
 
 
 
+//app.Urls.Add("http://0.0.0.0:80");
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
 app.UseAuthorization();
 
-
 app.MapControllers();
-
-//app.Urls.Add("http://0.0.0.0:80");
 
 app.Run();

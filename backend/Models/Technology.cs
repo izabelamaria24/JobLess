@@ -1,5 +1,6 @@
 ﻿using static System.Net.Mime.MediaTypeNames;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace JoblessAPI.Models
 {
@@ -11,8 +12,10 @@ namespace JoblessAPI.Models
         [Required(ErrorMessage = "Numele tehnologiei este obligatoriu")]
         public string Name { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Resume>? Resumes { get; set; }
-
+        
+        [JsonIgnore]
         public virtual ICollection<Application>? Applications { get; set; }
     }
 }

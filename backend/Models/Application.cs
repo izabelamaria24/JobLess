@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Primitives;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace JoblessAPI.Models
 {
@@ -6,6 +9,8 @@ namespace JoblessAPI.Models
     {
         [Key]
         public int Id { get; set; }
+
+        public string? UserId { get; set; }
 
         [Required(ErrorMessage = "Titlul jobului este obligatoriu")]
         public string JobTitle { get; set; }
@@ -25,8 +30,10 @@ namespace JoblessAPI.Models
 
         public string Status { get; set; }
 
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Technology>? Technologies { get; set; }
     }
 }
