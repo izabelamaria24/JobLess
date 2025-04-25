@@ -29,8 +29,8 @@ namespace JoblessAPI.Controllers
         }
 
 
-        // GET: api/Aplications
-        [HttpGet]
+        // GET: api/Aplications/index
+        [HttpGet("index")]
         public async Task<ActionResult<IEnumerable<Application>>> Index()
         {
 
@@ -56,29 +56,147 @@ namespace JoblessAPI.Controllers
             return Ok(applications);
         }
 
-        //// GET api/<ApplicationsController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        // GET: api/Aplications/show/{id}
+        [HttpGet("show/{id}")]
+        public async Task<ActionResult<Application>> Show(int id)
+        {
 
-        //// POST api/<ApplicationsController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //// PUT api/<ApplicationsController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
+            if (userId is null)
+            {
+                return Unauthorized(new
+                {
+                    Message = "User not authenticated"
+                });
+            }
 
-        //// DELETE api/<ApplicationsController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+            var application = await db.Applications
+                .Include(a => a.Technologies)
+                .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);
+
+            if (application == null)
+                return NotFound();
+
+            return Ok(application);
+        }
+
+        // POST api/Applications/new
+        [HttpPost("new")]
+        public async Task<IActionResult> New([FromBody] Application application)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new
+                {
+                    Message = "User not authenticated"
+                });
+            }
+
+            application.UserId = userId;
+
+
+            db.Applications.Add(application);
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Index), new { id = application.Id }, application);
+        }
+
+
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> Edit(int id, [FromBody] Application updatedApplication)
+        {
+            if (id != updatedApplication.Id)
+            {
+                return BadRequest(new { Message = "Application Id mismatch" });
+            }
+
+            var application = await db.Applications.FindAsync(id);
+            if (application == null)
+            {
+                return NotFound(new { Message = "Application not found" });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new
+                {
+                    Message = "User not authenticated"
+                });
+            }
+
+            if (application.UserId != userId)
+            {
+                return Unauthorized(new { Message = "You are not allowed to edit this application" });
+            }
+
+
+            application.JobTitle = updatedApplication.JobTitle;
+            application.Company = updatedApplication.Company;
+            application.Location = updatedApplication.Location;
+            application.Date = updatedApplication.Date;
+            application.Link = updatedApplication.Link;
+            application.Availability = updatedApplication.Availability;
+            application.Status = updatedApplication.Status;
+            application.Technologies = updatedApplication.Technologies;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { Message = "An error occurred while updating the application", Error = ex.Message });
+            }
+
+            return Ok(new { Message = "Application updated successfully" });
+        }
+
+
+        //// DELETE api/delete/{id}
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var application = await db.Applications.FindAsync(id);
+            if (application == null)
+            {
+                return NotFound(new { Message = "Application not found" });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new
+                {
+                    Message = "User not authenticated"
+                });
+            }
+
+            if (application.UserId != userId)
+            {
+                return Unauthorized(new { Message = "You are not allowed to delete this application" });
+            }
+
+            db.Applications.Remove(application);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new { Message = "An error occurred while deleting the application", Error = ex.Message });
+            }
+
+            return Ok(new { Message = "Application deleted successfully" });
+        }
     }
 }
