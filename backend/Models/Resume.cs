@@ -15,7 +15,7 @@ namespace JoblessAPI.Models
 
         public string? Experience { get; set; }
 
-        public string? Path { get; set; }
+        public string Path { get; set; }
 
         public string? LinkedIn { get; set; }
 

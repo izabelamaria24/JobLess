@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoblessAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250425212343_seeddata")]
-    partial class seeddata
+    [Migration("20250426084725_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,6 +131,7 @@ namespace JoblessAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Path")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
