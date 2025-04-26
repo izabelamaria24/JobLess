@@ -4,6 +4,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JoblessAPI.Models
 {
+    public enum Action
+    {
+        NULL,
+        Applied,
+        OnlineAssessment,
+        OnlineAssessmentAutomated,
+        IqTest,
+        ResumeWalkthrough,
+        PhoneScreening,
+        PhoneInterview,
+        TechnicalInterview,
+        SoftSkillsInterview,
+        HRInterview,
+        RecorededInterview,
+        OnSiteInterviews,
+        Ghosted,
+        Cancelled,
+        Rejected,
+        Accepted
+    }
+
     public class Response
     {
         [Key]
@@ -11,7 +32,8 @@ namespace JoblessAPI.Models
 
         public int? ApplicationId { get; set; }
 
-        public string Action { get; set; }
+        [EnumDataType(typeof(Action))]
+        public Action Action { get; set; }
 
         public DateTime Date { get; set; }
 

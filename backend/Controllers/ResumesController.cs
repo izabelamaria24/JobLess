@@ -39,6 +39,7 @@ namespace JoblessAPI.Controllers
 
             var resumes = await db.Resumes
                 .Include(r => r.Technologies)
+                .Include(a => a.User)
                 .Where(r => r.UserId == userId)
                 .ToListAsync();
 
@@ -61,6 +62,7 @@ namespace JoblessAPI.Controllers
 
             var resume = await db.Resumes
                 .Include(r => r.Technologies)
+                .Include(a => a.User)
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
 
             if (resume == null)
@@ -84,6 +86,7 @@ namespace JoblessAPI.Controllers
             }
 
             resume.UserId = userId;
+            resume.User = db.Users.Find(userId);
 
             db.Resumes.Add(resume);
             await db.SaveChangesAsync();

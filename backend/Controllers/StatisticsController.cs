@@ -38,6 +38,7 @@ namespace JoblessAPI.Controllers
             }
 
             var statistics = await db.Statistics
+                .Include(a => a.User)
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
 
@@ -59,6 +60,7 @@ namespace JoblessAPI.Controllers
             }
 
             var statistic = await db.Statistics
+                .Include(a => a.User)
                 .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
 
             if (statistic == null)
@@ -84,7 +86,7 @@ namespace JoblessAPI.Controllers
                 .CountAsync();
 
             var openApplications = await db.Applications
-                .Where(a => a.UserId == userId && a.Status == "Active")
+                .Where(a => a.UserId == userId && a.Status == Status.Active)
                 .CountAsync();
 
             var statistic = new Statistic
@@ -92,7 +94,8 @@ namespace JoblessAPI.Controllers
                 UserId = userId,
                 TotalApplications = totalApplications,
                 OpenApplications = openApplications,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                User = db.Users.Find(userId)
             };
 
             db.Statistics.Add(statistic);

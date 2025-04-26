@@ -5,6 +5,33 @@ using System.Text.Json.Serialization;
 
 namespace JoblessAPI.Models
 {
+    public enum JobType
+    {
+        NULL,
+        FullTime,
+        PartTime,
+        Internship,
+        Freelance,
+        Temporary
+    }
+
+    public enum Status
+    {
+        NULL,
+        Active,
+        Offer,
+        Rejected,
+        Accepted
+    }
+   
+    public enum Availability
+    {
+        NULL,
+        Remote,
+        Hybrid,
+        OnSite
+    }
+
     public class Application
     {
         [Key]
@@ -26,9 +53,14 @@ namespace JoblessAPI.Models
         [Required(ErrorMessage = "Link-ul catre aplicatie este obligatoriu")]
         public string Link { get; set; }
 
-        public string Availability { get; set; }
+        [EnumDataType(typeof(JobType))]
+        public JobType JobType { get; set; }
 
-        public string Status { get; set; }
+        [EnumDataType(typeof(Availability))]
+        public Availability Availability { get; set; }
+
+        [EnumDataType(typeof(Status))]
+        public Status Status { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }

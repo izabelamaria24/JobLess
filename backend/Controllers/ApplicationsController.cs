@@ -46,6 +46,7 @@ namespace JoblessAPI.Controllers
 
             var applications = await db.Applications
                 .Include(a => a.Technologies)
+                .Include(a => a.User)
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
 
@@ -73,6 +74,7 @@ namespace JoblessAPI.Controllers
 
             var application = await db.Applications
                 .Include(a => a.Technologies)
+                .Include(a => a.User)
                 .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);
 
             if (application == null)
@@ -99,6 +101,7 @@ namespace JoblessAPI.Controllers
             }
 
             application.UserId = userId;
+            application.User = db.Users.Find(userId);
 
 
             db.Applications.Add(application);
@@ -143,6 +146,7 @@ namespace JoblessAPI.Controllers
             application.Location = updatedApplication.Location;
             application.Date = updatedApplication.Date;
             application.Link = updatedApplication.Link;
+            application.JobType = updatedApplication.JobType;
             application.Availability = updatedApplication.Availability;
             application.Status = updatedApplication.Status;
             application.Technologies = updatedApplication.Technologies;
