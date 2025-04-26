@@ -17,8 +17,10 @@ namespace JoblessAPI.Models
 
         public string Path { get; set; }
 
+        [LinkedInUrl(ErrorMessage = "Link-ul catre LinkedIn nu este valid")]
         public string? LinkedIn { get; set; }
 
+        [GitHubUrl(ErrorMessage = "Link-ul catre GitHub nu este valid")]
         public string? GitHub { get; set; }
 
         [ForeignKey("UserId")]

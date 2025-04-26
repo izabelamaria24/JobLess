@@ -51,6 +51,7 @@ namespace JoblessAPI.Models
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Link-ul catre aplicatie este obligatoriu")]
+        [Url(ErrorMessage = "Link-ul catre aplicatie nu este valid")]
         public string Link { get; set; }
 
         [EnumDataType(typeof(JobType))]

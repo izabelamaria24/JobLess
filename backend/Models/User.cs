@@ -13,6 +13,7 @@ namespace JoblessAPI.Models
 
         public string? LastName { get; set; }
 
+        [Phone(ErrorMessage = "Numarul de telefon nu este valid")]
         public string? Phone { get; set; }
 
         [NotMapped]
