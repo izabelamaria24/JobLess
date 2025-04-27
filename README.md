@@ -21,8 +21,10 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 3. As a user, I want to receive reminders for application deadlines or upcoming interview stages via email or SMS (e.g., '3 days until OA deadline').
 4. As a user, I want to receive example interview questions from a company before an interview, based on my job applications or the technologies listed in the job description.
 5. As a user, I want the app to notify me to follow up on a job application after a certain period (e.g., 3 weeks since the last update) to check the status.
-6. As a user, I want a visual dashboard with charts displaying my application progress, including the number of jobs applied, interviews scheduled, and offers received.
-7. As a user, I want to upload and manage different versions of my CV and cover letter so I can quickly tailor applications.
-8. As a user, I want the app to provide AI-powered resume and cover letter suggestions based on the job description I’m applying to.
-9. As a user, I want to receive tips based on my job applications and feedback to strengthen specific skills.
-10. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
+6. As a user, I want a visual dashboard with charts displaying my application progress.
+7. As a user, I want to see all the events I need to participate in, sorted by the closest deadline. I want to have the feature to filter by event category (OA/Interview/etc).
+8. As a user, I want a visual dashboard with statistics including the number of jobs applied, interviews scheduled, and offers received.
+9. As a user, I want to upload and manage different versions of my CV and cover letter so I can quickly tailor applications.
+10. As a user, I want the app to provide AI-powered resume and cover letter suggestions based on the job description I’m applying to.
+11. As a user, I want to receive tips based on my job applications and feedback to strengthen specific skills.
+12. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
