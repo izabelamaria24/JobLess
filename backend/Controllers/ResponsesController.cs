@@ -262,7 +262,7 @@ namespace JoblessAPI.Controllers
                             <body>
                                 <p>Dear {user.FirstName},</p>
                 
-                                <p>This is a reminder that you have a deadline for your application on <strong>{response.Deadline.ToString("MMMM dd, yyyy")}</strong>.</p>
+                                <p>This is a reminder that you have a deadline for your application on <strong>{response.Deadline.ToString("dd MMM, yyyy")}</strong>.</p>
                 
                                 <p>Please make sure to complete your action before the deadline.</p>
                 
