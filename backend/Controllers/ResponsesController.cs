@@ -9,6 +9,8 @@ namespace JoblessAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
     public class ResponsesController : ControllerBase
     {
         private readonly AppDbContext db;
@@ -197,6 +199,31 @@ namespace JoblessAPI.Controllers
             }
 
             return Ok(new { Message = "Response deleted successfully" });
+        }
+
+        // GET: api/Responses/history/{id}
+        [HttpGet("history/{applicationId}")]
+        public async Task<IActionResult> GetResponseHistory(int applicationId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var responses = await db.Responses
+                .Where(r => r.ApplicationId == applicationId)
+                .ToListAsync();
+
+            if (responses == null || responses.Count == 0)
+                return NotFound();
+
+            responses = responses
+                .OrderByDescending(r => r.Date)
+                .ToList();
+
+            return Ok(responses);
         }
     }
 }

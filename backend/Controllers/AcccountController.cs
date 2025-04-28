@@ -17,6 +17,7 @@ namespace JoblessAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+
         public AccountController(UserManager<User> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -25,12 +26,19 @@ namespace JoblessAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AuthModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new User { UserName = model.Email, Email = model.Email };
+            var user = new User
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Phone = model.Phone
+            };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -49,7 +57,18 @@ namespace JoblessAPI.Controllers
             if (!roleAssignResult.Succeeded)
                 return BadRequest(roleAssignResult.Errors);
 
-            return Ok(new { Message = "User registered successfully" });
+            // Return the user object without sensitive information
+            var userInfo = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Phone,
+                user.UserName,
+                user.Email
+            };
+
+            return Ok(userInfo);
         }
 
         [HttpPost("login")]
