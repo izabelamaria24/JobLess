@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JoblessAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Validations : Migration
+    public partial class initialMgr : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -274,7 +274,8 @@ namespace JoblessAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationId = table.Column<int>(type: "int", nullable: true),
                     Action = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
