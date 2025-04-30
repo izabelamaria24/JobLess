@@ -1,33 +1,17 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    volumes:
-      - mssqldata:/var/opt/mssql
-    networks:
-      - mynetwork
-    restart: unless-stopped
-
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: "Server=host.docker.internal,1433;Database=JobLess;User Id=sa;Password=YourStrong!Passw0rd;Encrypt=False;TrustServerCertificate=True;"
     ports:
-      - "5000:5000"
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Server=host.docker.internal,1433;Database=JobLess;User Id=sa;Password=LocalhostPa55!;
     depends_on:
-      - mssql
-    networks:
-      - mynetwork
-    restart: unless-stopped
+      - db # Ensures the backend waits for the database to be ready
 
   frontend:
     build:
@@ -35,13 +19,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
-    networks:
-      - mynetwork
-    restart: unless-stopped
+    depends_on:
+      - backend  # Frontend waits for the backend to be up first
 
-volumes:
-  mssqldata:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server_container
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=LocalhostPa55!
+    ports:
+      - "1433:1433" # Exposing SQL Server port 1433 to be accessible
+    networks:
+      - app_network
+    restart: always
 
 networks:
-  mynetwork:
+  app_network:
     driver: bridge

@@ -37,7 +37,7 @@ namespace JoblessAPI.Models
 
         public DateTime Date { get; set; }
 
-        public DateTime Deadline { get; set; }
+        public DateTime? Deadline { get; set; }
 
         [ForeignKey("ApplicationId")]
         public virtual Application? Application { get; set; }

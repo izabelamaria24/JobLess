@@ -1,21 +1,20 @@
-﻿# Faza 1: Build
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 5000
-
+﻿# Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["JoblessAPI.csproj", "."]
-RUN dotnet restore "JoblessAPI.csproj"
-COPY . .
-WORKDIR "/src"
-RUN dotnet build "JoblessAPI.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "JoblessAPI.csproj" -c Release -o /app/publish
-
-# Faza 2: Rulare
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy everything and restore
+COPY . ./
+RUN dotnet restore
+
+# Build and publish
+RUN dotnet publish -c Release -o out
+
+# Runtime Stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/out ./
+
+EXPOSE 80
+
+# Set entrypoint
 ENTRYPOINT ["dotnet", "JoblessAPI.dll"]

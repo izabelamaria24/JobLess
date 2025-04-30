@@ -262,7 +262,7 @@ namespace JoblessAPI.Controllers
                             <body>
                                 <p>Dear {user.FirstName},</p>
                 
-                                <p>This is a reminder that you have a deadline for your application on <strong>{response.Deadline.ToString("dd MMM, yyyy")}</strong>.</p>
+                                <p>This is a reminder that you have a deadline for your application on <strong>{response.Deadline.Value:dd MMM, yyyy}</strong>.</p>
                 
                                 <p>Please make sure to complete your action before the deadline.</p>
                 
@@ -281,5 +281,66 @@ namespace JoblessAPI.Controllers
             return Ok(new { Message = "All reminders have been sent!" });
 
         }
+
+        [HttpGet("stale-actions")]
+        public async Task<IActionResult> GetStaleActions()
+        {
+            try
+            {
+                var now = DateTime.UtcNow;
+                var cutoffDate = now.AddDays(-28);
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { Message = "User not authenticated" });
+                }
+
+                var responses = await db.Responses
+                    .Include(r => r.Application)
+                    .Where(r => r.Application != null && r.Application.UserId == userId)
+                    .ToListAsync();
+
+                var latestResponses = responses
+                    .GroupBy(r => r.ApplicationId)
+                    .Select(g => g.OrderByDescending(r => r.Date).FirstOrDefault())
+                    .Where(r =>
+                        r != null &&
+                        r.Date < cutoffDate &&
+                        r.Action != Models.Action.Rejected &&
+                        r.Action != Models.Action.Ghosted &&
+                        r.Action != Models.Action.Accepted &&
+                        r.Action != Models.Action.Cancelled &&
+                        r.Application != null &&
+                        r.Application.Status == Models.Status.Active
+                    )
+                    .ToList();
+
+                var staleApplications = latestResponses
+                    .Select(r => new
+                    {
+                        r.Application.Id,
+                        r.Application.JobTitle,
+                        r.Application.Company,
+                        LastResponseDate = r.Date,
+                        LastAction = r.Action.ToString()
+                    })
+                    .ToList();
+
+                if (!staleApplications.Any())
+                {
+                    return Ok(new { Message = "No stale applications found", Items = new List<object>() });
+                }
+
+                return Ok(staleApplications);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An unexpected error occurred.", Details = ex.Message });
+            }
+        }
+
+
     }
 }

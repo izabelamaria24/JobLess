@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoblessAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250428120757_initialMgr")]
-    partial class initialMgr
+    [Migration("20250430183420_ResposneDeadlineNullable")]
+    partial class ResposneDeadlineNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,7 +103,7 @@ namespace JoblessAPI.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Deadline")
+                    b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
