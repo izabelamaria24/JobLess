@@ -36,3 +36,6 @@ Coverage/
 .jdks/.m2/repository
 .cache/huggingface
 .jdks/openjdk-22.0.1/lib/modules
+
+
+Migrations/*
