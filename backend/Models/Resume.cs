@@ -15,7 +15,7 @@ namespace JoblessAPI.Models
 
         public string? Experience { get; set; }
 
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
         [LinkedInUrl(ErrorMessage = "Link-ul catre LinkedIn nu este valid")]
         public string? LinkedIn { get; set; }

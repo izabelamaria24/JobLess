@@ -3,6 +3,7 @@ using JoblessAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 
 namespace JoblessAPI.Controllers
@@ -14,16 +15,19 @@ namespace JoblessAPI.Controllers
         private readonly AppDbContext db;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWebHostEnvironment _env;
 
         public ResumesController(
             AppDbContext context,
             UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment env
         )
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _env = env;
         }
 
         // GET: api/Resumes/index
@@ -93,6 +97,56 @@ namespace JoblessAPI.Controllers
 
             return CreatedAtAction(nameof(Index), new { id = resume.Id }, resume);
         }
+
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload(int id, [FromForm] IFormFile PdfFile)
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            Resume? resume = await db.Resumes
+                .Include(a => a.User)
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+
+
+            if (PdfFile != null && PdfFile.Length > 0)
+            {
+                var allowedExtensions = new[] { ".pdf" };
+
+                var fileExtension = Path.GetExtension(PdfFile.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    return StatusCode(400, new { Message = "The file must be a document (.pdf)" });
+                }
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var storagePath = Path.Combine(_env.WebRootPath, "Documents", uniqueFileName);
+                var databaseFileName = "/Documents/" + uniqueFileName;
+
+
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await PdfFile.CopyToAsync(fileStream);
+                }
+
+
+                resume.Path = databaseFileName;
+
+            }
+
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Index), new { id = resume.Id }, resume);
+
+
+        }
+
 
         // PUT: api/Resumes/edit/{id}
         [HttpPut("edit/{id}")]

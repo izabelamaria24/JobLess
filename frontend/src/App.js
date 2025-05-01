@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
 import Layout from "./components/Layout";
 
+
 function App() {
     return (
         <AuthProvider>
