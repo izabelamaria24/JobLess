@@ -12,20 +12,21 @@ namespace JoblessAPI.Controllers
     public class ApplicationsController : ControllerBase
     {
         private readonly AppDbContext db;
-
         private readonly UserManager<User> _userManager;
-
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWebHostEnvironment _env;
 
         public ApplicationsController(
             AppDbContext context,
             UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment env
         )
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _env = env; 
         }
 
 
@@ -105,6 +106,53 @@ namespace JoblessAPI.Controllers
 
 
             db.Applications.Add(application);
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Index), new { id = application.Id }, application);
+        }
+
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload(int id, [FromForm] IFormFile PdfFile)
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            Application? application = await db.Applications
+                .Include(a => a.User)
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+
+
+            if (PdfFile != null && PdfFile.Length > 0)
+            {
+                var allowedExtensions = new[] { ".pdf" };
+
+                var fileExtension = Path.GetExtension(PdfFile.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    return StatusCode(400, new { Message = "The file must be a document (.pdf)" });
+                }
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var storagePath = Path.Combine(_env.WebRootPath, "Documents", uniqueFileName);
+                var databaseFileName = "/Documents/CoverLetters/" + uniqueFileName;
+
+
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await PdfFile.CopyToAsync(fileStream);
+                }
+
+
+                application.Path = databaseFileName;
+
+            }
+
             await db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Index), new { id = application.Id }, application);

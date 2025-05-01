@@ -127,7 +127,7 @@ namespace JoblessAPI.Controllers
                 }
                 var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
                 var storagePath = Path.Combine(_env.WebRootPath, "Documents", uniqueFileName);
-                var databaseFileName = "/Documents/" + uniqueFileName;
+                var databaseFileName = "/Documents/Resumes/" + uniqueFileName;
 
 
                 using (var fileStream = new FileStream(storagePath, FileMode.Create))

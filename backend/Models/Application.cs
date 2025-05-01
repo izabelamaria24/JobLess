@@ -63,10 +63,15 @@ namespace JoblessAPI.Models
         [EnumDataType(typeof(Status))]
         public Status Status { get; set; }
 
+        public string? Path { get; set; }
+
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Technology>? Technologies { get; set; }
+
+        [NotMapped]
+        public IFormFile? File { get; set; }
     }
 }
