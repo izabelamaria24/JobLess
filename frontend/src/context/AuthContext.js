@@ -24,8 +24,8 @@ export const AuthProvider = ({ children }) => {
     const register = async (credentials) => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Account/register`, credentials);
-            setUser(res.data.user);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+            setUser(res.data);
+            localStorage.setItem("user", JSON.stringify(res.data));
         } catch (error) {
             console.error("Registration failed:", error.response.data);
         }

@@ -42,37 +42,37 @@ const JobApplicationsProvider = ({ children }) => {
 
   const [applications, setApplications] = useState(mockApplications);
 
-  // useEffect(() => {
-  //   const fetchApplications = async () => {
-  //     try {
-  //       const response = await axios.get('/api/applications');
-  //       setApplications(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching job applications:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/index`);
+        setApplications(response.data);
+      } catch (error) {
+        console.error('Error fetching job applications:', error);
+      }
+    };
 
-  //   fetchApplications();
-  // }, []);
+    fetchApplications();
+  }, []); 
 
   const addApplication = async (application) => {
     try {
-      const response = await axios.post('/api/applications', application);
-      setApplications([...applications, response.data]);
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`, application);
+        setApplications([...applications, response.data]);
     } catch (error) {
-      console.error('Error adding job application:', error);
+        console.error('Error adding job application:', error);
     }
   };
 
   const updateApplication = async (index, updatedApplication) => {
     try {
-      const response = await axios.put(`/api/applications/${updatedApplication.id}`, updatedApplication);
-      const updatedApplications = applications.map((app, i) =>
-        i === index ? response.data : app
-      );
-      setApplications(updatedApplications);
+        const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`, updatedApplication);
+        const updatedApplications = applications.map((app, i) =>
+            i === index ? response.data : app
+        );
+        setApplications(updatedApplications);
     } catch (error) {
-      console.error('Error updating job application:', error);
+        console.error('Error updating job application:', error);
     }
   };
 

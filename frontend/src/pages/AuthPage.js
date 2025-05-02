@@ -50,38 +50,34 @@ const AuthPage = () => {
                         required
                         className="auth-input"
                     />
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        onChange={handleChange}
-                        required
-                        className="auth-input"
-                    />
-                    <input
-                        type="text"
-                        name="firstname"
-                        placeholder="Firstname"
-                        onChange={handleChange}
-                        required
-                        className="auth-input"
-                    />
-                    <input
-                        type="text"
-                        name="lastname"
-                        placeholder="Lastname"
-                        onChange={handleChange}
-                        required
-                        className="auth-input"
-                    />
-                    <input
-                        type="text"
-                        name="phone_number"
-                        placeholder="Phone number"
-                        onChange={handleChange}
-                        required
-                        className="auth-input"
-                    />
+                    {!isLogin && (
+                        <>
+                            <input
+                                type="text"
+                                name="firstname"
+                                placeholder="First Name"
+                                onChange={handleChange}
+                                required
+                                className="auth-input"
+                            />
+                            <input
+                                type="text"
+                                name="lastname"
+                                placeholder="Last Name"
+                                onChange={handleChange}
+                                required
+                                className="auth-input"
+                            />
+                            <input
+                                type="text"
+                                name="phone"
+                                placeholder="Phone Number"
+                                onChange={handleChange}
+                                required
+                                className="auth-input"
+                            />
+                        </>
+                    )}
                     {error && <p className="auth-error">{error}</p>}
                     <button type="submit" className="auth-button">
                         {isLogin ? "Login" : "Register"}
