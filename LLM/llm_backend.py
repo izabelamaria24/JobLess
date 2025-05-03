@@ -63,7 +63,35 @@ def compareSalary():
             "error": "Please try again with a valid company and job title."
         }), 400
 
+'''
+{
+    "path": "/path/to/CV"
+}
+'''
+@app.route("/suggestionsCV", methods=["GET"])
+def suggestionsCV():
+    try:
+        data = request.get_json()
+        CV_path = data.get("path")
+        CV_text = extract_text_from_pdf(CV_path)
+        print(CV_text)
+        prompt = f"Please provide suggestions regaring my CV, I want to apply to IT jobs. You can search online. My CV: {CV_text}\n"          
+        answer = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=config_with_search)
+        grounding = answer.candidates[0].grounding_metadata
+        return jsonify({
+            "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
+            "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
+        })
+    except (TypeError, ValueError):
+        return jsonify({
+            "error": "Please try again with a valid CV path."
+        }), 400
         
+
+
 def init_client():
     client = genai.Client(api_key=API_key)
     config_with_search = types.GenerateContentConfig(
