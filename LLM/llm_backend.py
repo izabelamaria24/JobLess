@@ -90,6 +90,34 @@ def suggestionsCV():
             "error": "Please try again with a valid CV path."
         }), 400
         
+        
+'''
+{
+    "path": "/path/to/cover_letter.pdf"
+}
+'''
+@app.route("/suggestionsCoverLetter", methods=["GET"])
+def suggestionsCoverLetter():
+    try:
+        data = request.get_json()
+        CoverLetter_path = data.get("path")
+        #relative_path = os.path.join(os.getcwd(), CoverLetter_path)
+        #CoverLetter_text = extract_text_from_pdf(relative_path)
+        CoverLetter_text = extract_text_from_pdf(CoverLetter_path)
+        prompt = f"Please provide suggestions regaring my Cover Letter, I want to apply to IT jobs. You can search online. My Cover Letter: {CoverLetter_text}\n"          
+        answer = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=config_with_search)
+        grounding = answer.candidates[0].grounding_metadata
+        return jsonify({
+            "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
+            "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
+        })
+    except (TypeError, ValueError):
+        return jsonify({
+            "error": "Please try again with a valid Cover Letter."
+        }), 400
 
 
 def init_client():
