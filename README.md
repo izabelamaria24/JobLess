@@ -11,9 +11,6 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 
 - **[Soare Alex Antonio, grupa 251](https://github.com/raizojpg)**  
 
-# Jira 
- We used Jira to plan, track, and manage our project and tasks. This **[link](https://izabelajilavu.atlassian.net/jira/software/projects/JBLS/boards/1)** redirects to our backlog creation.
-
 # User Stories:
 
 1. As a user, I want to quickly add applied jobs by filling in fields such as company name, job title, link, and application date, along with progress stages ('Applied,' 'Interview Scheduled,' 'Offer Received,' and 'Rejected').
@@ -28,3 +25,22 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 10. As a user, I want the app to provide AI-powered resume and cover letter suggestions based on the job description I’m applying to.
 11. As a user, I want to receive tips based on my job applications and feedback to strengthen specific skills.
 12. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
+
+# Backlog creation - Jira:
+We used Jira to plan, track, and manage our project and tasks. This **[link](https://izabelajilavu.atlassian.net/jira/software/projects/JBLS/boards/1)** redirects to our backlog creation.
+
+# Source control: 
+All of our project can be accessed on github, **[commits](https://github.com/izabelamaria24/JobLess/commits/develop/)** și **[branches](https://github.com/izabelamaria24/JobLess/branches)** can be found here.
+
+# Bug reporting: 
+Issues **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)** and **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)**
+
+# Code standards:
+**[Backend standard:](https://google.github.io/styleguide/csharp-style.html )** C# at Google Style Guide
+
+**[Frontend standard:](https://react.dev/reference/rules)** Rules of React
+
+# Build Tools: 
+C# ASP.NET Core **[MSBuild](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022 )** 
+
+Database migrations **[EF Core Command-line Tools](https://learn.microsoft.com/en-us/ef/core/cli/powershell#add-migration )** 
