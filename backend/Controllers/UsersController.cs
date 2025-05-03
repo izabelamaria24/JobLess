@@ -107,7 +107,17 @@ namespace JoblessAPI.Controllers
                 return BadRequest(new { Message = "Error updating user", Error = ex.Message });
             }
 
-            return Ok(new { Message = "User updated successfully" });
+            var userInfo = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Phone,
+                user.UserName,
+                user.Email
+            };
+
+            return Ok(new { User = userInfo });
         }
 
         // DELETE: api/Users/delete/{id}

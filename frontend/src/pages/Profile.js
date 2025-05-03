@@ -1,17 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import '../design/Profile.css';
 
 const Profile = () => {
     const { user, updateUser } = useContext(AuthContext);
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        userName: user.userName,
-        firstName: user.firstName,
-        lastname: user.lastName,
-        email: user.email,
-        phone: user.phone,
-    });
+    const [formData, setFormData] = useState(null);
+
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                userName: user.userName || '',
+                firstName: user.firstName || '',
+                lastName: user.lastName || '',
+                email: user.email || '',
+                phone: user.phone || '',
+            });
+        }
+    }, [user]);
 
     if (!user) {
         return <p>Loading...</p>;

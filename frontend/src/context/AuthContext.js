@@ -10,14 +10,36 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // const storedUser = localStorage.getItem("user");
+        // if (storedUser) setUser(JSON.parse(storedUser));
+
+        // const storedToken = localStorage.getItem("token");
+        // if (storedToken){
+        //     setToken(JSON.parse(storedToken));
+        //     axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+        // } 
+
         const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
+        if (storedUser && storedUser !== "undefined") {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                console.error("Invalid user JSON in localStorage:", storedUser);
+                localStorage.removeItem("user");
+            }
+        }
 
         const storedToken = localStorage.getItem("token");
-        if (storedToken){
-            setToken(JSON.parse(storedToken));
-            axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-        } 
+        if (storedToken && storedToken !== "undefined") {
+            try {
+                const parsedToken = JSON.parse(storedToken);
+                setToken(parsedToken);
+                axios.defaults.headers.common["Authorization"] = `Bearer ${parsedToken}`;
+            } catch (e) {
+                console.error("Invalid token JSON in localStorage:", storedToken);
+                localStorage.removeItem("token");
+            }
+        }
 
         setLoading(false);
         
@@ -64,9 +86,13 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
-            const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/users/${user.id}`, updatedData);
-            setUser(res.data.user);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+            updatedData.id = user.id;
+            const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Users/edit/${user.id}`, updatedData);
+
+            const updatedUser = res.data.user;
+
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
         } catch (error) {
             console.error("Update failed:", error.response.data);
         }
