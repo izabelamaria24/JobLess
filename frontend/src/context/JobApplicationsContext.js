@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 
 const JobApplicationsContext = createContext();
 
@@ -9,17 +9,10 @@ const JobApplicationsProvider = ({ children }) => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-
-        let token = localStorage.getItem("token");
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/index`, {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(token)}`,
-          },
-        });
-
+        const response = await axiosInstance.get("/api/Applications/index");
         setApplications(response.data);
       } catch (error) {
-        console.error('Error fetching job applications:', error);
+          console.error("Error fetching job applications:", error.response?.data || error.message);
       }
     };
 
@@ -28,47 +21,28 @@ const JobApplicationsProvider = ({ children }) => {
 
   const addApplication = async (application) => {
     try {
-        const token = localStorage.getItem("token");
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`,
-          application,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(token)}`
-            }
-          }
-        );
-
-        setApplications([...applications, response.data]);
+      const response = await axiosInstance.post("/api/Applications/new", application);
+      setApplications([...applications, response.data]);
     } catch (error) {
-        console.error('Error adding job application:', error);
+        console.error("Error adding job application:", error.response?.data || error.message);
     }
   };
 
   const updateApplication = async (index, updatedApplication) => {
     try {
-        const applicationId = applications[index]?.id;
+      const applicationId = applications[index]?.id;
+      if (!applicationId) {
+          console.error("Application ID not found.");
+          return;
+      }
 
-        updatedApplication.id = applicationId;
-
-        const token = localStorage.getItem("token");
-        const response = await axios.put(
-          `${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`,
-          updatedApplication,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(token)}`
-            }
-          }
-        );
-
-        const updatedApplications = applications.map((app, i) =>
-            i === index ? response.data : app
-        );
-        setApplications(updatedApplications);
-
+      const response = await axiosInstance.put(`/api/Applications/edit/${applicationId}`, updatedApplication);
+      const updatedApplications = applications.map((app, i) =>
+          i === index ? response.data : app
+      );
+      setApplications(updatedApplications);
     } catch (error) {
-        console.error('Error updating job application:', error);
+        console.error("Error updating job application:", error.response?.data || error.message);
     }
   };
 
