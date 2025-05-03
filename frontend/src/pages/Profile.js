@@ -1,11 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import ChangePasswordForm from '../components/ChangePasswordForm'
 import '../design/Profile.css';
 
 const Profile = () => {
     const { user, updateUser, logout } = useContext(AuthContext);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(null);
+
+    const [isFormVisible, setIsFormVisible] = useState(false)
 
     useEffect(() => {
         if (user) {
@@ -36,11 +39,26 @@ const Profile = () => {
 
     const handleLogout = () => {
         logout();
-        // navigate('/login');
+    }
+
+    const handlePasswordChange = async (changePassword) => {
+        try {
+            await axiosInstance.post("/api/Users/change-password", changePassword);
+            navigate("/profile"); 
+
+
+        } catch (error) {
+            console.error("Password change failed:", error.response.data);
+        }
     }
 
     return (
         <div className="profile-page">
+            <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
+                <ChangePasswordForm
+                    onSubmit={handlePasswordChange}
+                />
+            </Modal>
             <h2>User Profile</h2>
             {isEditing ? (
                 <form className="profile-form" onSubmit={handleSubmit}>
@@ -75,6 +93,7 @@ const Profile = () => {
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Phone Number:</strong> {user.phone}</p>
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
+                    <button className="edit-profile-button" onClick={setIsFormVisible(true)}>Logout</button>
                     <button className='logout-button' onClick={handleLogout}>Logout</button>
                 </div>
             )}
