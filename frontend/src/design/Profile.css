@@ -52,3 +52,17 @@
 .profile-form button[type="button"]:hover {
     background-color: #e53935;
 }
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}

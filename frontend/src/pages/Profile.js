@@ -28,6 +28,11 @@ const Profile = () => {
         setIsEditing(false);
     };
 
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    }
+
     return (
         <div className="profile-page">
             <h2>User Profile</h2>
@@ -64,6 +69,7 @@ const Profile = () => {
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Phone Number:</strong> {user.phone}</p>
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
+                    <button className='logout-button' onClick={handleLogout}>Logout</button>
                 </div>
             )}
         </div>
