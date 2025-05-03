@@ -6,11 +6,11 @@ const Profile = () => {
     const { user, updateUser } = useContext(AuthContext);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
-        username: user.username,
-        firstname: user.firstname,
-        lastname: user.lastname,
+        userName: user.userName,
+        firstName: user.firstName,
+        lastname: user.lastName,
         email: user.email,
-        phone_number: user.phone_number,
+        phone: user.phone,
     });
 
     if (!user) {
@@ -35,15 +35,15 @@ const Profile = () => {
                 <form className="profile-form" onSubmit={handleSubmit}>
                     <label>
                         Username:
-                        <input type="text" name="username" value={formData.username} onChange={handleChange} />
+                        <input type="text" name="userName" value={formData.userName} onChange={handleChange} />
                     </label>
                     <label>
                         First Name:
-                        <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} />
+                        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
                     </label>
                     <label>
                         Last Name:
-                        <input type="text" name="lastname" value={formData.lastname} onChange={handleChange} />
+                        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
                     </label>
                     <label>
                         Email:
@@ -51,18 +51,18 @@ const Profile = () => {
                     </label>
                     <label>
                         Phone Number:
-                        <input type="text" name="phone_number" value={formData.phone_number} onChange={handleChange} />
+                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
                     </label>
                     <button type="submit">Save</button>
                     <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
                 </form>
             ) : (
                 <div className="profile-details">
-                    <p><strong>Username:</strong> {user.username}</p>
-                    <p><strong>First Name:</strong> {user.firstname}</p>
-                    <p><strong>Last Name:</strong> {user.lastname}</p>
+                    <p><strong>Username:</strong> {user.userName}</p>
+                    <p><strong>First Name:</strong> {user.firstName}</p>
+                    <p><strong>Last Name:</strong> {user.lastName}</p>
                     <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Phone Number:</strong> {user.phone_number}</p>
+                    <p><strong>Phone Number:</strong> {user.phone}</p>
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
                 </div>
             )}

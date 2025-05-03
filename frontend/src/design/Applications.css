@@ -43,3 +43,18 @@
 .edit-application-button:hover {
   background-color: #007bb5;
 }
+
+
+.show-application-button {
+  background-color: #008CBA;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.show-application-button:hover {
+  background-color: #007bb5;
+}
