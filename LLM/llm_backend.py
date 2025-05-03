@@ -32,6 +32,37 @@ def interviewQuestions():
             "error": "Please try again with a valid company and job title."
         }), 400
         
+'''
+{
+    companies = ["Google", "Amazon", "Microsoft", "Meta", "Apple"]
+    jobTitles = ["Software Engineer", "Data Scientist", "Product Manager", "Machine Learning Engineer", "UX Designer"]
+    locations = ["New York", "San Francisco", "Seattle", "Austin", "Los Angeles"]
+}
+'''
+@app.route("/compareSalary", methods=["GET"])
+def compareSalary():
+    try:
+        data = request.get_json()
+        companies = data.get("companies")
+        jobTitles = data.get("jobTitles")
+        locations = data.get("locations")
+        prompt = "Please provide the aproximate salary ranges of the following positions. You can search online. Write a list with the company, job title, location, and salary.\n"
+        for i in range(len(companies)):
+            prompt += f"Company: {companies[i]}, Job Title: {jobTitles[i]}, Location: {locations[i]}\n"           
+        answer = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=config_with_search)
+        grounding = answer.candidates[0].grounding_metadata
+        return jsonify({
+            "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
+            "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
+        })
+    except (TypeError, ValueError):
+        return jsonify({
+            "error": "Please try again with a valid company and job title."
+        }), 400
+
         
 def init_client():
     client = genai.Client(api_key=API_key)
