@@ -40,13 +40,21 @@ const JobApplicationsProvider = ({ children }) => {
     }
   ];
 
-  const [applications, setApplications] = useState(mockApplications);
+  const [applications, setApplications] = useState([]);
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/index`);
+
+        let token = localStorage.getItem("token");
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/index`, {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(token)}`, // Include the Bearer token
+          },
+        });
+
         setApplications(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching job applications:', error);
       }
@@ -57,7 +65,20 @@ const JobApplicationsProvider = ({ children }) => {
 
   const addApplication = async (application) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`, application);
+
+        // const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`, application);
+
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`,
+          application,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(token)}`
+            }
+          }
+        );
+
         setApplications([...applications, response.data]);
     } catch (error) {
         console.error('Error adding job application:', error);
@@ -66,7 +87,25 @@ const JobApplicationsProvider = ({ children }) => {
 
   const updateApplication = async (index, updatedApplication) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`, updatedApplication);
+        // const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`, updatedApplication);   
+
+        const applicationId = applications[index]?.id;
+
+        updatedApplication.id = applicationId;
+
+        console.log(updatedApplication);
+
+        const token = localStorage.getItem("token");
+        const response = await axios.put(
+          `${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`,
+          updatedApplication,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(token)}`
+            }
+          }
+        );
+
         const updatedApplications = applications.map((app, i) =>
             i === index ? response.data : app
         );

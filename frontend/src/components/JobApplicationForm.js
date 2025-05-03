@@ -3,7 +3,7 @@ import '../design/JobApplicationForm.css';
 
 const JobApplicationForm = ({ onSubmit, initialData }) => {
   const [company, setCompany] = useState('');
-  const [title, setTitle] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
   const [location, setLocation] = useState('');
   const [link, setLink] = useState('');
   const [date, setDate] = useState('');
@@ -19,7 +19,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setCompany(initialData.company || '');
-      setTitle(initialData.title || '');
+      setJobTitle(initialData.jobTitle || '');
       setLocation(initialData.location || '');
       setLink(initialData.link || '');
       setDate(initialData.date || '');
@@ -43,7 +43,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
     try {
       await onSubmit({
         company,
-        title,
+        jobTitle,
         location,
         link,
         date,
@@ -68,7 +68,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
       </div>
       <div>
         <label>Job Title:</label>
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
       </div>
       <div>
         <label>Company Link:</label>

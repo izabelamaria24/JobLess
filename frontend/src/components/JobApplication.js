@@ -3,7 +3,7 @@ import '../design/JobApplication.css';
 
 const statusSteps = ['Applied', 'Online Assessment', 'Interview', 'Offer', 'Hired'];
 
-const JobApplication = ({ company, title, location, availability, link, date, status, onlineAssessmentDeadline, interviewDate, onEdit }) => {
+const JobApplication = ({ company, jobTitle, location, availability, link, date, status, onlineAssessmentDeadline, interviewDate, onEdit }) => {
   const currentStep = status === 'Rejected' ? statusSteps.indexOf(status) - 1 : statusSteps.indexOf(status);
 
   return (
@@ -11,7 +11,7 @@ const JobApplication = ({ company, title, location, availability, link, date, st
       <div className="job-application-header">
         <div>
           <h3>{company}</h3>
-          <h3>{title}</h3>
+          <h3>{jobTitle}</h3>
           <h3>{location}</h3>
         </div>
         <div className="job-application-dates">
