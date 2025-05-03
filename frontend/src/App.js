@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
 import Layout from "./components/Layout";
 import Application from "./pages/Application";
+import Root from "./pages/Root";
 
 function App() {
     return (
@@ -43,6 +44,16 @@ function App() {
                                         <Application />
                                     </Layout>
                                 </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/"
+                            element={
+                            <ProtectedRoute>
+                                <Layout>
+                                <Root />
+                                </Layout>
+                            </ProtectedRoute>
                             }
                         />
                     </Routes>

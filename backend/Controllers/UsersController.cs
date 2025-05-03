@@ -172,6 +172,5 @@ namespace JoblessAPI.Controllers
             return Ok(new { Id = user.Id });
         }
 
-
     }
 }
