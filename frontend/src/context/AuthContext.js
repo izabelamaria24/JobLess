@@ -10,15 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // const storedUser = localStorage.getItem("user");
-        // if (storedUser) setUser(JSON.parse(storedUser));
-
-        // const storedToken = localStorage.getItem("token");
-        // if (storedToken){
-        //     setToken(JSON.parse(storedToken));
-        //     axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-        // } 
-
         const storedUser = localStorage.getItem("user");
         if (storedUser && storedUser !== "undefined") {
             try {
@@ -42,24 +33,18 @@ export const AuthProvider = ({ children }) => {
         }
 
         setLoading(false);
-        
     }, []);
+
 
     const login = async (credentials) => {
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Account/login`, credentials);
-
-            console.log(res);
-            
+            const res = await axiosInstance.post("/api/Account/login", credentials);
 
             localStorage.setItem("user", JSON.stringify(res.data.user));
             localStorage.setItem("token", JSON.stringify(res.data.token));
             
             setUser(res.data.user);
-            // setLoginstate(true);
-            
-
-            axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+            setToken(res.data.token);
         } catch (error) {
             console.error("Login failed:", error.response.data);
         }
@@ -68,7 +53,8 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (credentials) => {
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Account/register`, credentials);
+            const res = await axiosInstance.post("/api/Account/register", credentials);
+
             setUser(res.data);
             localStorage.setItem("user", JSON.stringify(res.data));
         } catch (error) {
@@ -81,14 +67,12 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
     };
 
     const updateUser = async (updatedData) => {
         try {
             updatedData.id = user.id;
-            const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Users/edit/${user.id}`, updatedData);
-
+            const res = await axiosInstance.put(`/api/users/${user.id}`, updatedData);
             const updatedUser = res.data.user;
 
             setUser(updatedUser);

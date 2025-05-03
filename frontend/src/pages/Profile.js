@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import '../design/Profile.css';
 
 const Profile = () => {
-    const { user, updateUser } = useContext(AuthContext);
+    const { user, updateUser, logout } = useContext(AuthContext);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(null);
 
@@ -36,7 +36,6 @@ const Profile = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
     }
 
     return (
