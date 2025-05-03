@@ -18,6 +18,7 @@ const AuthPage = () => {
         e.preventDefault();
         setError(null);
         try {
+            console.log(formData);
             if (isLogin) {
                 await login(formData);
             } else {

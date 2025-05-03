@@ -1,7 +1,9 @@
 ﻿using JoblessAPI.Models;
 using JoblessAPI.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace JoblessAPI.Controllers
 {

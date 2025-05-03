@@ -5,21 +5,38 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [loginstate, setLoginstate] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) setUser(JSON.parse(storedUser));
-    }, []);
+
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) setToken(JSON.parse(storedToken));
+        
+    }, [loginstate]);
 
     const login = async (credentials) => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Account/login`, credentials);
-            setUser(res.data.user);
+
+            console.log(res);
+            
+
             localStorage.setItem("user", JSON.stringify(res.data.user));
+            localStorage.setItem("token", JSON.stringify(res.data.token));
+            
+            setUser(res.data.user);
+            setLoginstate(true);
+            
+
+            
         } catch (error) {
             console.error("Login failed:", error.response.data);
         }
     };
+
 
     const register = async (credentials) => {
         try {
@@ -46,8 +63,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, updateUser }}>
+        <AuthContext.Provider value={{ user, token, login, register, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

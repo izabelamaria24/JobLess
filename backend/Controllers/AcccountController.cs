@@ -78,6 +78,9 @@ namespace JoblessAPI.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 return Unauthorized(new { Message = "Invalid credentials" });
 
+
+            Console.WriteLine(model.Email);
+
             var authClaims = new[]
             {
             new Claim(ClaimTypes.Name, user.UserName),
@@ -95,7 +98,25 @@ namespace JoblessAPI.Controllers
                     SecurityAlgorithms.HmacSha256)
             );
 
-            return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
+
+            var userInfo = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Phone,
+                user.UserName,
+                user.Email
+            };
+
+
+            var response = new
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                User = userInfo
+            };
+
+            return Ok(response);
         }
     }
 
