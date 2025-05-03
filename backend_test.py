@@ -237,6 +237,8 @@ def test_all_routes(token):
     test_technologies(token)
     test_applications(token)
     test_responses(token)
+
+    print("Everything went exceptionally well! Your backend has been thoroughly tested, and all endpoints, controllers, and functionalities are working perfectly as expected. Great job!")
    
 
 
