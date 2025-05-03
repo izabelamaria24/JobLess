@@ -1,7 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, navigate } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import ChangePasswordForm from '../components/ChangePasswordForm'
 import '../design/Profile.css';
+import axiosInstance from '../utils/axiosInstance';
+import Modal from '../components/Modal';
+
 
 const Profile = () => {
     const { user, updateUser, logout } = useContext(AuthContext);
@@ -93,7 +96,7 @@ const Profile = () => {
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Phone Number:</strong> {user.phone}</p>
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
-                    <button className="edit-profile-button" onClick={setIsFormVisible(true)}>Logout</button>
+                    <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button> 
                     <button className='logout-button' onClick={handleLogout}>Logout</button>
                 </div>
             )}
