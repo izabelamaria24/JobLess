@@ -36,6 +36,10 @@ We used Jira to plan, track, and manage our project and tasks. This **[link](htt
 # Source control: 
 All of our project can be accessed on github, **[commits](https://github.com/izabelamaria24/JobLess/commits/develop/)** și **[branches](https://github.com/izabelamaria24/JobLess/branches)** can be found here.
 
+# **[Conceptual diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess.png)**
+
+# **[ER diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLessER.png)**
+
 # Bug reporting: 
 Issues **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)** and **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)**
 
