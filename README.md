@@ -44,3 +44,20 @@ Issues **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453
 C# ASP.NET Core **[MSBuild](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022 )** 
 
 Database migrations **[EF Core Command-line Tools](https://learn.microsoft.com/en-us/ef/core/cli/powershell#add-migration )** 
+
+# Design patterns:
+RESTful web API *Architectural Pattern* **[](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design )** :
+  - Resource URI
+  - HTTP request methods (GET, POST, PUT, PATCH, DELETE)
+  - Asynchronous methods
+  - Data transfer objects
+
+Server-side ASP.NET *Framework choice*
+  - Models, controllers, DTOs, attributes and services
+
+Client-side React *Component-based UI Pattern*
+  - Component Composition, Higher-Order Components (HOC)
+
+Dependency injection *Creational Pattern*
+
+Factory Class *(Creational Pattern)*
