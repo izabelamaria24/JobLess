@@ -57,11 +57,13 @@ namespace JoblessAPI.Controllers
             {
                 ApplicationId = g.Key,
                 Application = g.First().Application,
-                Actions = g.Select(r => new
+                Actions = g.OrderByDescending(r=> r.Date)
+                .Select(r => new
                 {
                     r.Id,
                     r.Action,
-                    r.Date
+                    r.Date,
+                    r.Deadline
                 }).ToList()
             });
 

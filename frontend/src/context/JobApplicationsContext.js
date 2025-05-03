@@ -18,7 +18,6 @@ const JobApplicationsProvider = ({ children }) => {
         });
 
         setApplications(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching job applications:', error);
       }
@@ -67,6 +66,7 @@ const JobApplicationsProvider = ({ children }) => {
             i === index ? response.data : app
         );
         setApplications(updatedApplications);
+
     } catch (error) {
         console.error('Error updating job application:', error);
     }
