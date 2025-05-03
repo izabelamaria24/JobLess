@@ -152,6 +152,16 @@ namespace JoblessAPI.Controllers
             return Ok(new { Message = "Password changed successfully." });
         }
 
+        [HttpGet("whoami")]
+        public async Task<IActionResult> WhoAmI()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if(user == null)
+                return NotFound(new { Message = "User not found" });
+
+            return Ok(new { Id = user.Id });
+        }
+
 
     }
 }
