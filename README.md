@@ -11,6 +11,10 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 
 - **[Soare Alex Antonio, grupa 251](https://github.com/raizojpg)**  
 
+# Description of application:
+
+# **[Demo](https://github.com/)** 
+
 # User Stories:
 
 1. As a user, I want to quickly add applied jobs by filling in fields such as company name, job title, link, and application date, along with progress stages ('Applied,' 'Interview Scheduled,' 'Offer Received,' and 'Rejected').
