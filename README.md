@@ -58,6 +58,8 @@ Server-side ASP.NET *Framework choice*
 Client-side React *Component-based UI Pattern*
   - Component Composition, Higher-Order Components (HOC)
 
+LLM integration Flask
+
 Dependency injection *Creational Pattern*
 
 Factory Class *(Creational Pattern)*
