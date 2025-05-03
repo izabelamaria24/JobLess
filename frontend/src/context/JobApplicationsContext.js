@@ -4,42 +4,6 @@ import axios from 'axios';
 const JobApplicationsContext = createContext();
 
 const JobApplicationsProvider = ({ children }) => {
-  const mockApplications = [
-    {
-      company: 'Company A',
-      title: 'Software Engineer',
-      location: 'New York',
-      link: 'https://companya.com',
-      date: '2023-10-01',
-      availability: 'On site',
-      status: 'Applied',
-      onlineAssessmentDeadline: '2023-10-10',
-      interviewDate: '2023-10-15'
-    },
-    {
-      company: 'Company B',
-      title: 'Data Scientist',
-      location: 'San Francisco',
-      link: 'https://companyb.com',
-      date: '2023-09-15',
-      availability: 'Remote',
-      status: 'Online Assessment',
-      onlineAssessmentDeadline: '2023-09-25',
-      interviewDate: ''
-    },
-    {
-      company: 'Company C',
-      title: 'Product Manager',
-      location: 'Chicago',
-      link: 'https://companyc.com',
-      date: '2023-08-20',
-      availability: 'Hybrid',
-      status: 'Interview',
-      onlineAssessmentDeadline: '',
-      interviewDate: '2023-09-05'
-    }
-  ];
-
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
@@ -49,7 +13,7 @@ const JobApplicationsProvider = ({ children }) => {
         let token = localStorage.getItem("token");
         const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/index`, {
           headers: {
-            Authorization: `Bearer ${JSON.parse(token)}`, // Include the Bearer token
+            Authorization: `Bearer ${JSON.parse(token)}`,
           },
         });
 
@@ -65,9 +29,6 @@ const JobApplicationsProvider = ({ children }) => {
 
   const addApplication = async (application) => {
     try {
-
-        // const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`, application);
-
         const token = localStorage.getItem("token");
         const response = await axios.post(
           `${process.env.REACT_APP_API_BASE_URL}/api/Applications/new`,
@@ -87,13 +48,9 @@ const JobApplicationsProvider = ({ children }) => {
 
   const updateApplication = async (index, updatedApplication) => {
     try {
-        // const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/Applications/edit/${updatedApplication.id}`, updatedApplication);   
-
         const applicationId = applications[index]?.id;
 
         updatedApplication.id = applicationId;
-
-        console.log(updatedApplication);
 
         const token = localStorage.getItem("token");
         const response = await axios.put(

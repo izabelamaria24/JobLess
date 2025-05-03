@@ -4,6 +4,7 @@ import JobApplicationForm from '../components/JobApplicationForm';
 import Modal from '../components/Modal';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import "../design/Applications.css"; 
+import { Link } from 'react-router-dom'
 
 const Applications = () => {
   const { applications, addApplication, updateApplication } = useContext(JobApplicationsContext);
@@ -50,6 +51,7 @@ const Applications = () => {
             interviewDate={app.interviewDate}
             onEdit={() => handleEditApplication(index)}
           />
+          <Link to={`/applications/${app.id}`} className='details-link'>Show</Link>
         </div>
       ))}
     </div>

@@ -6,7 +6,7 @@ import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
 import Layout from "./components/Layout";
- 
+import Application from "./pages/Application";
 
 function App() {
     return (
@@ -31,6 +31,16 @@ function App() {
                                 <ProtectedRoute>
                                     <Layout>
                                         <Applications />
+                                    </Layout>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/applications/:id" 
+                            element={
+                                <ProtectedRoute>
+                                    <Layout>
+                                        <Application />
                                     </Layout>
                                 </ProtectedRoute>
                             }
