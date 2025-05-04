@@ -62,10 +62,11 @@ const Profile = () => {
     }
 
     const handleNewResume = async (newResume) => {
+        setIsResumeFormVisible(false);
         try {
             await axiosInstance.post("/api/Resumes/new", newResume);
             navigate("/profile"); 
-
+            
 
         } catch (error) {
             console.error("Resume creation failed:", error.response.data);
@@ -142,7 +143,7 @@ const Profile = () => {
                     <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button> 
                     <button className='logout-button' onClick={handleLogout}>Logout</button>
                     <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button> 
-                    <Link to={`/resumes`} className='edit-profile-button'>View Resumes</Link>
+                    <Link to={`/resumes`}><button className="edit-profile-button">View Resumes</button></Link>
                 </div>
             )}
         </div>

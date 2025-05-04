@@ -52,7 +52,7 @@ const Applications = () => {
             interviewDate={app.interviewDate}
             onEdit={() => handleEditApplication(index)}
           />
-          <Link to={`/applications/${app.id}`} className='show-application-button'>Show</Link>
+          <Link to={`/applications/${app.id}`}><button className='show-application-button'>Show</button></Link>
         </div>
       ))}
     </div>

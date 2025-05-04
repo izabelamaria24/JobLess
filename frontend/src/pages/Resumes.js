@@ -56,9 +56,6 @@ const Resumes = () => {
 
     return (
     <div className="resumes-container">
-        {/* <Modal isVisible={isPdfVisible} onClose={() => setIsPdfVisible(false)}>
-                <PdfUpload resumeId={resume.Id} />
-        </Modal> */}
         <h1>Your Resumes</h1>
         {loading && <div className="message">Loading resumes...</div>}
         {error && <div className="message">{error}</div>}
