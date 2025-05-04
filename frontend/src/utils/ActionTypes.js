@@ -1,0 +1,18 @@
+export const ActionTypes = {
+    1: "Applied",
+    2: "Online Assessment",
+    3: "Online Assessment Automated",
+    4: "IQ Test",
+    5: "Resume Walkthrough",
+    6: "Phone Screening",
+    7: "Phone Interview",
+    8: "Technical Interview",
+    9: "Soft Skills Interview",
+    10: "HR Interview",
+    11: "Recorded Interview",
+    12: "On-Site Interviews",
+    13: "Ghosted",
+    14: "Cancelled",
+    15: "Rejected",
+    16: "Accepted",
+};
