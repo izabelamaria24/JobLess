@@ -42,7 +42,7 @@ def interviewQuestions():
     locations = ["New York", "San Francisco", "Seattle", "Austin", "Los Angeles"]
 }
 '''
-@app.route("/compareSalary", methods=["GET"])
+@app.route("/compareSalary", methods=["GET", "POST"])
 def compareSalary():
     try:
         data = request.get_json()

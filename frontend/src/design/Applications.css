@@ -58,3 +58,17 @@
 .show-application-button:hover {
   background-color: #007bb5;
 }
+
+.compare-salary-button {
+  margin: 10px 0;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.compare-salary-button:hover {
+  background-color: #45a049;
+}

@@ -98,9 +98,54 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
+  const compareSalary = async (applications) => {
+    try {
+      const companies = applications.map((app) => app.company);
+      const jobTitles = applications.map((app) => app.jobTitle);
+      const locations = applications.map((app) => app.location);
+  
+      const payload = {
+        companies,
+        jobTitles,
+        locations,
+      };
+  
+      const response = await axiosInstance.post("/compareSalary", { data: payload });
+  
+      if (response.data.answer) {
+        return { answer: response.data.answer, links: response.data.links };
+      } else {
+        throw new Error("Cannot compare salaries.");
+      }
+    } catch (error) {
+      console.error("Error comparing salary:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  const getInterviewQuestions = async (company, jobTitle) => {
+    try {
+      const payload = {
+        company,
+        jobTitle,
+      };
+  
+      const response = await axiosInstance.post("/interviewQuestions", { data: payload });
+  
+      if (response.data.answer) {
+        return { answer: response.data.answer, links: response.data.links };
+      } else {
+        throw new Error("No questions returned.");
+      }
+    } catch (error) {
+      console.error("Error fetching interview questions:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "Failed to fetch interview questions.");
+    }
+  };
+
   return (
     <JobApplicationsContext.Provider value={{ applications, addApplication, updateApplication, fetchApplicationResponses, 
-      addResponse, fetchApplication, deleteApplication
+      addResponse, fetchApplication, deleteApplication, compareSalary, getInterviewQuestions
     }}>
       {children}
     </JobApplicationsContext.Provider>

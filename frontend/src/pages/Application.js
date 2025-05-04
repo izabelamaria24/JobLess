@@ -4,12 +4,11 @@ import '../design/Application.css';
 import Modal from '../components/Modal';
 import AddResponseForm from '../components/AddResponseForm';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
-import axios from 'axios';
 
 const Application = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { fetchApplication, deleteApplication, addResponse } = useContext(JobApplicationsContext);
+    const { fetchApplication, deleteApplication, addResponse, getInterviewQuestions } = useContext(JobApplicationsContext);
 
     const [application, setApplication] = useState(null);
     const [error, setError] = useState(null);
@@ -39,38 +38,19 @@ const Application = () => {
 
     const handleAddResponse = async (formData) => {
         try {
-        await addResponse({ ...formData, applicationId: id }); 
-        setIsModalOpen(false);
+            await addResponse({ ...formData, applicationId: id }); 
+            setIsModalOpen(false);
         } catch (err) {
-        setError(err.message);
+            setError(err.message);
         }
     };
 
     const handleGetInterviewQuestions = async () => {
         try {
-            const payload = {
-                company: application.company,
-                jobTitle: application.jobTitle,
-            };
-
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_LLM_URL}/interviewQuestions`,
-                {
-                    data: payload,
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            if (response.data.answer) {
-                const { answer, links } = response.data; 
-                navigate("/interview-questions", { state: { answer, links } }); 
-            } else {
-                alert("No questions returned.");
-            }
+            const { answer, links } = await getInterviewQuestions(application.company, application.jobTitle); 
+            navigate("/interview-questions", { state: { answer, links } }); 
         } catch (err) {
-            alert("Error fetching interview questions: " + (err.response?.data?.error || err.message));
+            alert(err.message || "Error fetching interview questions.");
         }
     };
 

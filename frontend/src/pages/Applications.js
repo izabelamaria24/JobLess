@@ -7,7 +7,7 @@ import "../design/Applications.css";
 import { Link } from 'react-router-dom'
 
 const Applications = () => {
-  const { applications, addApplication, updateApplication } = useContext(JobApplicationsContext);
+  const { applications, addApplication, updateApplication, compareSalary } = useContext(JobApplicationsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
 
@@ -27,16 +27,28 @@ const Applications = () => {
     setCurrentApplication(null);
   };
 
+  const handleCompareSalary = async () => {
+    try {
+      const { answer, links } = await compareSalary(applications); 
+      navigate("/compare-salary", { state: { answer, links } }); 
+    } catch (err) {
+      alert(err.message || "Error comparing salaries.");
+    }
+  };
+
   return (
     <div className="applications-page">
       <h1>Job Applications</h1>
       <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
+      <button className="compare-salary-button" onClick={handleCompareSalary}>Compare Salaries</button>
+      
       <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
         <JobApplicationForm
           onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
           initialData={currentApplication}
         />
       </Modal>
+
       {applications.map((app, index) => (
         <div key={index}>
           <JobApplication

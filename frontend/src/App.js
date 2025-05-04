@@ -11,6 +11,14 @@ import Root from "./pages/Root";
 import Resumes from "./pages/Resumes";
 import PdfViewer from "./components/PdfViewer";
 import ResumeTips from "./pages/ResumeTips";
+import CompareSalary from "./pages/CompareSalary";
+import InterviewQuestions from "./pages/InterviewQuestions";
+
+const ProtectedLayoutRoute = ({ element }) => (
+    <ProtectedRoute>
+        <Layout>{element}</Layout>
+    </ProtectedRoute>
+);
 
 function App() {
     return (
@@ -19,77 +27,15 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/login" element={<AuthPage />} />
-                        <Route
-                            path="/*"
-                            element={
-                                <ProtectedRoute>
-                                    <Layout>
-                                        <Dashboard />
-                                    </Layout>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/applications"
-                            element={
-                                <ProtectedRoute>
-                                    <Layout>
-                                        <Applications />
-                                    </Layout>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/applications/:id" 
-                            element={
-                                <ProtectedRoute>
-                                    <Layout>
-                                        <Application />
-                                    </Layout>
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/"
-                            element={
-                            <ProtectedRoute>
-                                <Layout>
-                                <Root />
-                                </Layout>
-                            </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/resumes"
-                            element={
-                            <ProtectedRoute>
-                                <Layout>
-                                <Resumes />
-                                </Layout>
-                            </ProtectedRoute>
-                            }
-                        />
-
-                        <Route 
-                            path="/viewer" 
-                            element={
-                            <ProtectedRoute>
-                                <Layout>
-                                    <PdfViewer />
-                                </Layout>
-                            </ProtectedRoute>
-                                } 
-                        />
-                        <Route 
-                            path="/resume-tips" 
-                            element={
-                            <ProtectedRoute>
-                                <Layout>
-                                    <ResumeTips />
-                                </Layout>
-                            </ProtectedRoute>
-                                } 
-                        />
+                        <Route path="/*" element={<ProtectedLayoutRoute element={<Dashboard />} />} />
+                        <Route path="/applications" element={<ProtectedLayoutRoute element={<Applications />} />} />
+                        <Route path="/applications/:id" element={<ProtectedLayoutRoute element={<Application />} />} />
+                        <Route path="/compare-salary" element={<ProtectedLayoutRoute element={<CompareSalary />} />} />
+                        <Route path="/interview-questions" element={<ProtectedLayoutRoute element={<InterviewQuestions />} />} />
+                        <Route path="/" element={<ProtectedLayoutRoute element={<Root />} />} />
+                        <Route path="/resumes" element={<ProtectedLayoutRoute element={<Resumes />} />} />
+                        <Route path="/viewer" element={<ProtectedLayoutRoute element={<PdfViewer />} />} />
+                        <Route path="/resume-tips" element={<ProtectedLayoutRoute element={<ResumeTips />} />} />
                     </Routes>
                 </Router>
             </JobApplicationsProvider>
