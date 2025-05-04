@@ -65,12 +65,11 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
-  const addResponse = async ({ action, deadline, date, applicationId }) => {
+  const addResponse = async ({ action, deadline, applicationId }) => {
     try {
-      const response = await axiosInstance.post("/api/Response/new", {
+      const response = await axiosInstance.post("/api/Responses/new", {
         action,
         deadline,
-        date,
         applicationId,
       });
       return response.data;

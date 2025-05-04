@@ -7,8 +7,7 @@ const AddResponseForm = ({ onSubmit, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const currentDate = new Date().toISOString(); 
-        onSubmit({ action, deadline, date: currentDate }); 
+        onSubmit({ action, deadline }); 
     };
 
     return (
