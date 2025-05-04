@@ -10,6 +10,7 @@ import Application from "./pages/Application";
 import Root from "./pages/Root";
 import Resumes from "./pages/Resumes";
 import PdfViewer from "./components/PdfViewer";
+import ResumeTips from "./pages/ResumeTips";
 
 function App() {
     return (
@@ -75,6 +76,16 @@ function App() {
                             <ProtectedRoute>
                                 <Layout>
                                     <PdfViewer />
+                                </Layout>
+                            </ProtectedRoute>
+                                } 
+                        />
+                        <Route 
+                            path="/resume-tips" 
+                            element={
+                            <ProtectedRoute>
+                                <Layout>
+                                    <ResumeTips />
                                 </Layout>
                             </ProtectedRoute>
                                 } 

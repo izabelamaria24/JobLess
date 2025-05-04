@@ -2,9 +2,12 @@ import os
 from google import genai
 from google.genai import types
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from helpers import *
 from api_key import API_key
 app = Flask(__name__)
+CORS(app)
+
 
 '''
 {

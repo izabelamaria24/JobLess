@@ -4,7 +4,7 @@ import '../design/Resumes.css';
 import PdfUpload from '../components/PdfUpload';
 import Modal from '../components/Modal';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 
 
@@ -51,6 +51,30 @@ const Resumes = () => {
         }
       };
 
+      const handleResumeTips = async (resumePath) => {
+        try {
+            const token = localStorage.getItem("token");
+    
+            // const res = await axios.get(
+            //     `http://localhost:5555/suggestionsCV`, 
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${token}`
+            //         },
+            //         params: { path: resumePath }
+            //     }
+            // );
+
+    
+            // navigate('/resume-tips', { state: { resumeTips: res.data } });
+
+            navigate('/resume-tips');
+        } catch (error) {
+            console.error("Error fetching resume tips:", error);
+        }
+    }
+    
+
     if (loading) return <div className="p-4">Loading resumes...</div>;
     if (error) return <div className="p-4 text-red-600">{error}</div>;
 
@@ -79,6 +103,12 @@ const Resumes = () => {
                 )}
 
                 <button className="delete-button" onClick={() => handleDelete(resume.id)}>Delete Resume</button>
+                <button
+                        className="view-button"
+                        onClick={() => handleResumeTips(resume.path)}
+                    >
+                        Get Tips
+                    </button>
             </div>
             ))}
         </div>
