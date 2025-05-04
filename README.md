@@ -40,8 +40,10 @@ All of our project can be accessed on github, **[commits](https://github.com/iza
 
 # **[ER diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLessER.png)**
 
+# **[UML diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess_UML.png)**
+
 # Bug reporting: 
-Issues **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)** and **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)**
+Issues **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html), **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**,  **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)** 
 
 # Code standards:
 **[Backend standard:](https://google.github.io/styleguide/csharp-style.html )** C# at Google Style Guide
