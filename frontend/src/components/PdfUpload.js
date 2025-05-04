@@ -30,13 +30,18 @@ const PdfUpload = () => {
 
 
     try {
+
+      let token = localStorage.getItem("token");
+      var yourJwtToken = JSON.parse(token);
+
+
       const response = await fetch(`/api/Resumes/upload?id=${resumeId}`, {
         method: 'POST',
         body: formData,
         // Uncomment and add token if your API requires authentication
-        // headers: {
-        //   Authorization: `Bearer ${yourJwtToken}`
-        // }
+        headers: {
+          Authorization: `Bearer ${yourJwtToken}`
+        }
       });
 
       if (response.ok) {

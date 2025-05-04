@@ -4,6 +4,9 @@ import ChangePasswordForm from '../components/ChangePasswordForm'
 import '../design/Profile.css';
 import axiosInstance from '../utils/axiosInstance';
 import Modal from '../components/Modal';
+import PdfUpload from '../components/PdfUpload';
+import ResumeForm from '../components/ResumeForm';
+
 
 
 const Profile = () => {
@@ -12,6 +15,8 @@ const Profile = () => {
     const [formData, setFormData] = useState(null);
 
     const [isFormVisible, setIsFormVisible] = useState(false)
+    const [isPdfVisible, setIsPdfVisible] = useState(false);
+    const [isResumeFormVisible, setIsResumeFormVisible] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -55,11 +60,48 @@ const Profile = () => {
         }
     }
 
+    const handleNewResume = async (newResume) => {
+        try {
+            await axiosInstance.post("/api/Resumes/new", newResume);
+            navigate("/profile"); 
+
+
+        } catch (error) {
+            console.error("Resume creation failed:", error.response.data);
+        }
+    }
+
+    // const handleEditResume = async (newResume) => {
+    //     try {
+    //         await axiosInstance.post("/api/Resumes/new", newResume);
+    //         navigate("/profile"); 
+
+
+    //     } catch (error) {
+    //         console.error("Resume creation failed:", error.response.data);
+    //     }
+    // }
+
+
     return (
         <div className="profile-page">
             <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
                 <ChangePasswordForm
                     onSubmit={handlePasswordChange}
+                />
+
+            </Modal>
+            {/* <Modal isVisible={isPdfVisible} onClose={() => setIsPdfVisible(false)}>
+                <PdfUpload
+                    // onSubmit={handlePasswordChange}
+                />
+            </Modal> */}
+
+            <Modal isVisible={isResumeFormVisible} onClose={() => setIsResumeFormVisible(false)}>
+                <ResumeForm
+                    onSubmit={handleNewResume}
+                    initialData={{}}
+                    userId={user.userId}
                 />
             </Modal>
             <h2>User Profile</h2>
@@ -98,6 +140,7 @@ const Profile = () => {
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
                     <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button> 
                     <button className='logout-button' onClick={handleLogout}>Logout</button>
+                    <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button> 
                 </div>
             )}
         </div>

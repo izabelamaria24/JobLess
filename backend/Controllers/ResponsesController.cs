@@ -315,7 +315,8 @@ namespace JoblessAPI.Controllers
                         r.Action != Models.Action.Accepted &&
                         r.Action != Models.Action.Cancelled &&
                         r.Application != null &&
-                        r.Application.Status == Models.Status.Active
+                        r.Application.Status != Models.Status.Rejected &&
+                        r.Application.Status != Models.Status.Accepted
                     )
                     .ToList();
 

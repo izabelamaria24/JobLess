@@ -139,7 +139,7 @@ namespace JoblessAPI.Controllers
                     return StatusCode(400, new { Message = "The file must be a document (.pdf)" });
                 }
                 var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
-                var storagePath = Path.Combine(_env.WebRootPath, "Documents", uniqueFileName);
+                var storagePath = Path.Combine(_env.WebRootPath, "Documents/CoverLetters/", uniqueFileName);
                 var databaseFileName = "/Documents/CoverLetters/" + uniqueFileName;
 
 
