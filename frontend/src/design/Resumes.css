@@ -1,0 +1,45 @@
+.resumes-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  .resumes-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .message {
+    padding: 1rem;
+    font-size: 1rem;
+    color: #d9534f;
+  }
+  
+  .resumes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .resume-card {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .resume-card h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem;
+    color: #222;
+  }
+  
+  .resume-card p {
+    margin: 0.25rem 0;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  

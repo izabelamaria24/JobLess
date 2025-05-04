@@ -145,6 +145,8 @@ if (app.Environment.IsDevelopment())
 
 //app.Urls.Add("http://0.0.0.0:80");
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

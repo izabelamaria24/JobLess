@@ -1,15 +1,7 @@
-/*
-
-      THIS IS FOR TEST PURPOSES
-      TO BE CONTINUED...
-
-*/
-
 
 import React, { useState } from 'react';
 
-const PdfUpload = () => {
-  const [resumeId, setResumeId] = useState('');
+const PdfUpload = ({resumeId}) => {
   const [pdfFile, setPdfFile] = useState(null);
   const [message, setMessage] = useState('');
 
@@ -20,7 +12,7 @@ const PdfUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!pdfFile || !resumeId) {
+    if (!pdfFile) {
       setMessage('Please select a PDF file and enter a resume ID.');
       return;
     }
@@ -31,16 +23,14 @@ const PdfUpload = () => {
 
     try {
 
-      let token = localStorage.getItem("token");
-      var yourJwtToken = JSON.parse(token);
+      const token = JSON.parse(localStorage.getItem("token"));
 
 
       const response = await fetch(`/api/Resumes/upload?id=${resumeId}`, {
         method: 'POST',
         body: formData,
-        // Uncomment and add token if your API requires authentication
         headers: {
-          Authorization: `Bearer ${yourJwtToken}`
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -60,15 +50,6 @@ const PdfUpload = () => {
     <div style={{ padding: '20px' }}>
       <h2>Upload PDF Resume</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Resume ID: </label>
-          <input
-            type="number"
-            value={resumeId}
-            onChange={(e) => setResumeId(e.target.value)}
-            required
-          />
-        </div>
         <div>
           <label>Select PDF: </label>
           <input

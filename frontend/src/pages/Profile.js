@@ -6,6 +6,7 @@ import axiosInstance from '../utils/axiosInstance';
 import Modal from '../components/Modal';
 import PdfUpload from '../components/PdfUpload';
 import ResumeForm from '../components/ResumeForm';
+import { Link } from 'react-router-dom';
 
 
 
@@ -141,6 +142,7 @@ const Profile = () => {
                     <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button> 
                     <button className='logout-button' onClick={handleLogout}>Logout</button>
                     <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button> 
+                    <Link to={`/resumes`} className='edit-profile-button'>View Resumes</Link>
                 </div>
             )}
         </div>
