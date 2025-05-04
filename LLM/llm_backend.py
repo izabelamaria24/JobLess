@@ -15,7 +15,7 @@ CORS(app)
     "jobTitle": "Machine learning engineer intern"
 }
 '''
-@app.route("/interviewQuestions", methods=["GET"])
+@app.route("/interviewQuestions", methods=["GET", "POST"])
 def interviewQuestions():
     try:
         data = request.get_json()

@@ -4,6 +4,7 @@ import '../design/Application.css';
 import Modal from '../components/Modal';
 import AddResponseForm from '../components/AddResponseForm';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import axios from 'axios';
 
 const Application = () => {
     const { id } = useParams();
@@ -45,6 +46,34 @@ const Application = () => {
         }
     };
 
+    const handleGetInterviewQuestions = async () => {
+        try {
+            const payload = {
+                company: application.company,
+                jobTitle: application.jobTitle,
+            };
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_LLM_URL}/interviewQuestions`,
+                {
+                    data: payload,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.data.answer) {
+                alert("Interview Questions:\n\n" + response.data.answer);
+            } else {
+                alert("No questions returned.");
+            }
+        } catch (err) {
+            alert("Error fetching interview questions: " + (err.response?.data?.error || err.message));
+        }
+    };
+
+
     if (error) {
         return <p className="error-message">{error}</p>;
     }
@@ -67,6 +96,8 @@ const Application = () => {
         <p><strong>Interview Date:</strong> {application.interviewDate || "N/A"}</p>
         <button className="delete-button" onClick={handleDelete}>Delete Application</button>
         <button className="add-response-button" onClick={() => setIsModalOpen(true)}>Add Response</button>
+        <button className="get-questions-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
+
 
         <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <AddResponseForm onSubmit={handleAddResponse} onClose={() => setIsModalOpen(false)} />
