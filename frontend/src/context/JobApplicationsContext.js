@@ -65,8 +65,44 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
+  const addResponse = async ({ action, deadline, date, applicationId }) => {
+    try {
+      const response = await axiosInstance.post("/api/Response/new", {
+        action,
+        deadline,
+        date,
+        applicationId,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error adding response:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "Failed to add response.");
+    }
+  };
+
+  const fetchApplication = async (applicationId) => {
+    try {
+      const response = await axiosInstance.get(`/api/Applications/show/${applicationId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching application:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "Failed to fetch application.");
+    }
+  };
+
+  const deleteApplication = async (applicationId) => {
+    try {
+      await axiosInstance.delete(`/api/Applications/delete/${applicationId}`);
+    } catch (error) {
+      console.error("Error deleting application:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "Failed to delete application.");
+    }
+  };
+
   return (
-    <JobApplicationsContext.Provider value={{ applications, addApplication, updateApplication, fetchApplicationResponses }}>
+    <JobApplicationsContext.Provider value={{ applications, addApplication, updateApplication, fetchApplicationResponses, 
+      addResponse, fetchApplication, deleteApplication
+    }}>
       {children}
     </JobApplicationsContext.Provider>
   );

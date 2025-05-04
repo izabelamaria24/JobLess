@@ -1,49 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../design/Application.css';
+import Modal from '../components/Modal';
+import AddResponseForm from '../components/AddResponseForm';
+import { JobApplicationsContext } from '../context/JobApplicationsContext';
 
 const Application = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { fetchApplication, deleteApplication, addResponse } = useContext(JobApplicationsContext);
+
     const [application, setApplication] = useState(null);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        const fetchApplication = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_BASE_URL}/api/Applications/show/${id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${JSON.parse(token)}`,
-                        },
-                    }
-                );
-                setApplication(response.data);
-            } catch (err) {
-                setError(err.response?.data?.message || "Failed to fetch application.");
-            }
-        };
+        const loadApplication = async () => {
+        try {
+            const data = await fetchApplication(id); 
+            setApplication(data);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
-        fetchApplication();
-    }, [id]);
+        loadApplication();
+    }, [id, fetchApplication]);
 
     const handleDelete = async () => {
         try {
-            const token = localStorage.getItem("token");
-            await axios.delete(
-                `${process.env.REACT_APP_API_BASE_URL}/api/Applications/delete/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${JSON.parse(token)}`,
-                    },
-                }
-            );
-            navigate("/applications"); 
+            await deleteApplication(id); 
+            navigate("/applications");
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to delete application.");
+            setError(err.message);
+        }
+    };
+
+    const handleAddResponse = async (formData) => {
+        try {
+        await addResponse({ ...formData, applicationId: id }); 
+        setIsModalOpen(false);
+        } catch (err) {
+        setError(err.message);
         }
     };
 
@@ -57,17 +55,22 @@ const Application = () => {
 
     return (
         <div className="application-details">
-            <h2>Application Details</h2>
-            <p><strong>Company:</strong> {application.company}</p>
-            <p><strong>Job Title:</strong> {application.jobTitle}</p>
-            <p><strong>Location:</strong> {application.location}</p>
-            <p><strong>Application Date:</strong> {application.date}</p>
-            <p><strong>Job Type:</strong> {application.jobType}</p>
-            <p><strong>Availability:</strong> {application.availability}</p>
-            <p><strong>Status:</strong> {application.status}</p>
-            <p><strong>Online Assessment Deadline:</strong> {application.onlineAssessmentDeadline || "N/A"}</p>
-            <p><strong>Interview Date:</strong> {application.interviewDate || "N/A"}</p>
-            <button className="delete-button" onClick={handleDelete}>Delete Application</button>
+        <h2>Application Details</h2>
+        <p><strong>Company:</strong> {application.company}</p>
+        <p><strong>Job Title:</strong> {application.jobTitle}</p>
+        <p><strong>Location:</strong> {application.location}</p>
+        <p><strong>Application Date:</strong> {application.date}</p>
+        <p><strong>Job Type:</strong> {application.jobType}</p>
+        <p><strong>Availability:</strong> {application.availability}</p>
+        <p><strong>Status:</strong> {application.status}</p>
+        <p><strong>Online Assessment Deadline:</strong> {application.onlineAssessmentDeadline || "N/A"}</p>
+        <p><strong>Interview Date:</strong> {application.interviewDate || "N/A"}</p>
+        <button className="delete-button" onClick={handleDelete}>Delete Application</button>
+        <button className="add-response-button" onClick={() => setIsModalOpen(true)}>Add Response</button>
+
+        <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <AddResponseForm onSubmit={handleAddResponse} onClose={() => setIsModalOpen(false)} />
+        </Modal>
         </div>
     );
 };

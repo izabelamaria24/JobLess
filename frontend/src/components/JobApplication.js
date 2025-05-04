@@ -15,7 +15,7 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
       setResponses(applicationResponses);
 
       if (applicationResponses.length > 0) {
-        const lastAction = applicationResponses[applicationResponses.length - 1].action;
+        const lastAction = applicationResponses[0].action;
         if (lastAction === 1) setCurrentStep(0); 
         else if (lastAction >= 2 && lastAction <= 4) setCurrentStep(1); 
         else if (lastAction >= 5 && lastAction <= 12) setCurrentStep(2); 
