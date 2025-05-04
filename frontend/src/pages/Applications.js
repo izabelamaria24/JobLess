@@ -40,6 +40,7 @@ const Applications = () => {
       {applications.map((app, index) => (
         <div key={index}>
           <JobApplication
+            applicationId={app.id}
             company={app.company}
             jobTitle={app.jobTitle}
             availability={app.availability}

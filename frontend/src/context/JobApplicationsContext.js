@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
+import { ActionTypes } from '../utils/ActionTypes'
 
 const JobApplicationsContext = createContext();
 
@@ -46,8 +47,26 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
+  const fetchApplicationResponses = async (applicationId) => {
+    try {
+      const response = await axiosInstance.get(`/api/Responses/index`);
+      
+      const filteredResponses = response.data
+        .filter((action) => action.applicationId === applicationId)
+        .map((action) => ({
+          ...action,
+          actionType: ActionTypes[action.action], 
+        }));
+  
+      return filteredResponses;
+    } catch (error) {
+      console.error("Error fetching application responses:", error.response?.data || error.message);
+      return [];
+    }
+  };
+
   return (
-    <JobApplicationsContext.Provider value={{ applications, addApplication, updateApplication }}>
+    <JobApplicationsContext.Provider value={{ applications, addApplication, updateApplication, fetchApplicationResponses }}>
       {children}
     </JobApplicationsContext.Provider>
   );
