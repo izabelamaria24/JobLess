@@ -64,7 +64,8 @@ const Application = () => {
             );
 
             if (response.data.answer) {
-                alert("Interview Questions:\n\n" + response.data.answer);
+                const { answer, links } = response.data; 
+                navigate("/interview-questions", { state: { answer, links } }); 
             } else {
                 alert("No questions returned.");
             }
