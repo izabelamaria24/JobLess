@@ -73,5 +73,8 @@ namespace JoblessAPI.Models
 
         [NotMapped]
         public IFormFile? File { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Response>? Responses { get; set; }
     }
 }

@@ -439,8 +439,9 @@ namespace JoblessAPI.Migrations
             modelBuilder.Entity("JoblessAPI.Models.Response", b =>
                 {
                     b.HasOne("JoblessAPI.Models.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId");
+                        .WithMany("Responses")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Application");
                 });
@@ -527,6 +528,11 @@ namespace JoblessAPI.Migrations
                         .HasForeignKey("TechnologiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("JoblessAPI.Models.Application", b =>
+                {
+                    b.Navigation("Responses");
                 });
 #pragma warning restore 612, 618
         }

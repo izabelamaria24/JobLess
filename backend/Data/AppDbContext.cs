@@ -19,6 +19,18 @@ namespace JoblessAPI.Data
         public DbSet<Application> Applications { get; set; }
         public DbSet<Response> Responses { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Response>()
+                .HasOne(r => r.Application)
+                .WithMany(a => a.Responses)
+                .HasForeignKey(r => r.ApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
     }
 }
 

@@ -217,6 +217,8 @@ namespace JoblessAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var application = await db.Applications.FindAsync(id);
+
+
             if (application == null)
             {
                 return NotFound(new { Message = "Application not found" });
