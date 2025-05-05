@@ -2,6 +2,9 @@ import axios from "axios";
 
 const axiosInstance2 = axios.create({
     baseURL: process.env.REACT_APP_API_LLM_URL, 
+    headers: {
+        "Content-Type": "application/json", 
+    },
 });
 
 axiosInstance2.interceptors.request.use(
