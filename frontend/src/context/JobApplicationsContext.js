@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
+import axiosInstance2 from '../utils/axiosInstance2';
 import { ActionTypes } from '../utils/ActionTypes'
 
 const JobApplicationsContext = createContext();
@@ -110,7 +111,7 @@ const JobApplicationsProvider = ({ children }) => {
         locations,
       };
   
-      const response = await axiosInstance.post("/compareSalary", { data: payload });
+      const response = await axiosInstance2.post("/compareSalary", { data: payload });
   
       if (response.data.answer) {
         return { answer: response.data.answer, links: response.data.links };
@@ -130,7 +131,7 @@ const JobApplicationsProvider = ({ children }) => {
         jobTitle,
       };
   
-      const response = await axiosInstance.post("/interviewQuestions", { data: payload });
+      const response = await axiosInstance2.post("/interviewQuestions", { data: payload });
   
       if (response.data.answer) {
         return { answer: response.data.answer, links: response.data.links };
