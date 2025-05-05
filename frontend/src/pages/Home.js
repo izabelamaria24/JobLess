@@ -80,7 +80,7 @@ const Home = () => {
             };
         })
         .filter(Boolean) // remove nulls
-        .sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+        .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
 
     console.log(filteredApplications);

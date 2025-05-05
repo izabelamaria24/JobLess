@@ -21,12 +21,12 @@ const Resumes = () => {
     useEffect(() => {
     const fetchResumes = async () => {
         try {
-        const res = await axiosInstance.get('/api/Resumes/index');
-        setResumes(res.data);
+            const res = await axiosInstance.get('/api/Resumes/index');
+            setResumes(res.data);
         } catch (err) {
-        if (err.response && err.res.status === 401) {
-            setError('You must be logged in to view your resumes.');
-        } else if (err.response && err.res.status === 404) {
+            if (err.response && err.response.status === 401) {
+                setError('You must be logged in to view your resumes.');
+        } else if (err.response && err.response.status === 404) {
             setError('No resumes found.');
         } else {
             setError('An error occurred while fetching resumes.');

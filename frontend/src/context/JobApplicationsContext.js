@@ -38,6 +38,7 @@ const JobApplicationsProvider = ({ children }) => {
           return;
       }
 
+      updatedApplication.id = applicationId;
       const response = await axiosInstance.put(`/api/Applications/edit/${applicationId}`, updatedApplication);
       const updatedApplications = applications.map((app, i) =>
           i === index ? response.data : app
