@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     const updateUser = async (updatedData) => {
         try {
             updatedData.id = user.id;
-            const res = await axiosInstance.put(`/api/users/${user.id}`, updatedData);
+            const res = await axiosInstance.put(`/api/Users/edit/${user.id}`, updatedData);
             const updatedUser = res.data.user;
 
             setUser(updatedUser);
