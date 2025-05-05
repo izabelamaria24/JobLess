@@ -110,6 +110,8 @@ const JobApplicationsProvider = ({ children }) => {
         jobTitles,
         locations,
       };
+
+      console.log(payload);
   
       const response = await axiosInstance2.post("/compareSalary", { data: payload });
   

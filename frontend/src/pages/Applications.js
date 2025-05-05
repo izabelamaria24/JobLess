@@ -4,12 +4,17 @@ import JobApplicationForm from '../components/JobApplicationForm';
 import Modal from '../components/Modal';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import "../design/Applications.css"; 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+
+
 
 const Applications = () => {
   const { applications, addApplication, updateApplication, compareSalary } = useContext(JobApplicationsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleAddApplication = (application) => {
     addApplication(application);

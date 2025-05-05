@@ -23,7 +23,7 @@ namespace JoblessAPI.Models
         Rejected,
         Accepted
     }
-   
+
     public enum Availability
     {
         NULL,
