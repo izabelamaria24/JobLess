@@ -14,8 +14,6 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 # Description of application:
 This is a web application designed to help users organize and track all their job applications in one central place.
 
-# **[Documentation](https://github.com/izabelamaria24/JobLess/blob/develop/Documentation.pdf)**
-
 **Key Features**:
 - Application Tracker: Users can log each job they apply to and update the status (e.g., Applied, Interviewing, Offer).
 
@@ -30,6 +28,8 @@ A real-life situation that many of us are going through right now—job hunting.
 
 
 # **[Demo](https://youtu.be/Q4RYpFnFuus)** 
+
+# **[Documentation](https://github.com/izabelamaria24/JobLess/blob/develop/Documentation.pdf)**
 
 # User Stories:
 
