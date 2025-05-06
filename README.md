@@ -13,7 +13,7 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 
 # Description of application:
 
-# **[Demo](https://github.com/)** 
+# **[Demo](https://github.com/](https://youtu.be/Q4RYpFnFuus)** 
 
 # User Stories:
 
@@ -43,7 +43,7 @@ All of our project can be accessed on github, **[commits](https://github.com/iza
 # **[UML diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess_UML.png)**
 
 # Bug reporting: 
-Issues **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html), **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**,  **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)** 
+Issues **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html)**, **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**,  **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)** 
 
 # Code standards:
 **[Backend standard:](https://google.github.io/styleguide/csharp-style.html )** C# at Google Style Guide
@@ -56,7 +56,7 @@ C# ASP.NET Core **[MSBuild](https://learn.microsoft.com/en-us/visualstudio/msbui
 Database migrations **[EF Core Command-line Tools](https://learn.microsoft.com/en-us/ef/core/cli/powershell#add-migration )** 
 
 # Design patterns:
-RESTful web API *Architectural Pattern* **[](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design )** :
+RESTful web API *Architectural Pattern* **[Microsoft best practices](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design )** :
   - Resource URI
   - HTTP request methods (GET, POST, PUT, PATCH, DELETE)
   - Asynchronous methods
@@ -73,3 +73,6 @@ LLM integration Flask
 Dependency injection *Creational Pattern*
 
 Factory Class *(Creational Pattern)*
+
+# Automated tests:
+**[Unit tests](https://github.com/izabelamaria24/JobLess/blob/develop/backend_test.py)**
