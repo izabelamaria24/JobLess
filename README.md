@@ -12,6 +12,20 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 - **[Soare Alex Antonio, grupa 251](https://github.com/raizojpg)**  
 
 # Description of application:
+This is a web application designed to help users organize and track all their job applications in one central place.
+
+**Key Features**:
+- Application Tracker: Users can log each job they apply to and update the status (e.g., Applied, Interviewing, Offer).
+
+- Reminders for Deadlines: Get notifications for important dates like application deadlines or interviews.
+
+- Progress Statistics: Visual summaries (charts or progress bars) show how many applications are active, successful, rejected, etc.
+
+- Centralized Information: Store everything in one place—job post link, job description, submitted CV, interview date and time, and any other notes.
+
+**Inspiration**:
+A real-life situation that many of us are going through right now—job hunting. It can be chaotic and stressful, so this app aims to bring clarity, structure, and peace of mind to that process.
+
 
 # **[Demo](https://youtu.be/Q4RYpFnFuus)** 
 
