@@ -13,7 +13,7 @@ Project developed for the discipline "Software Development Methods" - Faculty of
 
 # Description of application:
 
-# **[Demo](https://github.com/](https://youtu.be/Q4RYpFnFuus)** 
+# **[Demo](https://youtu.be/Q4RYpFnFuus)** 
 
 # User Stories:
 
