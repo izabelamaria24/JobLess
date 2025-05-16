@@ -4,10 +4,9 @@ import JobApplicationForm from '../components/JobApplicationForm';
 import Modal from '../components/Modal';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import "../design/Applications.css"; 
-import { Link, useNavigate } from 'react-router-dom'
-
-
-
+import { Link, useNavigate } from 'react-router-dom';
+import Alert from '../components/Alert'; 
+import { useAlert } from '../utils/useAlert'; 
 
 const Applications = () => {
   const { applications, addApplication, updateApplication, compareSalary } = useContext(JobApplicationsContext);
@@ -15,10 +14,16 @@ const Applications = () => {
   const [currentApplication, setCurrentApplication] = useState(null);
 
   const navigate = useNavigate();
+  const { alert, showAlert, closeAlert } = useAlert(); 
 
-  const handleAddApplication = (application) => {
-    addApplication(application);
-    setIsFormVisible(false);
+  const handleAddApplication = async (application) => {
+    try {
+      await addApplication(application);
+      setIsFormVisible(false);
+      showAlert('success', 'Job application added successfully.');
+    } catch (err) {
+      showAlert('error', err.message || 'Failed to add job application.');
+    }
   };
 
   const handleEditApplication = (index) => {
@@ -26,18 +31,24 @@ const Applications = () => {
     setIsFormVisible(true);
   };
 
-  const handleUpdateApplication = (updatedApplication) => {
-    updateApplication(currentApplication.index, updatedApplication);
-    setIsFormVisible(false);
-    setCurrentApplication(null);
+  const handleUpdateApplication = async (updatedApplication) => {
+    try {
+      await updateApplication(currentApplication.index, updatedApplication);
+      setIsFormVisible(false);
+      setCurrentApplication(null);
+      showAlert('success', 'Job application updated successfully.');
+    } catch (err) {
+      showAlert('error', err.message || 'Failed to update job application.');
+    }
   };
 
   const handleCompareSalary = async () => {
     try {
       const { answer, links } = await compareSalary(applications); 
       navigate("/compare-salary", { state: { answer, links } }); 
+      showAlert('success', 'Salary comparison completed successfully.');
     } catch (err) {
-      alert(err.message || "Error comparing salaries.");
+      showAlert('error', err.message || 'Error comparing salaries.');
     }
   };
 
@@ -72,6 +83,10 @@ const Applications = () => {
           <Link to={`/applications/${app.id}`}><button className='show-application-button'>Show</button></Link>
         </div>
       ))}
+
+      {alert.show && (
+        <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+      )}
     </div>
   );
 };

@@ -2,19 +2,18 @@ import React, { useContext, useState, useEffect } from 'react';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import '../design/Home.css';
 import axios from 'axios';
+import Alert from '../components/Alert'; 
+import { useAlert } from '../utils/useAlert'; 
 
 const Home = () => {
     const { applications } = useContext(JobApplicationsContext);
     const [filter, setFilter] = useState('all');
     const [responses, setResponses] = useState([]);
+    const { alert, showAlert, closeAlert } = useAlert(); 
 
     useEffect(() => {
         fetchResponses();
     }, []);
-
-    
-    console.log(applications);
-
 
     const fetchResponses = async () => {
         try {
@@ -25,35 +24,35 @@ const Home = () => {
                 },
             });
             setResponses(response.data);
+            showAlert('success', 'Responses fetched successfully.');
         } catch (error) {
             console.error('Error fetching job applications:', error);
+            showAlert('error', 'Failed to fetch responses.');
         }
     };
-
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
     };
-    
 
     const filteredApplications = applications
         .map((app) => {
             const appResponses = responses
-            .filter((response) => response.applicationId === app.id)
-            .map((response) => ({
-                ...response,
-                firstAction: response.actions?.[0] || null,
-            }))
-            .filter((response) => response.firstAction); // remove responses with no actions
+                .filter((response) => response.applicationId === app.id)
+                .map((response) => ({
+                    ...response,
+                    firstAction: response.actions?.[0] || null,
+                }))
+                .filter((response) => response.firstAction);
 
             const matchingResponse = appResponses.find((response) => {
-            const action = response.firstAction?.action;
+                const action = response.firstAction?.action;
 
-            if (filter === 'all') return action >= 2 && action <= 12;
-            if (filter === 'oa') return action >= 2 && action <= 4;
-            if (filter === 'interview') return action >= 5 && action <= 12;
+                if (filter === 'all') return action >= 2 && action <= 12;
+                if (filter === 'oa') return action >= 2 && action <= 4;
+                if (filter === 'interview') return action >= 5 && action <= 12;
 
-            return false;
+                return false;
             });
 
             if (!matchingResponse) return null;
@@ -65,25 +64,22 @@ const Home = () => {
                 month: 'short',
                 day: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit'
-              });
+                minute: '2-digit',
+            });
 
             return {
-            ...app,
-            eventDate: formattedDeadline,
-            eventType:
-                action >= 2 && action <= 4
-                ? 'Online Assessment'
-                : action >= 5 && action <= 12
-                ? 'Interview'
-                : 'Other',
+                ...app,
+                eventDate: formattedDeadline,
+                eventType:
+                    action >= 2 && action <= 4
+                        ? 'Online Assessment'
+                        : action >= 5 && action <= 12
+                        ? 'Interview'
+                        : 'Other',
             };
         })
-        .filter(Boolean) // remove nulls
+        .filter(Boolean) 
         .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
-
-
-    console.log(filteredApplications);
 
     return (
         <div className="home-page">
@@ -116,6 +112,10 @@ const Home = () => {
                     ))}
                 </tbody>
             </table>
+
+            {alert.show && (
+                <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+            )}
         </div>
     );
 };

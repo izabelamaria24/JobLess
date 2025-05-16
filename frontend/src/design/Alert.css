@@ -1,0 +1,35 @@
+.alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  z-index: 1000;
+  opacity: 0.9;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.alert-success {
+  background-color: #4caf50; /* Green */
+}
+
+.alert-warning {
+  background-color: #ff9800; /* Yellow */
+}
+
+.alert-error {
+  background-color: #f44336; /* Red */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}

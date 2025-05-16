@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import axiosInstance from "../utils/axiosInstance";
+import { useAlert } from "../utils/useAlert"; 
 
 export const AuthContext = createContext();
 
@@ -9,6 +10,8 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loginstate, setLoginstate] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const { showAlert } = useAlert(); 
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -36,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-
     const login = async (credentials) => {
         try {
             const res = await axiosInstance.post("/api/Account/login", credentials);
@@ -46,11 +48,13 @@ export const AuthProvider = ({ children }) => {
             
             setUser(res.data.user);
             setToken(res.data.token);
+
+            showAlert("success", "Login successful!");
         } catch (error) {
-            console.error("Login failed:", error.response.data);
+            console.error("Login failed:", error.response?.data || error.message);
+            showAlert("error", "Login failed. Please check your credentials.");
         }
     };
-
 
     const register = async (credentials) => {
         try {
@@ -58,8 +62,11 @@ export const AuthProvider = ({ children }) => {
 
             setUser(res.data);
             localStorage.setItem("user", JSON.stringify(res.data));
+
+            showAlert("success", "Registration successful!");
         } catch (error) {
-            console.error("Registration failed:", error.response.data);
+            console.error("Registration failed:", error.response?.data || error.message);
+            showAlert("error", "Registration failed. Please try again.");
         }
     };
 
@@ -68,6 +75,8 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+
+        showAlert("success", "Logged out successfully.");
     };
 
     const updateUser = async (updatedData) => {
@@ -78,11 +87,13 @@ export const AuthProvider = ({ children }) => {
 
             setUser(updatedUser);
             localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            showAlert("success", "User information updated successfully.");
         } catch (error) {
-            console.error("Update failed:", error.response.data);
+            console.error("Update failed:", error.response?.data || error.message);
+            showAlert("error", "Failed to update user information. Please try again.");
         }
     };
-
 
     return (
         <AuthContext.Provider value={{ user, token, loginstate, loading, login, register, logout, updateUser }}>

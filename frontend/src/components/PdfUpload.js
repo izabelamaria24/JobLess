@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
+import Alert from './Alert'; 
+import { useAlert } from '../utils/useAlert'; 
 
-const PdfUpload = ({resumeId}) => {
+const PdfUpload = ({ resumeId }) => {
   const [pdfFile, setPdfFile] = useState(null);
-  const [message, setMessage] = useState('');
+  const { alert, showAlert, closeAlert } = useAlert();
 
   const handleFileChange = (e) => {
     setPdfFile(e.target.files[0]);
@@ -13,36 +14,32 @@ const PdfUpload = ({resumeId}) => {
     e.preventDefault();
 
     if (!pdfFile) {
-      setMessage('Please select a PDF file and enter a resume ID.');
+      showAlert('error', 'Please select a PDF file.');
       return;
     }
 
     const formData = new FormData();
     formData.append('PdfFile', pdfFile);
 
-
     try {
-
-      const token = JSON.parse(localStorage.getItem("token"));
-
-
+      const token = JSON.parse(localStorage.getItem('token'));
       const response = await fetch(`/api/Resumes/upload?id=${resumeId}`, {
         method: 'POST',
         body: formData,
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
         const result = await response.json();
-        setMessage(`Upload successful! Resume ID: ${result.id}`);
+        showAlert('success', `Upload successful! Resume ID: ${result.id}`);
       } else {
         const error = await response.json();
-        setMessage(`Error: ${error.message || 'Upload failed'}`);
+        showAlert('error', `Error: ${error.message || 'Upload failed'}`);
       }
     } catch (err) {
-      setMessage(`An error occurred: ${err.message}`);
+      showAlert('error', `An error occurred: ${err.message}`);
     }
   };
 
@@ -61,7 +58,10 @@ const PdfUpload = ({resumeId}) => {
         </div>
         <button type="submit">Upload</button>
       </form>
-      {message && <p style={{ marginTop: '10px' }}>{message}</p>}
+
+      {alert.show && (
+        <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+      )}
     </div>
   );
 };

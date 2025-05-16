@@ -1,23 +1,24 @@
-import React, { useContext, useState, useEffect, navigate } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import ChangePasswordForm from '../components/ChangePasswordForm'
+import ChangePasswordForm from '../components/ChangePasswordForm';
 import '../design/Profile.css';
 import axiosInstance from '../utils/axiosInstance';
 import Modal from '../components/Modal';
-import PdfUpload from '../components/PdfUpload';
 import ResumeForm from '../components/ResumeForm';
-import { Link } from 'react-router-dom';
-
-
+import Alert from '../components/Alert'; 
+import { useAlert } from '../utils/useAlert'; 
+import { Link, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const { user, updateUser, logout } = useContext(AuthContext);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(null);
 
-    const [isFormVisible, setIsFormVisible] = useState(false)
-    const [isPdfVisible, setIsPdfVisible] = useState(false);
+    const [isFormVisible, setIsFormVisible] = useState(false);
     const [isResumeFormVisible, setIsResumeFormVisible] = useState(false);
+
+    const navigate = useNavigate();
+    const { alert, showAlert, closeAlert } = useAlert(); 
 
     useEffect(() => {
         if (user) {
@@ -42,62 +43,60 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateUser(formData);
-        setIsEditing(false);
+        try {
+            await updateUser(formData);
+            setIsEditing(false);
+            showAlert('success', 'Profile updated successfully!');
+        } catch (error) {
+            showAlert('error', 'Failed to update profile. Please try again.');
+        }
     };
 
     const handleLogout = () => {
         logout();
-    }
+        showAlert('success', 'Logged out successfully.');
+    };
 
     const handlePasswordChange = async (changePassword) => {
         try {
             await axiosInstance.post("/api/Users/change-password", changePassword);
-            navigate("/profile"); 
-
-
+            setIsFormVisible(false);
+            showAlert('success', 'Password changed successfully!');
+            navigate("/profile");
         } catch (error) {
-            console.error("Password change failed:", error.response.data);
+            console.error("Password change failed:", error.response?.data);
+            showAlert('error', 'Failed to change password. Please try again.');
         }
-    }
+    };
 
     const handleNewResume = async (newResume) => {
         setIsResumeFormVisible(false);
         try {
             await axiosInstance.post("/api/Resumes/new", newResume);
-            navigate("/profile"); 
-            
-
+            showAlert('success', 'Resume added successfully!');
+            navigate("/profile");
         } catch (error) {
-            console.error("Resume creation failed:", error.response.data);
+            console.error("Resume creation failed:", error.response?.data);
+            showAlert('error', 'Failed to add resume. Please try again.');
         }
-    }
+    };
 
     // const handleEditResume = async (newResume) => {
     //     try {
     //         await axiosInstance.post("/api/Resumes/new", newResume);
-    //         navigate("/profile"); 
-
-
+    //         navigate("/profile");
+    //         showAlert('success', 'Resume updated successfully!');
     //     } catch (error) {
-    //         console.error("Resume creation failed:", error.response.data);
+    //         console.error("Resume update failed:", error.response?.data);
+    //         showAlert('error', 'Failed to update resume. Please try again.');
     //     }
-    // }
-
+    // };
 
     return (
         <div className="profile-page">
             <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
-                <ChangePasswordForm
-                    onSubmit={handlePasswordChange}
-                />
-
+                <ChangePasswordForm onSubmit={handlePasswordChange} />
             </Modal>
-            {/* <Modal isVisible={isPdfVisible} onClose={() => setIsPdfVisible(false)}>
-                <PdfUpload
-                    // onSubmit={handlePasswordChange}
-                />
-            </Modal> */}
 
             <Modal isVisible={isResumeFormVisible} onClose={() => setIsResumeFormVisible(false)}>
                 <ResumeForm
@@ -106,6 +105,7 @@ const Profile = () => {
                     userId={user.userId}
                 />
             </Modal>
+
             <h2>User Profile</h2>
             {isEditing ? (
                 <form className="profile-form" onSubmit={handleSubmit}>
@@ -140,11 +140,15 @@ const Profile = () => {
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>Phone Number:</strong> {user.phone}</p>
                     <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
-                    <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button> 
-                    <button className='logout-button' onClick={handleLogout}>Logout</button>
-                    <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button> 
+                    <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button>
+                    <button className="logout-button" onClick={handleLogout}>Logout</button>
+                    <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button>
                     <Link to={`/resumes`}><button className="edit-profile-button">View Resumes</button></Link>
                 </div>
+            )}
+
+            {alert.show && (
+                <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
             )}
         </div>
     );
