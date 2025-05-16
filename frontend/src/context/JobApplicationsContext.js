@@ -1,29 +1,34 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import axiosInstance2 from '../utils/axiosInstance2';
 import { ActionTypes } from '../utils/ActionTypes';
 import { useAlert } from '../utils/useAlert'; 
+import { AuthContext } from './AuthContext';
 
 const JobApplicationsContext = createContext();
 
 const JobApplicationsProvider = ({ children }) => {
   const [applications, setApplications] = useState([]);
   const { showAlert } = useAlert(); 
+  const { token } = useContext(AuthContext);
+
 
   useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const response = await axiosInstance.get("/api/Applications/index");
-        setApplications(response.data);
-        showAlert('success', 'Job applications fetched successfully.');
-      } catch (error) {
-        console.error("Error fetching job applications:", error.response?.data || error.message);
-        showAlert('error', 'Failed to fetch job applications.');
-      }
-    };
+    if (token) {
+      fetchApplications();
+    }
+  }, [token]);
 
-    fetchApplications();
-  }, [showAlert]);
+  const fetchApplications = async () => {
+    try {
+      const response = await axiosInstance.get("/api/Applications/index");
+      setApplications(response.data);
+      showAlert('success', 'Job applications fetched successfully.');
+    } catch (error) {
+      console.error("Error fetching job applications:", error.response?.data || error.message);
+      showAlert('error', 'Failed to fetch job applications.');
+    }
+  };
 
   const addApplication = async (application) => {
     try {
