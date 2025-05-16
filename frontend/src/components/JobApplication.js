@@ -1,31 +1,40 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import Alert from './Alert';
+import { useAlert } from '../utils/useAlert';
 import '../design/JobApplication.css';
 
 const statusSteps = ['Applied', 'Online Assessment', 'Interview', 'Offer', 'Hired'];
 
 const JobApplication = ({ applicationId, company, jobTitle, location, availability, link, date, onEdit }) => {
-  const {fetchApplicationResponses} = useContext(JobApplicationsContext)
+  const { fetchApplicationResponses } = useContext(JobApplicationsContext);
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState([]);
+  const { alert, showAlert, closeAlert } = useAlert(); 
 
   useEffect(() => {
     const fetchResponses = async () => {
-      const applicationResponses = await fetchApplicationResponses(applicationId);
-      setResponses(applicationResponses);
+      try {
+        const applicationResponses = await fetchApplicationResponses(applicationId);
+        setResponses(applicationResponses);
 
-      if (applicationResponses.length > 0) {
-        const lastAction = applicationResponses[0].actions[0].action;
-        if (lastAction === 1) setCurrentStep(0); 
-        else if (lastAction >= 2 && lastAction <= 4) setCurrentStep(1); 
-        else if (lastAction >= 5 && lastAction <= 12) setCurrentStep(2); 
-        else if (lastAction >= 13 && lastAction <= 15) setCurrentStep(3); 
-        else if (lastAction === 16) setCurrentStep(4); 
+        if (applicationResponses.length > 0) {
+          const lastAction = applicationResponses[0].actions[0].action;
+          if (lastAction === 1) setCurrentStep(0);
+          else if (lastAction >= 2 && lastAction <= 4) setCurrentStep(1);
+          else if (lastAction >= 5 && lastAction <= 12) setCurrentStep(2);
+          else if (lastAction >= 13 && lastAction <= 15) setCurrentStep(3);
+          else if (lastAction === 16) setCurrentStep(4);
+        }
+
+        showAlert('success', 'Application responses fetched successfully.');
+      } catch (error) {
+        showAlert('error', 'Failed to fetch application responses.');
       }
     };
 
     fetchResponses();
-  }, [applicationId]);
+  }, [applicationId, fetchApplicationResponses, showAlert]);
 
   return (
     <div className="job-application">
@@ -50,6 +59,10 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
       </div>
       <p className="availability-text">{availability}</p>
       <button className="edit-application-button" onClick={onEdit}>Edit</button>
+
+      {alert.show && (
+        <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+      )}
     </div>
   );
 };

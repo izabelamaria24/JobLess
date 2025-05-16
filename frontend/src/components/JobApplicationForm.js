@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Alert from './Alert'; 
+import { useAlert } from '../utils/useAlert';
 import '../design/JobApplicationForm.css';
 
 const JobApplicationForm = ({ onSubmit, initialData }) => {
@@ -7,14 +9,14 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
   const [location, setLocation] = useState('');
   const [link, setLink] = useState('');
   const [date, setDate] = useState('');
-  const [jobType, setJobType] = useState(0); 
-  const [availability, setAvailability] = useState(0); 
+  const [jobType, setJobType] = useState(0);
+  const [availability, setAvailability] = useState(0);
   const [status, setStatus] = useState(0);
   const [onlineAssessmentDeadline, setOnlineAssessmentDeadline] = useState('');
   const [interviewDate, setInterviewDate] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { alert, showAlert, closeAlert } = useAlert(); 
 
   useEffect(() => {
     if (initialData) {
@@ -33,13 +35,14 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-  
+    setIsLoading(true);
+
     if (jobType === 0 || availability === 0 || status === 0) {
-      setError("Please select valid options for Job Type, Availability, and Status.");
+      showAlert('error', 'Please select valid options for Job Type, Availability, and Status.');
+      setIsLoading(false);
       return;
     }
-  
+
     try {
       await onSubmit({
         company,
@@ -53,10 +56,11 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
         onlineAssessmentDeadline,
         interviewDate,
       });
-      setIsLoading(false)
+      setIsLoading(false);
+      showAlert('success', 'Job application submitted successfully!');
     } catch (err) {
-      setIsLoading(false)
-      setError("Failed to submit the application. Please try again.");
+      setIsLoading(false);
+      showAlert('error', 'Failed to submit the application. Please try again.');
     }
   };
 
@@ -125,10 +129,13 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
         </div>
       )}
 
-      {error && <p className="error-message">{error}</p>}
       <button type="submit" disabled={isLoading}>
-        {isLoading ? "Submitting..." : "Submit"}
+        {isLoading ? 'Submitting...' : 'Submit'}
       </button>
+
+      {alert.show && (
+        <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+      )}
     </form>
   );
 };

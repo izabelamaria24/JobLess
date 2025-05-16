@@ -2,61 +2,52 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import '../design/Resumes.css';
 import PdfUpload from '../components/PdfUpload';
-import Modal from '../components/Modal';
+import Alert from '../components/Alert'; 
+import { useAlert } from '../utils/useAlert'; 
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-
-
 
 const Resumes = () => {
     const [resumes, setResumes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    // const [isPdfVisible, setIsPdfVisible] = useState(false);
+    const { alert, showAlert, closeAlert } = useAlert(); 
     const navigate = useNavigate();
 
-
     useEffect(() => {
-    const fetchResumes = async () => {
-        try {
-            const res = await axiosInstance.get('/api/Resumes/index');
-            setResumes(res.data);
-        } catch (err) {
-            if (err.response && err.response.status === 401) {
-                setError('You must be logged in to view your resumes.');
-        } else if (err.response && err.response.status === 404) {
-            setError('No resumes found.');
-        } else {
-            setError('An error occurred while fetching resumes.');
-        }
-        } finally {
-            setLoading(false);
-        }
-    };
-
+        const fetchResumes = async () => {
+            try {
+                const res = await axiosInstance.get('/api/Resumes/index');
+                setResumes(res.data);
+                showAlert('success', 'Resumes fetched successfully.');
+            } catch (err) {
+                if (err.response && err.response.status === 401) {
+                    showAlert('error', 'You must be logged in to view your resumes.');
+                } else if (err.response && err.response.status === 404) {
+                    showAlert('error', 'No resumes found.');
+                } else {
+                    showAlert('error', 'An error occurred while fetching resumes.');
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchResumes();
-    }, []);
-
-
+    }, [showAlert]);
 
     const handleDelete = async (resumeId) => {
         try {
-          const token = localStorage.getItem("token");
-          await axiosInstance.delete(`/api/Resumes/delete/${resumeId}`);
-          setResumes(resumes.filter(r => r.id !== resumeId));
+            await axiosInstance.delete(`/api/Resumes/delete/${resumeId}`);
+            setResumes(resumes.filter((r) => r.id !== resumeId));
+            showAlert('success', 'Resume deleted successfully.');
         } catch (err) {
-          setError(err.response?.data?.message || "Failed to delete resume.");
+            showAlert('error', err.response?.data?.message || 'Failed to delete resume.');
         }
-      };
+    };
 
-      const handleResumeTips = async (resumePath) => {
+    const handleResumeTips = async (resumePath) => {
         try {
-            const token = localStorage.getItem("token");
-    
+            // const token = localStorage.getItem("token");
             // const res = await axios.get(
-            //     `http://localhost:5555/suggestionsCV`, 
+            //     `http://localhost:5555/suggestionsCV`,
             //     {
             //         headers: {
             //             Authorization: `Bearer ${token}`
@@ -64,57 +55,54 @@ const Resumes = () => {
             //         params: { path: resumePath }
             //     }
             // );
-
-    
             // navigate('/resume-tips', { state: { resumeTips: res.data } });
 
             navigate('/resume-tips');
+            showAlert('success', 'Redirecting to resume tips.');
         } catch (error) {
-            console.error("Error fetching resume tips:", error);
+            console.error('Error fetching resume tips:', error);
+            showAlert('error', 'Failed to fetch resume tips.');
         }
-    }
-    
+    };
 
     if (loading) return <div className="p-4">Loading resumes...</div>;
-    if (error) return <div className="p-4 text-red-600">{error}</div>;
 
     return (
-    <div className="resumes-container">
-        <h1>Your Resumes</h1>
-        {loading && <div className="message">Loading resumes...</div>}
-        {error && <div className="message">{error}</div>}
-        <div className="resumes-grid">
-            {resumes.map((resume) => (
-            <div key={resume.id} className="resume-card">
-                <h2>Resume #{resume.id}</h2>
-                <p><strong>Email:</strong> {resume.user?.email}</p>
-                <p><strong>Phone:</strong> {resume.user?.phone || 'N/A'}</p>
-                <p><strong>LinkedIn:</strong> {resume.linkedIn || 'N/A'}</p>
-                <p><strong>GitHub:</strong> {resume.gitHub || 'N/A'}</p>
-                {resume.path ? (
-                    <button
-                        className="view-button"
-                        onClick={() => navigate('/viewer', { state: { pdfUrl: resume.path } })}
-                    >
-                        View Resume
-                    </button>
-                ) : (
-                    <PdfUpload resumeId={resume.id} />
-                )}
-
-                <button className="delete-button" onClick={() => handleDelete(resume.id)}>Delete Resume</button>
-                <button
-                        className="view-button"
-                        onClick={() => handleResumeTips(resume.path)}
-                    >
-                        Get Tips
-                    </button>
+        <div className="resumes-container">
+            <h1>Your Resumes</h1>
+            <div className="resumes-grid">
+                {resumes.map((resume) => (
+                    <div key={resume.id} className="resume-card">
+                        <h2>Resume #{resume.id}</h2>
+                        <p><strong>Email:</strong> {resume.user?.email}</p>
+                        <p><strong>Phone:</strong> {resume.user?.phone || 'N/A'}</p>
+                        <p><strong>LinkedIn:</strong> {resume.linkedIn || 'N/A'}</p>
+                        <p><strong>GitHub:</strong> {resume.gitHub || 'N/A'}</p>
+                        {resume.path ? (
+                            <button
+                                className="view-button"
+                                onClick={() => navigate('/viewer', { state: { pdfUrl: resume.path } })}
+                            >
+                                View Resume
+                            </button>
+                        ) : (
+                            <PdfUpload resumeId={resume.id} />
+                        )}
+                        <button className="delete-button" onClick={() => handleDelete(resume.id)}>Delete Resume</button>
+                        <button
+                            className="view-button"
+                            onClick={() => handleResumeTips(resume.path)}
+                        >
+                            Get Tips
+                        </button>
+                    </div>
+                ))}
             </div>
-            ))}
+
+            {alert.show && (
+                <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+            )}
         </div>
-    </div>
-
-
     );
 };
 

@@ -1,14 +1,16 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import "../design/AuthPage.css"; 
+import "../design/AuthPage.css";
+import Alert from "../components/Alert";
+import { useAlert } from "../utils/useAlert"; 
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({ email: "", password: "" });
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { login, register } = useContext(AuthContext);
+    const { alert, showAlert, closeAlert } = useAlert(); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,17 +18,17 @@ const AuthPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
         try {
-            console.log(formData);
             if (isLogin) {
                 await login(formData);
+                showAlert("success", "Login successful!");
             } else {
                 await register(formData);
+                showAlert("success", "Registration successful!");
             }
             navigate("/dashboard");
         } catch (err) {
-            setError("Authentication failed. Check your credentials.");
+            showAlert("error", "Authentication failed. Check your credentials.");
         }
     };
 
@@ -79,7 +81,6 @@ const AuthPage = () => {
                             />
                         </>
                     )}
-                    {error && <p className="auth-error">{error}</p>}
                     <button type="submit" className="auth-button">
                         {isLogin ? "Login" : "Register"}
                     </button>
@@ -88,6 +89,10 @@ const AuthPage = () => {
                     {isLogin ? "Need an account? Register" : "Already have an account? Login"}
                 </button>
             </div>
+
+            {alert.show && (
+                <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+            )}
         </div>
     );
 };
