@@ -50,19 +50,6 @@ const Application = () => {
         }
     };
 
-    // const handleGetInterviewQuestions = async () => {
-    //     try {
-    //         const { answer, links } = await getInterviewQuestions(application.company, application.jobTitle);
-    //         navigate("/interview-questions", { state: { answer, links } });
-    //         showAlert('success', 'Interview questions fetched successfully.');
-    //     } catch (err) {
-    //         showAlert('error', err.message || 'Failed to fetch interview questions.');
-    //     }
-    // };
-
-    const handleGetInterviewQuestions = async () => {
-        navigate("/interview-questions");
-    }
 
     if (!application) {
         return <p>Loading...</p>;
@@ -82,7 +69,6 @@ const Application = () => {
             <p><strong>Interview Date:</strong> {application.interviewDate || "N/A"}</p>
             <button className="delete-button" onClick={handleDelete}>Delete Application</button>
             <button className="add-response-button" onClick={() => setIsModalOpen(true)}>Add Response</button>
-            <button className="get-questions-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
 
             <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <AddResponseForm onSubmit={handleAddResponse} onClose={() => setIsModalOpen(false)} />

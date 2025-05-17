@@ -42,18 +42,12 @@ const Applications = () => {
     }
   };
 
-  // const handleCompareSalary = async () => {
-  //   try {
-  //     const { answer, links } = await compareSalary(applications); 
-  //     navigate("/compare-salary", { state: { answer, links } }); 
-  //     showAlert('success', 'Salary comparison completed successfully.');
-  //   } catch (err) {
-  //     showAlert('error', err.message || 'Error comparing salaries.');
-  //   }
-  // };
-
   const handleCompareSalary = async () => {
     navigate("/compare-salary");
+  }
+
+  const handleGetInterviewQuestions = async () => {
+    navigate("/interview-questions");
   }
 
   return (
@@ -61,6 +55,8 @@ const Applications = () => {
       <h1>Job Applications</h1>
       <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
       <button className="compare-salary-button" onClick={handleCompareSalary}>Compare Salaries</button>
+      <button className="get-questions-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
+
       
       <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
         <JobApplicationForm
