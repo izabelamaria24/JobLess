@@ -42,15 +42,19 @@ const Applications = () => {
     }
   };
 
+  // const handleCompareSalary = async () => {
+  //   try {
+  //     const { answer, links } = await compareSalary(applications); 
+  //     navigate("/compare-salary", { state: { answer, links } }); 
+  //     showAlert('success', 'Salary comparison completed successfully.');
+  //   } catch (err) {
+  //     showAlert('error', err.message || 'Error comparing salaries.');
+  //   }
+  // };
+
   const handleCompareSalary = async () => {
-    try {
-      const { answer, links } = await compareSalary(applications); 
-      navigate("/compare-salary", { state: { answer, links } }); 
-      showAlert('success', 'Salary comparison completed successfully.');
-    } catch (err) {
-      showAlert('error', err.message || 'Error comparing salaries.');
-    }
-  };
+    navigate("/compare-salary");
+  }
 
   return (
     <div className="applications-page">
