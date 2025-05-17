@@ -50,15 +50,19 @@ const Application = () => {
         }
     };
 
+    // const handleGetInterviewQuestions = async () => {
+    //     try {
+    //         const { answer, links } = await getInterviewQuestions(application.company, application.jobTitle);
+    //         navigate("/interview-questions", { state: { answer, links } });
+    //         showAlert('success', 'Interview questions fetched successfully.');
+    //     } catch (err) {
+    //         showAlert('error', err.message || 'Failed to fetch interview questions.');
+    //     }
+    // };
+
     const handleGetInterviewQuestions = async () => {
-        try {
-            const { answer, links } = await getInterviewQuestions(application.company, application.jobTitle);
-            navigate("/interview-questions", { state: { answer, links } });
-            showAlert('success', 'Interview questions fetched successfully.');
-        } catch (err) {
-            showAlert('error', err.message || 'Failed to fetch interview questions.');
-        }
-    };
+        navigate("/interview-questions");
+    }
 
     if (!application) {
         return <p>Loading...</p>;
