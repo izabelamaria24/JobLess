@@ -81,19 +81,8 @@ const Profile = () => {
         }
     };
 
-    // const handleEditResume = async (newResume) => {
-    //     try {
-    //         await axiosInstance.post("/api/Resumes/new", newResume);
-    //         navigate("/profile");
-    //         showAlert('success', 'Resume updated successfully!');
-    //     } catch (error) {
-    //         console.error("Resume update failed:", error.response?.data);
-    //         showAlert('error', 'Failed to update resume. Please try again.');
-    //     }
-    // };
-
     return (
-        <div className="profile-page">
+        <div className="profile-container">
             <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
                 <ChangePasswordForm onSubmit={handlePasswordChange} />
             </Modal>
@@ -106,46 +95,115 @@ const Profile = () => {
                 />
             </Modal>
 
-            <h2>User Profile</h2>
-            {isEditing ? (
-                <form className="profile-form" onSubmit={handleSubmit}>
-                    <label>
-                        Username:
-                        <input type="text" name="userName" value={formData.userName} onChange={handleChange} />
-                    </label>
-                    <label>
-                        First Name:
-                        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Last Name:
-                        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Email:
-                        <input type="email" name="email" value={formData.email} onChange={handleChange} />
-                    </label>
-                    <label>
-                        Phone Number:
-                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
-                    </label>
-                    <button type="submit">Save</button>
-                    <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
-                </form>
-            ) : (
-                <div className="profile-details">
-                    <p><strong>Username:</strong> {user.userName}</p>
-                    <p><strong>First Name:</strong> {user.firstName}</p>
-                    <p><strong>Last Name:</strong> {user.lastName}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Phone Number:</strong> {user.phone}</p>
-                    <button className="edit-profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
-                    <button className="edit-profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button>
-                    <button className="logout-button" onClick={handleLogout}>Logout</button>
-                    <button className="edit-profile-button" onClick={() => setIsResumeFormVisible(true)}>Add Cv</button>
-                    <Link to={`/resumes`}><button className="edit-profile-button">View Resumes</button></Link>
-                </div>
-            )}
+            <div className="profile-header">
+                <h1>User Profile</h1>
+                <p>Manage your personal information</p>
+            </div>
+
+            <div className="profile-card">
+                {isEditing ? (
+                    <form className="profile-section" onSubmit={handleSubmit}>
+                        <h2 className="profile-section-title">Edit Profile</h2>
+                        
+                        <div className="profile-form-group">
+                            <label>Username:</label>
+                            <input 
+                                type="text" 
+                                name="userName" 
+                                className="profile-input"
+                                value={formData.userName} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        
+                        <div className="profile-form-group">
+                            <label>First Name:</label>
+                            <input 
+                                type="text" 
+                                name="firstName" 
+                                className="profile-input"
+                                value={formData.firstName} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        
+                        <div className="profile-form-group">
+                            <label>Last Name:</label>
+                            <input 
+                                type="text" 
+                                name="lastName" 
+                                className="profile-input"
+                                value={formData.lastName} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        
+                        <div className="profile-form-group">
+                            <label>Email:</label>
+                            <input 
+                                type="email" 
+                                name="email" 
+                                className="profile-input"
+                                value={formData.email} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        
+                        <div className="profile-form-group">
+                            <label>Phone Number:</label>
+                            <input 
+                                type="text" 
+                                name="phone" 
+                                className="profile-input"
+                                value={formData.phone} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        
+                        <div className="profile-buttons">
+                            <button className="profile-button secondary" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+                            <button className="profile-button" type="submit">Save</button>
+                        </div>
+                    </form>
+                ) : (
+                    <div className="profile-section">
+                        <h2 className="profile-section-title">Personal Information</h2>
+                        
+                        <div className="profile-info-row">
+                            <span className="profile-info-label">Username:</span>
+                            <span className="profile-info-value">{user.userName}</span>
+                        </div>
+                        
+                        <div className="profile-info-row">
+                            <span className="profile-info-label">First Name:</span>
+                            <span className="profile-info-value">{user.firstName}</span>
+                        </div>
+                        
+                        <div className="profile-info-row">
+                            <span className="profile-info-label">Last Name:</span>
+                            <span className="profile-info-value">{user.lastName}</span>
+                        </div>
+                        
+                        <div className="profile-info-row">
+                            <span className="profile-info-label">Email:</span>
+                            <span className="profile-info-value">{user.email}</span>
+                        </div>
+                        
+                        <div className="profile-info-row">
+                            <span className="profile-info-label">Phone Number:</span>
+                            <span className="profile-info-value">{user.phone}</span>
+                        </div>
+                        
+                        <div className="profile-buttons">
+                            <button className="profile-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
+                            <button className="profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button>
+                            <button className="profile-button" onClick={() => setIsResumeFormVisible(true)}>Add CV</button>
+                            <Link to={`/resumes`}><button className="profile-button">View Resumes</button></Link>
+                            <button className="profile-button secondary" onClick={handleLogout}>Logout</button>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {alert.show && (
                 <Alert type={alert.type} message={alert.message} onClose={closeAlert} />

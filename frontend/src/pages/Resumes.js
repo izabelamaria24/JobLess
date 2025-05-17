@@ -45,18 +45,6 @@ const Resumes = () => {
 
     const handleResumeTips = async (resumePath) => {
         try {
-            // const token = localStorage.getItem("token");
-            // const res = await axios.get(
-            //     `http://localhost:5555/suggestionsCV`,
-            //     {
-            //         headers: {
-            //             Authorization: `Bearer ${token}`
-            //         },
-            //         params: { path: resumePath }
-            //     }
-            // );
-            // navigate('/resume-tips', { state: { resumeTips: res.data } });
-
             navigate('/resume-tips');
             showAlert('success', 'Redirecting to resume tips.');
         } catch (error) {
@@ -71,32 +59,44 @@ const Resumes = () => {
         <div className="resumes-container">
             <h1>Your Resumes</h1>
             <div className="resumes-grid">
-                {resumes.map((resume) => (
-                    <div key={resume.id} className="resume-card">
-                        <h2>Resume #{resume.id}</h2>
-                        <p><strong>Email:</strong> {resume.user?.email}</p>
-                        <p><strong>Phone:</strong> {resume.user?.phone || 'N/A'}</p>
-                        <p><strong>LinkedIn:</strong> {resume.linkedIn || 'N/A'}</p>
-                        <p><strong>GitHub:</strong> {resume.gitHub || 'N/A'}</p>
-                        {resume.path ? (
-                            <button
-                                className="view-button"
-                                onClick={() => navigate('/viewer', { state: { pdfUrl: resume.path } })}
-                            >
-                                View Resume
-                            </button>
-                        ) : (
-                            <PdfUpload resumeId={resume.id} />
-                        )}
-                        <button className="delete-button" onClick={() => handleDelete(resume.id)}>Delete Resume</button>
-                        <button
-                            className="view-button"
-                            onClick={() => handleResumeTips(resume.path)}
-                        >
-                            Get Tips
-                        </button>
-                    </div>
-                ))}
+                {resumes.length === 0 ? (
+                    <div className="message">You don't have any resumes yet.</div>
+                ) : (
+                    resumes.map((resume) => (
+                        <div key={resume.id} className="resume-card">
+                            <h2>Resume #{resume.id}</h2>
+                            <p><strong>Email:</strong> {resume.user?.email}</p>
+                            <p><strong>Phone:</strong> {resume.user?.phone || 'N/A'}</p>
+                            <p><strong>LinkedIn:</strong> {resume.linkedIn || 'N/A'}</p>
+                            <p><strong>GitHub:</strong> {resume.gitHub || 'N/A'}</p>
+                            
+                            <div className="resume-card-actions">
+                                {resume.path ? (
+                                    <button
+                                        className="view-button"
+                                        onClick={() => navigate('/viewer', { state: { pdfUrl: resume.path } })}
+                                    >
+                                        View Resume
+                                    </button>
+                                ) : (
+                                    <PdfUpload resumeId={resume.id} />
+                                )}
+                                <button 
+                                    className="view-button"
+                                    onClick={() => handleResumeTips(resume.path)}
+                                >
+                                    Get Tips
+                                </button>
+                                <button 
+                                    className="delete-button" 
+                                    onClick={() => handleDelete(resume.id)}
+                                >
+                                    Delete Resume
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
 
             {alert.show && (
