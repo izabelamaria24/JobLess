@@ -32,6 +32,54 @@ const CompareSalary = () => {
     }
   };
 
+  const formatSalaryText = (text) => {
+    let formatted = text
+      .replace(/•/g, '')
+      .replace(/\*/g, '')
+      .replace(/^\s*[-–]\s*/gm, '');
+    
+    formatted = formatted.replace(/\$[\d,.]+\s*(-|to|–)\s*\$[\d,.]+/g, match => 
+      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
+    );
+    
+    formatted = formatted.replace(/\$[\d,.]+(\s*per\s*year|\s*per\s*annum|\s*annually)/g, match => 
+      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
+    );
+    
+    const lines = formatted.split('\n');
+    let inList = false;
+    let result = '';
+    
+    lines.forEach(line => {
+      if (line.trim() === '') {
+        result += '\n';
+        return;
+      }
+      
+      if (line.match(/^[A-Z][\w\s&]+:/) || line.match(/^[A-Z][\w\s&]+\s*-/)) {
+        if (!inList) {
+          result += '<ul>';
+          inList = true;
+        }
+        result += `<li><strong>${line}</strong></li>`;
+      } else if (inList && !line.startsWith('<')) {
+        result += `<li>${line}</li>`;
+      } else {
+        if (inList) {
+          result += '</ul>';
+          inList = false;
+        }
+        result += line + '\n';
+      }
+    });
+    
+    if (inList) {
+      result += '</ul>';
+    }
+    
+    return <div dangerouslySetInnerHTML={{ __html: result }} />;
+  };
+
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>Compare Salaries</Typography>
@@ -74,19 +122,23 @@ const CompareSalary = () => {
           <Typography variant="h6" gutterBottom>Comparison Results:</Typography>
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="body1" style={{ whiteSpace: 'pre-line' }}>
-                {results.answer}
-              </Typography>
+              <Box sx={{ 
+                whiteSpace: 'pre-line',
+                '& ul': { pl: 2, mb: 2 },
+                '& li': { mb: 1 }
+              }}>
+                {formatSalaryText(results.answer)}
+              </Box>
               
               {results.links && results.links.length > 0 && (
                 <>
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="subtitle1">Sources:</Typography>
-                  <List>
+                  <List dense>
                     {results.links.map((link, index) => (
                       <ListItem key={index}>
                         <Link href={link} target="_blank" rel="noopener noreferrer">
-                          {link}
+                          {`[${index + 1}] ${link}`}
                         </Link>
                       </ListItem>
                     ))}

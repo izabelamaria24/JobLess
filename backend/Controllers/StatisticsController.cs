@@ -183,5 +183,7 @@ namespace JoblessAPI.Controllers
 
             return Ok(new { Message = "Statistic deleted successfully" });
         }
+
+
     }
 }

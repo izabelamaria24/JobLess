@@ -252,5 +252,84 @@ namespace JoblessAPI.Controllers
 
             return Ok(new { Message = "Application deleted successfully" });
         }
+
+        [HttpGet("summary")]
+        public async Task<IActionResult> Summary()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var applications = await db.Applications
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
+
+            if (applications.Count == 0)
+            {
+                return Ok(new
+                {
+                    TotalApplications = 0,
+                    ActiveApplications = 0,
+                    Stages = new Dictionary<string, int>()
+                });
+            }
+
+            var totalApplications = applications.Count;
+            var activeApplications = applications.Count(a => a.Status == Status.Active);
+
+            // Count applications by stage (excluding NULL & Active)
+            var stageCounts = applications
+                .Where(a => a.Status != Status.NULL && a.Status != Status.Active)
+                .GroupBy(a => a.Status)
+                .ToDictionary(
+                    g => g.Key.ToString(),
+                    g => g.Count()
+                );
+
+            return Ok(new
+            {
+                TotalApplications = totalApplications,
+                ActiveApplications = activeApplications,
+                Stages = stageCounts
+            });
+        }
+
+
+        [HttpGet("stages")]
+        public async Task<IActionResult> Stages()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var responses = await db.Responses
+                .Where(r => r.Application != null && r.Application.UserId == userId)
+                .ToListAsync();
+
+            if (responses.Count == 0)
+            {
+                return Ok(new { Message = "No response stages found", Stages = new Dictionary<string, int>() });
+            }
+
+            var stageCounts = responses
+                .Where(r => r.Action != Models.Action.NULL)
+                .GroupBy(r => r.Action)
+                .ToDictionary(
+                    g => g.Key.ToString(),
+                    g => g.Count()
+                );
+
+            return Ok(new
+            {
+                TotalStages = responses.Count,
+                Stages = stageCounts
+            });
+        }
     }
 }
