@@ -104,6 +104,18 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
+  const deleteResponse = async (responseId) => {
+    try {
+      await axiosInstance.delete(`/api/Responses/delete/${responseId}`);
+      showAlert('success', 'Response deleted successfully.');
+      return true;
+    } catch (error) {
+      console.error("Error deleting response:", error.response?.data || error.message);
+      showAlert('error', 'Failed to delete response.');
+      throw new Error(error.response?.data?.message || "Failed to delete response.");
+    }
+  };
+
   const fetchApplication = async (applicationId) => {
     try {
       const response = await axiosInstance.get(`/api/Applications/show/${applicationId}`);
@@ -185,6 +197,7 @@ const JobApplicationsProvider = ({ children }) => {
         updateApplication,
         fetchApplicationResponses,
         addResponse,
+        deleteResponse,
         fetchApplication,
         deleteApplication,
         compareSalary,
