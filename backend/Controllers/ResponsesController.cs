@@ -218,14 +218,30 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "User not authenticated" });
             }
 
+            var application = await db.Applications
+                .Include(a => a.User)
+                .FirstOrDefaultAsync(a => a.Id == applicationId && a.UserId == userId);
+
+            if (application == null)
+            {
+                return NotFound(new { Message = "Application not found or you are not authorized to view it" });
+            }
+
             var responses = await db.Responses
-                .Where(r => r.ApplicationId == applicationId)
-                .ToListAsync();
+            .Where(r => r.ApplicationId == applicationId)
+            .ToListAsync();
 
-            if (responses == null || responses.Count == 0)
-                return NotFound();
+            if (responses == null)
+            {
+                return NotFound(new { Message = "No responses found for this application" });
+            }
 
-            responses = responses
+            if (responses.Count == 0)
+            {
+                return Ok(new { Message = "No responses found for this application" });
+
+            }
+                responses = responses
                 .OrderByDescending(r => r.Date)
                 .ToList();
 

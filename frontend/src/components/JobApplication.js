@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
@@ -11,30 +11,50 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState([]);
   const { alert, showAlert, closeAlert } = useAlert(); 
+  const [loading, setLoading] = useState(false);
+  const requestInProgress = useRef(false);
+  
+  const stableShowAlert = useCallback((type, message) => {
+    showAlert(type, message);
+  }, [showAlert]);
 
-  useEffect(() => {
-    const fetchResponses = async () => {
-      try {
-        const applicationResponses = await fetchApplicationResponses(applicationId);
-        setResponses(applicationResponses);
+  const fetchResponses = useCallback(async () => {
+    if (requestInProgress.current) return;
+    
+    try {
+      requestInProgress.current = true;
+      setLoading(true);
+      const applicationResponses = await fetchApplicationResponses(applicationId);
+      setResponses(applicationResponses);
 
-        if (applicationResponses.length > 0) {
-          const lastAction = applicationResponses[0].actions[0].action;
-          if (lastAction === 1) setCurrentStep(0);
-          else if (lastAction >= 2 && lastAction <= 4) setCurrentStep(1);
-          else if (lastAction >= 5 && lastAction <= 12) setCurrentStep(2);
-          else if (lastAction >= 13 && lastAction <= 15) setCurrentStep(3);
-          else if (lastAction === 16) setCurrentStep(4);
-        }
-
-        showAlert('success', 'Application responses fetched successfully.');
-      } catch (error) {
+      if (applicationResponses.length > 0) {
+        const lastResponse = applicationResponses[0];
+        const actionValue = lastResponse.action;
+        
+        if (actionValue === 1) setCurrentStep(0);
+        else if (actionValue >= 2 && actionValue <= 4) setCurrentStep(1);
+        else if (actionValue >= 5 && actionValue <= 12) setCurrentStep(2);
+        else if (actionValue >= 13 && actionValue <= 15) setCurrentStep(3);
+        else if (actionValue === 16) setCurrentStep(4);
+      }
+    } catch (error) {
+      console.error("Error in fetchResponses:", error);
+      if (!error.response || error.response.status !== 404) {
         showAlert('error', 'Failed to fetch application responses.');
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  }, [applicationId, fetchApplicationResponses, stableShowAlert]);
 
+  useEffect(() => {
     fetchResponses();
-  }, [applicationId, fetchApplicationResponses, showAlert]);
+    
+    // Clean up function to handle component unmounting
+    return () => {
+      // Any cleanup if needed
+    };
+  }, [fetchResponses]);
 
   return (
     <div className="job-application">
@@ -57,6 +77,7 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
           </div>
         ))}
       </div>
+      
       <p className="availability-text">{availability}</p>
       <button className="edit-application-button" onClick={onEdit}>Edit</button>
 

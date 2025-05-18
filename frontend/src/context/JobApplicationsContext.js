@@ -23,7 +23,7 @@ const JobApplicationsProvider = ({ children }) => {
     try {
       const response = await axiosInstance.get("/api/Applications/index");
       setApplications(response.data);
-      showAlert('success', 'Job applications fetched successfully.');
+      // showAlert('success', 'Job applications fetched successfully.');
     } catch (error) {
       console.error("Error fetching job applications:", error.response?.data || error.message);
       showAlert('error', 'Failed to fetch job applications.');
@@ -34,7 +34,7 @@ const JobApplicationsProvider = ({ children }) => {
     try {
       const response = await axiosInstance.post("/api/Applications/new", application);
       setApplications([...applications, response.data]);
-      showAlert('success', 'Job application added successfully.');
+      // showAlert('success', 'Job application added successfully.');
     } catch (error) {
       console.error("Error adding job application:", error.response?.data || error.message);
       showAlert('error', 'Failed to add job application.');
@@ -56,7 +56,7 @@ const JobApplicationsProvider = ({ children }) => {
         i === index ? response.data : app
       );
       setApplications(updatedApplications);
-      showAlert('success', 'Job application updated successfully.');
+      // showAlert('success', 'Job application updated successfully.');
     } catch (error) {
       console.error("Error updating job application:", error.response?.data || error.message);
       showAlert('error', 'Failed to update job application.');
@@ -65,18 +65,24 @@ const JobApplicationsProvider = ({ children }) => {
 
   const fetchApplicationResponses = async (applicationId) => {
     try {
-      const response = await axiosInstance.get(`/api/Responses/index`);
-      const filteredResponses = response.data
-        .filter((action) => action.applicationId === applicationId)
-        .map((action) => ({
-          ...action,
-          actionType: ActionTypes[action.action],
-        }));
+      const response = await axiosInstance.get(`/api/Responses/history/${applicationId}`);
 
-      showAlert('success', 'Application responses fetched successfully.');
-      return filteredResponses;
+      if (response.data.length === 0) {
+        return [];
+      }
+
+      const mappedResponses = response.data.map(response => ({
+        ...response,
+        actionType: ActionTypes[response.action]
+      }));
+
+      return mappedResponses;
     } catch (error) {
       console.error("Error fetching application responses:", error.response?.data || error.message);
+      if (error.response?.status === 404) {
+        console.log(`No responses found for application ${applicationId}`);
+        return [];
+      }
       showAlert('error', 'Failed to fetch application responses.');
       return [];
     }
@@ -89,7 +95,7 @@ const JobApplicationsProvider = ({ children }) => {
         deadline,
         applicationId,
       });
-      showAlert('success', 'Response added successfully.');
+      // showAlert('success', 'Response added successfully.');
       return response.data;
     } catch (error) {
       console.error("Error adding response:", error.response?.data || error.message);
@@ -101,7 +107,7 @@ const JobApplicationsProvider = ({ children }) => {
   const fetchApplication = async (applicationId) => {
     try {
       const response = await axiosInstance.get(`/api/Applications/show/${applicationId}`);
-      showAlert('success', 'Application fetched successfully.');
+      // showAlert('success', 'Application fetched successfully.');
       return response.data;
     } catch (error) {
       console.error("Error fetching application:", error.response?.data || error.message);
@@ -114,7 +120,7 @@ const JobApplicationsProvider = ({ children }) => {
     try {
       await axiosInstance.delete(`/api/Applications/delete/${applicationId}`);
       setApplications(applications.filter((app) => app.id !== applicationId));
-      showAlert('success', 'Job application deleted successfully.');
+      // showAlert('success', 'Job application deleted successfully.');
     } catch (error) {
       console.error("Error deleting application:", error.response?.data || error.message);
       showAlert('error', 'Failed to delete job application.');
@@ -137,7 +143,7 @@ const JobApplicationsProvider = ({ children }) => {
       const response = await axiosInstance2.post("/compareSalary", { data: payload });
 
       if (response.data.answer) {
-        showAlert('success', 'Salary comparison completed successfully.');
+        // showAlert('success', 'Salary comparison completed successfully.');
         return { answer: response.data.answer, links: response.data.links };
       } else {
         throw new Error("Cannot compare salaries.");
@@ -159,7 +165,7 @@ const JobApplicationsProvider = ({ children }) => {
       const response = await axiosInstance2.post("/interviewQuestions", { data: payload });
 
       if (response.data.answer) {
-        showAlert('success', 'Interview questions fetched successfully.');
+        // showAlert('success', 'Interview questions fetched successfully.');
         return { answer: response.data.answer, links: response.data.links };
       } else {
         throw new Error("No questions returned.");
