@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActionTypes } from '../utils/ActionTypes';
 import Alert from './Alert'; 
 import { useAlert } from '../utils/useAlert'; 
+import '../design/ResponseForm.css';
 
-const AddResponseForm = ({ onSubmit, onClose }) => {
+const ResponseForm = ({ onSubmit, onClose, initialData = null }) => {
     const [action, setAction] = useState(1); 
     const [deadline, setDeadline] = useState("");
     const { alert, showAlert, closeAlert } = useAlert(); 
+    const isEditMode = !!initialData;
+
+    useEffect(() => {
+        if (initialData) {
+            setAction(initialData.action || 1);
+            
+            // Format deadline if it exists
+            if (initialData.deadline) {
+                const deadlineDate = new Date(initialData.deadline);
+                if (!isNaN(deadlineDate.getTime())) {
+                    setDeadline(deadlineDate.toISOString().split('T')[0]);
+                }
+            }
+        }
+    }, [initialData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,12 +33,11 @@ const AddResponseForm = ({ onSubmit, onClose }) => {
         }
 
         onSubmit({ action, deadline });
-        showAlert('success', 'Response added successfully!');
     };
 
     return (
-        <div className="add-response-form">
-            <h3>Add Response</h3>
+        <div className="response-form">
+            <h3>{isEditMode ? 'Edit Response' : 'Add Response'}</h3>
             <form onSubmit={handleSubmit}>
                 <label>
                     Action:
@@ -42,7 +57,7 @@ const AddResponseForm = ({ onSubmit, onClose }) => {
                     />
                 </label>
                 <div className="form-buttons">
-                    <button type="submit">Submit</button>
+                    <button type="submit">{isEditMode ? 'Update' : 'Submit'}</button>
                     <button type="button" onClick={onClose}>Cancel</button>
                 </div>
             </form>
@@ -54,4 +69,4 @@ const AddResponseForm = ({ onSubmit, onClose }) => {
     );
 };
 
-export default AddResponseForm;
+export default ResponseForm;

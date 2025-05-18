@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../design/Application.css';
 import Modal from '../components/Modal';
-import AddResponseForm from '../components/AddResponseForm';
+import ResponseForm from '../components/AddResponseForm';
 import Alert from '../components/Alert';
 import { useAlert } from '../utils/useAlert'; 
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
@@ -11,11 +11,12 @@ import { JobTypeMap, StatusMap, AvailabilityMap } from '../utils/EnumMappings';
 const Application = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { fetchApplication, deleteApplication, addResponse, getInterviewQuestions, fetchApplicationResponses, deleteResponse } = useContext(JobApplicationsContext);
+    const { fetchApplication, deleteApplication, addResponse, getInterviewQuestions, fetchApplicationResponses, deleteResponse, editResponse } = useContext(JobApplicationsContext);
 
     const [application, setApplication] = useState(null);
     const [responses, setResponses] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedResponse, setSelectedResponse] = useState(null);
     const { alert, showAlert, closeAlert } = useAlert();
 
     useEffect(() => {
@@ -61,6 +62,7 @@ const Application = () => {
         try {
             await addResponse({ ...formData, applicationId: id });
             setIsModalOpen(false);
+            setSelectedResponse(null);
             showAlert('success', 'Response added successfully.');
             
             // Refresh responses after adding a new one
@@ -68,6 +70,25 @@ const Application = () => {
             setResponses(responseData);
         } catch (err) {
             showAlert('error', err.message || 'Failed to add response.');
+        }
+    };
+    
+    const handleEditResponse = async (formData) => {
+        try {
+            if (!selectedResponse || !selectedResponse.id) {
+                throw new Error('No response selected for editing');
+            }
+            
+            await editResponse(selectedResponse.id, formData);
+            setIsModalOpen(false);
+            setSelectedResponse(null);
+            showAlert('success', 'Response updated successfully.');
+            
+            // Refresh responses after editing
+            const responseData = await fetchApplicationResponses(id);
+            setResponses(responseData);
+        } catch (err) {
+            showAlert('error', err.message || 'Failed to update response.');
         }
     };
     
@@ -82,6 +103,21 @@ const Application = () => {
         } catch (err) {
             showAlert('error', err.message || 'Failed to delete response.');
         }
+    };
+    
+    const openAddResponseModal = () => {
+        setSelectedResponse(null);
+        setIsModalOpen(true);
+    };
+    
+    const openEditResponseModal = (response) => {
+        setSelectedResponse(response);
+        setIsModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedResponse(null);
     };
 
     if (!application) {
@@ -105,25 +141,39 @@ const Application = () => {
                     <ul>
                         {responses.map((response, index) => (
                             <li key={index} className="response-item">
-                                <div className="response-header">
-                                    <strong>{response.actionType}</strong>
-                                    <span className="response-date">
-                                        {new Date(response.date).toLocaleDateString()}
-                                    </span>
-                                </div>
-                                {response.deadline && (
-                                    <div className="response-deadline">
-                                        Deadline: {new Date(response.deadline).toLocaleDateString()}
+                                <div className="response-content">
+                                    <div className="response-header">
+                                        <div className="response-action">
+                                            <strong>{response.actionType}</strong>
+                                        </div>
+                                        <div className="response-date">
+                                            {new Date(response.date).toLocaleDateString()}
+                                        </div>
                                     </div>
-                                )}
-                                <button 
-                                    className="delete-response-button" 
-                                    onClick={() => handleDeleteResponse(response.id)}
-                                    title="Delete this response"
-                                    aria-label="Delete response"
-                                >
-                                    ×
-                                </button>
+                                    {response.deadline && (
+                                        <div className="response-deadline">
+                                            Deadline: {new Date(response.deadline).toLocaleDateString()}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="response-actions">
+                                    <button 
+                                        className="edit-response-button" 
+                                        onClick={() => openEditResponseModal(response)}
+                                        title="Edit this response"
+                                        aria-label="Edit response"
+                                    >
+                                        ✎
+                                    </button>
+                                    <button 
+                                        className="delete-response-button" 
+                                        onClick={() => handleDeleteResponse(response.id)}
+                                        title="Delete this response"
+                                        aria-label="Delete response"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
                             </li>
                         ))}
                     </ul>
@@ -131,10 +181,14 @@ const Application = () => {
             )}
             
             <button className="delete-button" onClick={handleDelete}>Delete Application</button>
-            <button className="add-response-button" onClick={() => setIsModalOpen(true)}>Add Response</button>
+            <button className="add-response-button" onClick={openAddResponseModal}>Add Response</button>
 
-            <Modal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <AddResponseForm onSubmit={handleAddResponse} onClose={() => setIsModalOpen(false)} />
+            <Modal isVisible={isModalOpen} onClose={closeModal}>
+                <ResponseForm 
+                    onSubmit={selectedResponse ? handleEditResponse : handleAddResponse} 
+                    onClose={closeModal} 
+                    initialData={selectedResponse}
+                />
             </Modal>
 
             {alert.show && (

@@ -116,6 +116,21 @@ const JobApplicationsProvider = ({ children }) => {
     }
   };
 
+  const editResponse = async (responseId, updatedResponse) => {
+    try {
+      const response = await axiosInstance.put(`/api/Responses/edit/${responseId}`, {
+        ...updatedResponse,
+        id: responseId
+      });
+      showAlert('success', 'Response updated successfully.');
+      return response.data;
+    } catch (error) {
+      console.error("Error updating response:", error.response?.data || error.message);
+      showAlert('error', 'Failed to update response.');
+      throw new Error(error.response?.data?.message || "Failed to update response.");
+    }
+  };
+
   const fetchApplication = async (applicationId) => {
     try {
       const response = await axiosInstance.get(`/api/Applications/show/${applicationId}`);
@@ -198,6 +213,7 @@ const JobApplicationsProvider = ({ children }) => {
         fetchApplicationResponses,
         addResponse,
         deleteResponse,
+        editResponse,
         fetchApplication,
         deleteApplication,
         compareSalary,
