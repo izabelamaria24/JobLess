@@ -59,7 +59,12 @@ All of our project can be accessed on github, **[commits](https://github.com/iza
 # **[UML diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess_UML.png)**
 
 # Bug reporting: 
-Issues **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html)**, **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**,  **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)** 
+Issues 
+- **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html)**
+- **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**
+- **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)**
+- **[commit 44853b7](https://github.com/izabelamaria24/JobLess/commit/44853b70063850faeb1a9dff3d16a7599e5e661a)**
+- **[commit 78deaf1](https://github.com/izabelamaria24/JobLess/commit/78deaf1a603cf18b109bd81d682f16c284ed5792)**.
 
 # **[AI use process documentation](https://github.com/izabelamaria24/JobLess/blob/develop/AI%20use%20documentation.pdf)**
 # Code standards:
