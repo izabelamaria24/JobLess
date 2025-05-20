@@ -26,11 +26,16 @@ namespace JoblessAPI.Models
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
 
+        public List<int>? TechnologiesIds { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Technology>? Technologies { get; set; }
 
         [NotMapped]
         public IFormFile? File { get; set; }
+
+        [NotMapped]
+        public string? TechnologiesIdsString { get; set; }
 
     }
 }

@@ -104,6 +104,19 @@ namespace JoblessAPI.Controllers
             application.UserId = userId;
             application.User = db.Users.Find(userId);
 
+            application.TechnologiesIds = await ProcessTechnologies(application.TechnologiesIdsString);
+            application.Technologies = new List<Technology>();
+
+            for (int i = 0; i < application.TechnologiesIds.Count; i++)
+            {
+                int technologyId = application.TechnologiesIds[i];
+                var technology = await db.Technologies.FindAsync(technologyId);
+
+                if (technology != null)
+                {
+                    application.Technologies.Add(technology);
+                }
+            }
 
             db.Applications.Add(application);
             await db.SaveChangesAsync();
@@ -167,7 +180,9 @@ namespace JoblessAPI.Controllers
                 return BadRequest(new { Message = "Application Id mismatch" });
             }
 
-            var application = await db.Applications.FindAsync(id);
+            var application = await db.Applications
+                .Include(a => a.Technologies)
+                .FirstOrDefaultAsync(a => a.Id == id);
             if (application == null)
             {
                 return NotFound(new { Message = "Application not found" });
@@ -197,7 +212,48 @@ namespace JoblessAPI.Controllers
             application.JobType = updatedApplication.JobType;
             application.Availability = updatedApplication.Availability;
             application.Status = updatedApplication.Status;
-            application.Technologies = updatedApplication.Technologies;
+            
+            updatedApplication.TechnologiesIds = await ProcessTechnologies(updatedApplication.TechnologiesIdsString);
+
+            var addedIds = updatedApplication.TechnologiesIds
+                .Except(application.TechnologiesIds)
+                .ToList();
+
+            var removedIds = application.TechnologiesIds
+                .Except(updatedApplication.TechnologiesIds)
+                .ToList();
+
+            application.TechnologiesIds = updatedApplication.TechnologiesIds;
+
+            var addedTechnologies = new List<Technology>();
+            foreach (var addedId in addedIds)
+            {
+                var technology = await db.Technologies.FindAsync(addedId);
+                if (technology != null)
+                {
+                    addedTechnologies.Add(technology);
+                }
+            }
+
+            var removedTechnologies = new List<Technology>();
+            foreach (var removedId in removedIds)
+            {
+                var technology = await db.Technologies.FindAsync(removedId);
+                if (technology != null)
+                {
+                    removedTechnologies.Add(technology);
+                }
+            }
+
+            foreach (var removedTechnology in removedTechnologies)
+            {
+                application.Technologies.Remove(removedTechnology);
+            }
+
+            foreach (var addedTechnology in addedTechnologies)
+            {
+                application.Technologies.Add(addedTechnology);
+            }
 
             try
             {
@@ -331,5 +387,45 @@ namespace JoblessAPI.Controllers
                 Stages = stageCounts
             });
         }
+
+        public async Task<List<int>> ProcessTechnologies(string? technologiesString)
+        {
+            if (string.IsNullOrWhiteSpace(technologiesString))
+            {
+                return new List<int>();
+            }
+
+            var technologyNames = technologiesString.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var technologyIds = new List<int>();
+
+            foreach (var techName in technologyNames)
+            {
+                var trimmedName = techName.Trim();
+
+                if (string.IsNullOrWhiteSpace(trimmedName))
+                {
+                    continue;
+                }
+
+                var technology = await db.Technologies.FirstOrDefaultAsync(t => t.Name == trimmedName);
+
+                if (technology != null)
+                {
+                    technologyIds.Add(technology.Id);
+                }
+                else
+                {
+                    var newTechnology = new Technology { Name = trimmedName };
+                    db.Technologies.Add(newTechnology);
+                    await db.SaveChangesAsync();
+
+                    technologyIds.Add(newTechnology.Id);
+                }
+            }
+
+            return technologyIds;
+        }
+
+
     }
 }

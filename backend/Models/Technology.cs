@@ -13,6 +13,12 @@ namespace JoblessAPI.Models
         public string Name { get; set; }
 
         [JsonIgnore]
+        public List<int>? ResumeIds { get; set; }
+
+        [JsonIgnore]
+        public List<int>? ApplicationIds { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Resume>? Resumes { get; set; }
         
         [JsonIgnore]

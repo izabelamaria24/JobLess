@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace JoblessAPI.Controllers
 {
@@ -89,8 +90,24 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "User not authenticated" });
             }
 
+            
+            
             resume.UserId = userId;
             resume.User = db.Users.Find(userId);
+
+            resume.TechnologiesIds = await ProcessTechnologies(resume.TechnologiesIdsString);
+            resume.Technologies = new List<Technology>();
+
+            for (int i = 0; i < resume.TechnologiesIds.Count; i++)
+            {
+                int technologyId = resume.TechnologiesIds[i];
+                var technology = await db.Technologies.FindAsync(technologyId);
+
+                if (technology != null)
+                {
+                    resume.Technologies.Add(technology);
+                }
+            }
 
             db.Resumes.Add(resume);
             await db.SaveChangesAsync();
@@ -157,7 +174,9 @@ namespace JoblessAPI.Controllers
                 return BadRequest(new { Message = "Resume Id mismatch" });
             }
 
-            var resume = await db.Resumes.FindAsync(id);
+            var resume = await db.Resumes
+                .Include(r => r.Technologies)
+                .FirstOrDefaultAsync(r => r.Id == id);
             if (resume == null)
             {
                 return NotFound(new { Message = "Resume not found" });
@@ -180,7 +199,48 @@ namespace JoblessAPI.Controllers
             resume.Path = updatedResume.Path;
             resume.LinkedIn = updatedResume.LinkedIn;
             resume.GitHub = updatedResume.GitHub;
-            resume.Technologies = updatedResume.Technologies;
+
+            updatedResume.TechnologiesIds = await ProcessTechnologies(updatedResume.TechnologiesIdsString);
+
+            var addedIds = updatedResume.TechnologiesIds
+                .Except(resume.TechnologiesIds)
+                .ToList();
+
+            var removedIds = resume.TechnologiesIds
+                .Except(updatedResume.TechnologiesIds)
+                .ToList();
+
+            resume.TechnologiesIds = updatedResume.TechnologiesIds;
+
+            var addedTechnologies = new List<Technology>();
+            foreach (var addedId in addedIds)
+            {
+                var technology = await db.Technologies.FindAsync(addedId);
+                if (technology != null)
+                {
+                    addedTechnologies.Add(technology);
+                }
+            }
+
+            var removedTechnologies = new List<Technology>();
+            foreach (var removedId in removedIds)
+            {
+                var technology = await db.Technologies.FindAsync(removedId);
+                if (technology != null)
+                {
+                    removedTechnologies.Add(technology);
+                }
+            }
+
+            foreach (var removedTechnology in removedTechnologies)
+            {
+                resume.Technologies.Remove(removedTechnology);
+            }
+
+            foreach (var addedTechnology in addedTechnologies)
+            {
+                resume.Technologies.Add(addedTechnology);
+            }
 
             try
             {
@@ -229,5 +289,44 @@ namespace JoblessAPI.Controllers
 
             return Ok(new { Message = "Resume deleted successfully" });
         }
+
+        public async Task<List<int>> ProcessTechnologies(string? technologiesString)
+        {
+            if (string.IsNullOrWhiteSpace(technologiesString))
+            {
+                return new List<int>();
+            }
+
+            var technologyNames = technologiesString.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var technologyIds = new List<int>();
+
+            foreach (var techName in technologyNames)
+            {
+                var trimmedName = techName.Trim();
+
+                if (string.IsNullOrWhiteSpace(trimmedName))
+                {
+                    continue;
+                }
+
+                var technology = await db.Technologies.FirstOrDefaultAsync(t => t.Name == trimmedName);
+
+                if (technology != null)
+                {
+                    technologyIds.Add(technology.Id);
+                }
+                else
+                {
+                    var newTechnology = new Technology { Name = trimmedName };
+                    db.Technologies.Add(newTechnology);
+                    await db.SaveChangesAsync();
+
+                    technologyIds.Add(newTechnology.Id);
+                }
+            }
+
+            return technologyIds;
+        }
+
     }
 }

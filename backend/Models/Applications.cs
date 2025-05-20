@@ -68,6 +68,8 @@ namespace JoblessAPI.Models
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
 
+        public List<int>? TechnologiesIds { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Technology>? Technologies { get; set; }
 
@@ -76,5 +78,8 @@ namespace JoblessAPI.Models
 
         [JsonIgnore]
         public virtual ICollection<Response>? Responses { get; set; }
+
+        [NotMapped]
+        public string? TechnologiesIdsString { get; set; }
     }
 }
