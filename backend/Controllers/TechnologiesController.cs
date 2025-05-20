@@ -115,5 +115,57 @@ namespace JoblessAPI.Controllers
 
             return Ok(new { Message = "Technology deleted successfully" });
         }
+
+
+        // GET: api/Technologies/getApplications/{id}
+        [HttpGet("getApplications/{id}")]
+        public async Task<ActionResult<IEnumerable<Application>>> GetApplications(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var technologyExists = await db.Technologies.AnyAsync(t => t.Id == id);
+            if (!technologyExists)
+            {
+                return NotFound(new { Message = "Technology not found" });
+            }
+
+            var applications = await db.Technologies
+                .Where(t => t.Id == id)
+                .SelectMany(t => t.Applications)
+                .Where(app => app.UserId == userId)
+                .ToListAsync();
+
+            return Ok(applications);
+        }
+
+        // GET: api/Technologies/getResumes/{id}
+        [HttpGet("getResumes/{id}")]
+        public async Task<ActionResult<IEnumerable<Resume>>> GetResumes(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var technologyExists = await db.Technologies.AnyAsync(t => t.Id == id);
+            if (!technologyExists)
+            {
+                return NotFound(new { Message = "Technology not found" });
+            }
+
+            var resumes = await db.Technologies
+                .Where(t => t.Id == id)
+                .SelectMany(t => t.Resumes) 
+                .Where(resume => resume.UserId == userId)
+                .ToListAsync();
+
+            return Ok(resumes);
+        }
+
     }
 }
