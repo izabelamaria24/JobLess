@@ -29,9 +29,26 @@ namespace JoblessAPI.Controllers
 
         // GET: api/Users/index
         [HttpGet("index")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (!isAdmin)
+            {
+                return Unauthorized(new { Message = "You do not have permission to access this" });
+            }
+
             var users = await db.Users.ToListAsync();
             var result = users.Select(user => new
             {
@@ -45,58 +62,84 @@ namespace JoblessAPI.Controllers
 
             return Ok(result);
         }
-       
 
         // GET: api/Users/show/{id}
         [HttpGet("show/{id}")]
         public async Task<ActionResult<User>> Show(string id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId is null)
             {
                 return Unauthorized(new { Message = "User not authenticated" });
             }
 
-            if (userId != id && !User.IsInRole("Admin"))
+            var currentUser = await _userManager.FindByIdAsync(currentUserId);
+            if (currentUser == null)
+            {
+                return NotFound(new { Message = "Current user not found" });
+            }
+
+            var targetUser = await _userManager.FindByIdAsync(id);
+            if (targetUser == null)
+            {
+                return NotFound(new { Message = "Target user not found" });
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+            if (!isAdmin && currentUserId != id)
             {
                 return Unauthorized(new { Message = "You do not have permission to access this user" });
             }
 
-            var user = await db.Users.FindAsync(id);
-            if (user == null)
-                return NotFound(new { Message = "User not found" });
+            var userInfo = new
+            {
+                targetUser.Id,
+                targetUser.UserName,
+                targetUser.Email,
+                targetUser.FirstName,
+                targetUser.LastName,
+                targetUser.PhoneNumber
+            };
 
-            return Ok(user);
+            return Ok(userInfo);
         }
 
         // PUT: api/Users/edit/{id}
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(string id, [FromBody] User updatedUser)
         {
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId is null)
             {
                 return Unauthorized(new { Message = "User not authenticated" });
             }
 
-            if (userId != id && !User.IsInRole("Admin"))
+            var currentUser = await _userManager.FindByIdAsync(currentUserId);
+            if (currentUser == null)
             {
-                return Unauthorized(new { Message = "You do not have permission to access this user" });
+                return NotFound(new { Message = "Current user not found" });
+            }
+
+            var targetUser = await _userManager.FindByIdAsync(id);
+            if (targetUser == null)
+            {
+                return NotFound(new { Message = "Target user not found" });
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+            if (!isAdmin && currentUserId != id)
+            {
+                return Unauthorized(new { Message = "You do not have permission to edit this user" });
             }
 
             if (id != updatedUser.Id)
+            {
                 return BadRequest(new { Message = "User ID mismatch" });
+            }
 
-            var user = await db.Users.FindAsync(id);
-            if (user == null)
-                return NotFound(new { Message = "User not found" });
-
-            user.FirstName = updatedUser.FirstName;
-            user.LastName = updatedUser.LastName;
-            user.Phone = updatedUser.Phone;
+            targetUser.FirstName = updatedUser.FirstName;
+            targetUser.LastName = updatedUser.LastName;
+            targetUser.Phone = updatedUser.Phone;
 
             try
             {
@@ -109,12 +152,12 @@ namespace JoblessAPI.Controllers
 
             var userInfo = new
             {
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.Phone,
-                user.UserName,
-                user.Email
+                targetUser.Id,
+                targetUser.FirstName,
+                targetUser.LastName,
+                targetUser.Phone,
+                targetUser.UserName,
+                targetUser.Email
             };
 
             return Ok(new { User = userInfo });
@@ -122,16 +165,35 @@ namespace JoblessAPI.Controllers
 
         // DELETE: api/Users/delete/{id}
         [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
-            var user = await db.Users.FindAsync(id);
-            if (user == null)
-                return NotFound(new { Message = "User not found" });
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
+            var currentUser = await _userManager.FindByIdAsync(currentUserId);
+            if (currentUser == null)
+            {
+                return NotFound(new { Message = "Current user not found" });
+            }
+
+            var targetUser = await _userManager.FindByIdAsync(id);
+            if (targetUser == null)
+            {
+                return NotFound(new { Message = "Target user not found" });
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+            if (!isAdmin && currentUserId != id)
+            {
+                return Unauthorized(new { Message = "You do not have permission to delete this user" });
+            }
 
             try
             {
-                db.Users.Remove(user);
+                db.Users.Remove(targetUser);
                 await db.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
