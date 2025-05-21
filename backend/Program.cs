@@ -1,4 +1,4 @@
-using JoblessAPI.Data;
+﻿using JoblessAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +12,6 @@ using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
 using JoblessAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-
-
 
 
 var builder = WebApplication.CreateBuilder(args);
