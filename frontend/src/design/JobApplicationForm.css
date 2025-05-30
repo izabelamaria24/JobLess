@@ -1,24 +1,22 @@
 .job-application-form {
     margin: 20px auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-height: 80vh; /* Limit height to 80% of viewport height */
-    overflow-y: auto; /* Allow scrolling if content is too tall */
+    max-height: 80vh;
+    overflow-y: auto;
     width: 100%;
-    max-width: 800px; /* Max width for larger screens */
+    max-width: 800px;
 }
 
-/* Create a two-column layout */
 .job-application-form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 15px;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
 }
 
-/* For mobile devices, revert to single column */
 @media (max-width: 768px) {
     .job-application-form-grid {
         grid-template-columns: 1fr;
@@ -26,7 +24,7 @@
 }
   
 .job-application-form div {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
   
 .job-application-form label {
@@ -43,15 +41,14 @@
     border-radius: 4px;
 }
 
-/* Make the submit button take full width */
 .job-application-form .form-footer {
     margin-top: 15px;
-    grid-column: 1 / -1; /* Span across all columns */
+    grid-column: 1 / -1;
 }
   
 .job-application-form button {
     padding: 10px 20px;
-    background-color: #4caf50;
+    background-color: #2196F3;
     color: white;
     border: none;
     border-radius: 4px;
@@ -62,7 +59,7 @@
 }
   
 .job-application-form button:hover {
-    background-color: #45a049;
+    background-color: #0c7cd5;
 }
 
 .job-application-form button:disabled {

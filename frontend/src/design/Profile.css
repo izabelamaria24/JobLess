@@ -131,3 +131,21 @@
     width: 100%;
   }
 }
+
+.logout-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
+.profile-card.change-password-form,
+.profile-card.resume-form,
+.profile-card.job-application-form {
+    max-width: 500px;
+    margin: 20px auto;
+}

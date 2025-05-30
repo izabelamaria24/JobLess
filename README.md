@@ -41,8 +41,8 @@ A real-life situation that many of us are going through right now—job hunting.
 6. As a user, I want a visual dashboard with charts displaying my application progress.
 7. As a user, I want to see all the events I need to participate in, sorted by the closest deadline. I want to have the feature to filter by event category (OA/Interview/etc).
 8. As a user, I want a visual dashboard with statistics including the number of jobs applied, interviews scheduled, and offers received.
-9. As a user, I want to upload and manage different versions of my CV and cover letter so I can quickly tailor applications.
-10. As a user, I want the app to provide AI-powered resume and cover letter suggestions based on the job description I’m applying to.
+9. As a user, I want to upload and manage different versions of my CV so I can quickly tailor applications.
+10. As a user, I want the app to provide AI-powered resume suggestions based on the job description I’m applying to.
 11. As a user, I want to receive tips based on my job applications and feedback to strengthen specific skills.
 12. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
 

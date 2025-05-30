@@ -7,6 +7,11 @@
     background-color: #fff;
     transition: transform 0.2s;
   }
+
+  .job-application.stale {
+    border-color: #f44336;
+    background-color: #f8d7da;
+  }
   
   .job-application:hover {
     transform: translateY(-5px);
@@ -117,4 +122,12 @@
   .availability-text {
     font-size: 0.9em;
   }
-  
+
+.stale-badge {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8em;
+}
+

@@ -25,7 +25,7 @@ const ChangePasswordForm = ({ onSubmit }) => {
                 NewPassword,
             });
             setIsLoading(false);
-            showAlert('success', 'Password changed successfully.');
+
         } catch (err) {
             setIsLoading(false);
             showAlert('error', 'Failed to change password. Please try again.');
@@ -33,27 +33,30 @@ const ChangePasswordForm = ({ onSubmit }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="change-password-form">
-            <div>
+        <form onSubmit={handleSubmit} className="profile-card change-password-form">
+            <h2 className="profile-section-title">Change Password</h2>
+            <div className="profile-form-group">
                 <label>Old password:</label>
                 <input
                     type="password"
                     value={CurrentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     required
+                    className="profile-input"
                 />
             </div>
-            <div>
+            <div className="profile-form-group">
                 <label>New password:</label>
                 <input
                     type="password"
                     value={NewPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
+                    className="profile-input"
                 />
             </div>
 
-            <button type="submit" disabled={isLoading}>
+            <button type="submit" disabled={isLoading} className="profile-button">
                 {isLoading ? 'Submitting...' : 'Submit'}
             </button>
 

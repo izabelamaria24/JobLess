@@ -68,9 +68,23 @@ def compareSalary():
         companies = data.get("companies")
         jobTitles = data.get("jobTitles")
         locations = data.get("locations")
-        prompt = "Please provide the aproximate salary ranges of the following positions. You can search online. Write a list with the company, job title, location, and salary.\n"
+        prompt = (
+            "You are a salary research assistant who has access to online salary databases and public compensation reports. "
+            "Your task is to look up and summarize the **approximate salary ranges** (base salary only is fine) for a series of tech roles. "
+            "You are allowed to search online to provide realistic and recent estimates based on location, company, and role.\n\n"
+            "For each job listed below, provide the following fields:\n"
+            "- Company\n"
+            "- Job Title\n"
+            "- Location\n"
+            "- Approximate Annual Salary Range in USD (e.g., $120,000 - $150,000)\n\n"
+            "Respond strictly in a JSON list format like this:\n"
+            '[{"company": "Company Name", "jobTitle": "Job Title", "location": "Location", "salary": "Salary Range"}, ...]\n\n'
+            "Here is the list of positions to analyze:\n"
+        )
+
         for i in range(len(companies)):
-            prompt += f"Company: {companies[i]}, Job Title: {jobTitles[i]}, Location: {locations[i]}\n"           
+            prompt += f"Company: {companies[i]}, Job Title: {jobTitles[i]}, Location: {locations[i]}\n"
+
         answer = client.models.generate_content(
         model="gemini-2.0-flash",
         contents=prompt,

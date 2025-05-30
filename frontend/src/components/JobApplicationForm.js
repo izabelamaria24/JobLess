@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Alert from './Alert'; 
+import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
 import '../design/JobApplicationForm.css';
 
@@ -21,7 +21,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
   const [interviewDate, setInterviewDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { alert, showAlert, closeAlert } = useAlert(); 
+  const { alert, showAlert, closeAlert } = useAlert();
 
   useEffect(() => {
     if (initialData) {
@@ -29,7 +29,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
       setJobTitle(initialData.jobTitle || '');
       setLocation(initialData.location || '');
       setLink(initialData.link || '');
-      
+
       if (initialData.date) {
         if (initialData.date.includes('-') && initialData.date.length === 10) {
           setDate(initialData.date);
@@ -48,7 +48,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
       } else {
         setDate(getTodayFormatted());
       }
-      
+
       setJobType(initialData.jobType || 0);
       setAvailability(initialData.availability || 0);
       setStatus(initialData.status || 0);
@@ -81,7 +81,7 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
         interviewDate,
       });
       setIsLoading(false);
-      showAlert('success', 'Job application submitted successfully!');
+      // No success alert here, let the parent handle it
     } catch (err) {
       setIsLoading(false);
       showAlert('error', 'Failed to submit the application. Please try again.');
@@ -89,31 +89,32 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="job-application-form">
+    <form onSubmit={handleSubmit} className="profile-card job-application-form">
+      <h2 className="profile-section-title">{initialData ? 'Edit Job Application' : 'Add New Job Application'}</h2>
       <div className="job-application-form-grid">
-        <div>
+        <div className="profile-form-group">
           <label>Company Name:</label>
-          <input type="text" value={company} onChange={(e) => setCompany(e.target.value)} required />
+          <input type="text" value={company} onChange={(e) => setCompany(e.target.value)} required className="profile-input" />
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Job Title:</label>
-          <input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
+          <input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required className="profile-input" />
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Company Link:</label>
-          <input type="url" value={link} onChange={(e) => setLink(e.target.value)} required />
+          <input type="url" value={link} onChange={(e) => setLink(e.target.value)} required className="profile-input" />
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Location:</label>
-          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required className="profile-input" />
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Application Date:</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="profile-input" />
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Job Type:</label>
-          <select value={jobType} onChange={(e) => setJobType(parseInt(e.target.value))} required>
+          <select value={jobType} onChange={(e) => setJobType(parseInt(e.target.value))} required className="profile-input">
             <option value="0">Select Job Type</option>
             <option value="1">Full Time</option>
             <option value="2">Part Time</option>
@@ -122,18 +123,18 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
             <option value="5">Temporary</option>
           </select>
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Availability:</label>
-          <select value={availability} onChange={(e) => setAvailability(parseInt(e.target.value))} required>
+          <select value={availability} onChange={(e) => setAvailability(parseInt(e.target.value))} required className="profile-input">
             <option value="0">Select Availability</option>
             <option value="1">Remote</option>
             <option value="2">Hybrid</option>
             <option value="3">On Site</option>
           </select>
         </div>
-        <div>
+        <div className="profile-form-group">
           <label>Status:</label>
-          <select value={status} onChange={(e) => setStatus(parseInt(e.target.value))} required>
+          <select value={status} onChange={(e) => setStatus(parseInt(e.target.value))} required className="profile-input">
             <option value="0">Select Status</option>
             <option value="1">Active</option>
             <option value="2">Offer</option>
@@ -142,9 +143,9 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
           </select>
         </div>
       </div>
-      
-      <div className="form-footer">
-        <button type="submit" disabled={isLoading}>
+
+      <div className="form-footer profile-buttons">
+        <button type="submit" disabled={isLoading} className="profile-button">
           {isLoading ? 'Submitting...' : initialData ? 'Update Application' : 'Add Application'}
         </button>
       </div>
