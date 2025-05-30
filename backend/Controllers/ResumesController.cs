@@ -9,15 +9,18 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace JoblessAPI.Controllers
 {
+    // Defines the route for the controller and marks it as an API controller.
     [Route("api/[controller]")]
     [ApiController]
     public class ResumesController : ControllerBase
     {
+        // Dependency injection for database context, user manager, role manager, and environment.
         private readonly AppDbContext db;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _env;
 
+        // Constructor to initialize dependencies.
         public ResumesController(
             AppDbContext context,
             UserManager<User> userManager,
@@ -31,7 +34,7 @@ namespace JoblessAPI.Controllers
             _env = env;
         }
 
-        // GET: api/Resumes/index
+        // Retrieves all resumes for the authenticated user.
         [HttpGet("index")]
         public async Task<ActionResult<IEnumerable<Resume>>> Index()
         {
@@ -43,9 +46,9 @@ namespace JoblessAPI.Controllers
             }
 
             var resumes = await db.Resumes
-                .Include(r => r.Technologies)
-                .Include(a => a.User)
-                .Where(r => r.UserId == userId)
+                .Include(r => r.Technologies) // Includes related technologies.
+                .Include(a => a.User) // Includes related user.
+                .Where(r => r.UserId == userId) // Filters resumes by user ID.
                 .ToListAsync();
 
             if (resumes == null || resumes.Count == 0)
@@ -54,7 +57,7 @@ namespace JoblessAPI.Controllers
             return Ok(resumes);
         }
 
-        // GET: api/Resumes/show/{id}
+        // Retrieves a specific resume by ID for the authenticated user.
         [HttpGet("show/{id}")]
         public async Task<ActionResult<Resume>> Show(int id)
         {
@@ -66,9 +69,9 @@ namespace JoblessAPI.Controllers
             }
 
             var resume = await db.Resumes
-                .Include(r => r.Technologies)
-                .Include(a => a.User)
-                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+                .Include(r => r.Technologies) // Includes related technologies.
+                .Include(a => a.User) // Includes related user.
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId); // Filters by ID and user ID.
 
             if (resume == null)
                 return NotFound();
@@ -76,7 +79,7 @@ namespace JoblessAPI.Controllers
             return Ok(resume);
         }
 
-        // POST: api/Resumes/new
+        // Creates a new resume for the authenticated user.
         [HttpPost("new")]
         public async Task<IActionResult> New([FromBody] Resume resume)
         {
@@ -90,14 +93,14 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "User not authenticated" });
             }
 
-            
-            
             resume.UserId = userId;
-            resume.User = db.Users.Find(userId);
+            resume.User = db.Users.Find(userId); // Associates the resume with the user.
 
+            // Processes technologies from the input string.
             resume.TechnologiesIds = await ProcessTechnologies(resume.TechnologiesIdsString);
             resume.Technologies = new List<Technology>();
 
+            // Adds technologies to the resume.
             for (int i = 0; i < resume.TechnologiesIds.Count; i++)
             {
                 int technologyId = resume.TechnologiesIds[i];
@@ -109,17 +112,16 @@ namespace JoblessAPI.Controllers
                 }
             }
 
-            db.Resumes.Add(resume);
+            db.Resumes.Add(resume); // Adds the resume to the database.
             await db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Index), new { id = resume.Id }, resume);
         }
 
-
+        // Uploads a PDF file for a specific resume.
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(int id, [FromForm] IFormFile PdfFile)
         {
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId is null)
@@ -128,9 +130,8 @@ namespace JoblessAPI.Controllers
             }
 
             Resume? resume = await db.Resumes
-                .Include(a => a.User)
-                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
-
+                .Include(a => a.User) // Includes related user.
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId); // Filters by ID and user ID.
 
             if (PdfFile != null && PdfFile.Length > 0)
             {
@@ -142,30 +143,26 @@ namespace JoblessAPI.Controllers
                 {
                     return StatusCode(400, new { Message = "The file must be a document (.pdf)" });
                 }
+
+                // Generates a unique file name and saves the file.
                 var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
                 var storagePath = Path.Combine(_env.WebRootPath, "Documents/Resumes/", uniqueFileName);
                 var databaseFileName = "/Documents/Resumes/" + uniqueFileName;
-
 
                 using (var fileStream = new FileStream(storagePath, FileMode.Create))
                 {
                     await PdfFile.CopyToAsync(fileStream);
                 }
 
-
-                resume.Path = databaseFileName;
-
+                resume.Path = databaseFileName; // Updates the resume's file path.
             }
 
             await db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Index), new { id = resume.Id }, resume);
-
-
         }
 
-
-        // PUT: api/Resumes/edit/{id}
+        // Updates an existing resume for the authenticated user.
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(int id, [FromBody] Resume updatedResume)
         {
@@ -175,8 +172,9 @@ namespace JoblessAPI.Controllers
             }
 
             var resume = await db.Resumes
-                .Include(r => r.Technologies)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .Include(r => r.Technologies) // Includes related technologies.
+                .FirstOrDefaultAsync(r => r.Id == id); // Finds the resume by ID.
+
             if (resume == null)
             {
                 return NotFound(new { Message = "Resume not found" });
@@ -194,12 +192,14 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "You are not allowed to edit this resume" });
             }
 
+            // Updates resume properties.
             resume.Description = updatedResume.Description;
             resume.Experience = updatedResume.Experience;
             resume.Path = updatedResume.Path;
             resume.LinkedIn = updatedResume.LinkedIn;
             resume.GitHub = updatedResume.GitHub;
 
+            // Processes technologies and updates the resume's technology list.
             updatedResume.TechnologiesIds = await ProcessTechnologies(updatedResume.TechnologiesIdsString);
 
             var addedIds = updatedResume.TechnologiesIds
@@ -254,7 +254,7 @@ namespace JoblessAPI.Controllers
             return Ok(new { Message = "Resume updated successfully" });
         }
 
-        // DELETE: api/Resumes/delete/{id}
+        // Deletes a specific resume for the authenticated user.
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -276,7 +276,7 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "You are not allowed to delete this resume" });
             }
 
-            db.Resumes.Remove(resume);
+            db.Resumes.Remove(resume); // Removes the resume from the database.
 
             try
             {
@@ -290,6 +290,7 @@ namespace JoblessAPI.Controllers
             return Ok(new { Message = "Resume deleted successfully" });
         }
 
+        // Processes a comma-separated string of technology names and returns their IDs.
         public async Task<List<int>> ProcessTechnologies(string? technologiesString)
         {
             if (string.IsNullOrWhiteSpace(technologiesString))
@@ -318,7 +319,7 @@ namespace JoblessAPI.Controllers
                 else
                 {
                     var newTechnology = new Technology { Name = trimmedName };
-                    db.Technologies.Add(newTechnology);
+                    db.Technologies.Add(newTechnology); // Adds new technology to the database.
                     await db.SaveChangesAsync();
 
                     technologyIds.Add(newTechnology.Id);
@@ -327,6 +328,5 @@ namespace JoblessAPI.Controllers
 
             return technologyIds;
         }
-
     }
 }
