@@ -32,7 +32,7 @@ const Resumes = () => {
             }
         };
         fetchResumes();
-    }, [showAlert]);
+    }, []);
 
     const handleDelete = async (resumeId) => {
         try {
