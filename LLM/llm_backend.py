@@ -15,16 +15,35 @@ CORS(app)
     "jobTitle": "Machine learning engineer intern"
 }
 '''
-@app.route("/interviewQuestions", methods=["GET", "POST"])
+
+@app.route("/interviewQuestions", methods=["GET"])
 def interviewQuestions():
     try:
         data = request.get_json()
         company = data.get("company")
         jobTitle = data.get("jobTitle")
+        
+        prompt = (
+            f"You are a software engineer at {company} who has to conduct interviews with candidates "
+            f"for a position of {jobTitle}. In order to prepare for these interviews, you need to have a set "
+            f"of questions prepared. You are allowed to search online in order to prepare a comprehensive list "
+            f"of questions.\n\n"
+            f"A question should have the following structure: "
+            f'[{{"title": "", "category": "", "contents": ""}}]. '
+            f"Title should be filled with a concise title of the question and category with one of these categories: "
+            f"Algorithms, Data Structures, System Design, Multithreading, OOP, Functional Programming. "
+            f"The field contents should contain the full question.\n\n"
+            f"Respond with the full list of questions using this structure only: "
+            f'[{{"title": "", "category": "", "contents": ""}}, ...]. '
+            f"Do not write any additional text. Be concise and brief in your answers."
+        )
+
         answer = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=f"I am interviewing for {jobTitle} at the company {company}. Please provide interview questions so I can prepare for the interview. You can search online. Write 10 questions.",
-        config=config_with_search)
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=config_with_search
+        )
+
         grounding = answer.candidates[0].grounding_metadata
         return jsonify({
             "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
