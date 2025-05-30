@@ -3,16 +3,18 @@ import { JobApplicationsContext } from '../context/JobApplicationsContext';
 import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
 import '../design/JobApplication.css';
+import { useNavigate } from 'react-router-dom';
 
 const statusSteps = ['Applied', 'Online Assessment', 'Interview', 'Offer', 'Hired'];
 
-const JobApplication = ({ applicationId, company, jobTitle, location, availability, link, date, onEdit }) => {
+const JobApplication = ({ applicationId, company, jobTitle, location, availability, link, date, isStale, onEdit }) => {
   const { fetchApplicationResponses } = useContext(JobApplicationsContext);
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState([]);
   const { alert, showAlert, closeAlert } = useAlert(); 
   const [loading, setLoading] = useState(false);
   const requestInProgress = useRef(false);
+  const navigate = useNavigate();
   
   const stableShowAlert = useCallback((type, message) => {
     showAlert(type, message);
@@ -57,7 +59,7 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
   }, [fetchResponses]);
 
   return (
-    <div className="job-application">
+    <div className={`job-application ${isStale ? 'stale' : ''}`}>
       <div className="job-application-header">
         <div>
           <h3>{company}</h3>
@@ -66,10 +68,11 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
         </div>
         <div className="job-application-dates">
           {currentStep >= 0 && <p>Application Date: {date}</p>}
+          {isStale && <div className="stale-badge">This application has not received any responses in the last 28 days</div>}
         </div>
       </div>
       <p><a href={link} target="_blank" rel="noopener noreferrer">Company Link</a></p>
-      <div className="progress-container">
+      <div className={`progress-container ${isStale ? 'stale' : ''}`}>
         {statusSteps.map((step, index) => (
           <div key={index} className={`progress-step ${index <= currentStep ? 'completed' : ''}`}>
             <div className="step-number">{index + 1}</div>
@@ -80,6 +83,7 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
       
       <p className="availability-text">{availability}</p>
       <button className="edit-application-button" onClick={onEdit}>Edit</button>
+      <button className="edit-application-button" onClick={() => navigate(`/applications/${applicationId}`)}>Show</button>
 
       {alert.show && (
         <Alert type={alert.type} message={alert.message} onClose={closeAlert} />

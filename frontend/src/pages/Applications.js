@@ -7,11 +7,13 @@ import "../design/Applications.css";
 import { Link, useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert'; 
 import { useAlert } from '../utils/useAlert'; 
+import axiosInstance from '../utils/axiosInstance';
 
 const Applications = () => {
   const { applications, addApplication, updateApplication, compareSalary } = useContext(JobApplicationsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
+  const [staleApplications, setStaleApplications] = useState([]);
 
   const navigate = useNavigate();
   const { alert, showAlert, closeAlert } = useAlert(); 
@@ -50,12 +52,25 @@ const Applications = () => {
     navigate("/interview-questions");
   }
 
+  const highlightStaleApplications = async () => {
+    try {
+      const response = await axiosInstance.get('/api/Responses/stale-actions');
+
+      let staleApplicationIds = response.data.map(app => app.id);
+    
+      setStaleApplications(staleApplicationIds);
+    } catch (err) {
+      console.error('Error fetching stale applications:', err);
+    }
+  }
+
   return (
     <div className="applications-page">
       <h1>Job Applications</h1>
       <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
       <button className="compare-salary-button" onClick={handleCompareSalary}>Compare Salaries</button>
-      <button className="get-questions-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
+      <button className="add-application-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
+      <button className="add-application-button" onClick={ highlightStaleApplications }>Highlight Stale Applications</button>
 
       
       <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
@@ -78,9 +93,9 @@ const Applications = () => {
             status={app.status}
             onlineAssessmentDeadline={app.onlineAssessmentDeadline}
             interviewDate={app.interviewDate}
+            isStale={staleApplications.includes(app.id)}
             onEdit={() => handleEditApplication(index)}
           />
-          <Link to={`/applications/${app.id}`}><button className='show-application-button'>Show</button></Link>
         </div>
       ))}
 
