@@ -90,28 +90,48 @@ def compareSalary():
     "path": "/path/to/CV"
 }
 '''
-@app.route("/suggestionsCV", methods=["GET"])
+@app.route("/suggestionsCV", methods=["POST"])
 def suggestionsCV():
     try:
         data = request.get_json()
-        CV_path = data.get("path")
-        CV_text = extract_text_from_pdf(CV_path)
-        print(CV_text)
-        prompt = f"Please provide suggestions regaring my CV, I want to apply to IT jobs. You can search online. My CV: {CV_text}\n"          
+        cv_rel_path = data.get("path")
+        print("Received CV path:", cv_rel_path)
+        if not cv_rel_path:
+            return jsonify({"error": "Missing CV path."}), 400
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        wwwroot_dir = os.path.abspath(os.path.join(base_dir, "..", "backend", "wwwroot"))
+        full_cv_path = os.path.join(wwwroot_dir, cv_rel_path.lstrip("/"))
+        print("Full CV path:", full_cv_path)
+
+        try:
+            cv_text = extract_text_from_pdf(full_cv_path)
+        except FileNotFoundError:
+            return jsonify({"error": "CV file not found."}), 404
+        except Exception as e:
+            return jsonify({"error": f"Failed to extract text: {str(e)}"}), 500
+
+        print(cv_text)
+
+        prompt = (
+            "Please provide suggestions regarding my CV, I want to apply to IT jobs. "
+            "You can search online. My CV: " + cv_text + "\n"
+        )
         answer = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config=config_with_search)
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=config_with_search
+        )
         grounding = answer.candidates[0].grounding_metadata
+
         return jsonify({
-            "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
+            "answer": "\n".join([part.text for part in answer.candidates[0].content.parts]),
             "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
         })
     except (TypeError, ValueError):
         return jsonify({
             "error": "Please try again with a valid CV path."
         }), 400
-        
         
 '''
 {
@@ -123,14 +143,22 @@ def suggestionsCoverLetter():
     try:
         data = request.get_json()
         CoverLetter_path = data.get("path")
-        #relative_path = os.path.join(os.getcwd(), CoverLetter_path)
-        #CoverLetter_text = extract_text_from_pdf(relative_path)
-        CoverLetter_text = extract_text_from_pdf(CoverLetter_path)
+        print("Received Cover Letter path:", CoverLetter_path)
+        if not CoverLetter_path:
+            return jsonify({"error": "Missing Cover Letter path."}), 400
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        wwwroot_dir = os.path.abspath(os.path.join(base_dir, "..", "backend", "wwwroot"))
+        full_cover_letter_path = os.path.join(wwwroot_dir, CoverLetter_path.lstrip("/"))
+        print("Full Cover Letter path:", full_cover_letter_path)
+
+        CoverLetter_text = extract_text_from_pdf(full_cover_letter_path)
         prompt = f"Please provide suggestions regaring my Cover Letter, I want to apply to IT jobs. You can search online. My Cover Letter: {CoverLetter_text}\n"          
         answer = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config=config_with_search)
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=config_with_search
+        )
         grounding = answer.candidates[0].grounding_metadata
         return jsonify({
             "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),

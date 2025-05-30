@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
+import axiosInstance2 from '../utils/axiosInstance2';
 import '../design/Resumes.css';
 import PdfUpload from '../components/PdfUpload';
 import Alert from '../components/Alert'; 
@@ -45,7 +46,9 @@ const Resumes = () => {
 
     const handleResumeTips = async (resumePath) => {
         try {
-            navigate('/resume-tips');
+            const res = await axiosInstance2.post('suggestionsCV', { path: resumePath });
+            navigate('/resume-tips', { state: { tips: res.data } });
+
             showAlert('success', 'Redirecting to resume tips.');
         } catch (error) {
             console.error('Error fetching resume tips:', error);
