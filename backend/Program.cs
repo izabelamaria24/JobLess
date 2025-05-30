@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
 using JoblessAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
+using JoblessAPI.Services;
+using System.Runtime.Intrinsics.X86;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +48,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+
+// Add Hangfire services
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
 
 
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -114,6 +123,7 @@ builder.Services.AddCors(options =>
 // For docker compatibility
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
+builder.Services.AddScoped<SendRemindersJob>();
 
 
 
@@ -147,6 +157,26 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseHangfireDashboard(); // Adds dashboard at /hangfire
+
+
+// Trigger the job once at startup (for testing purposes)
+//using (var scope = app.Services.CreateScope())
+//{
+//    var job = scope.ServiceProvider.GetRequiredService<SendRemindersJob>();
+//    await job.Trigger();
+//}
+
+RecurringJob.AddOrUpdate<SendRemindersJob>(
+    job => job.Trigger(),
+    "30 16 * * *");  // 16:30 UTC = 19:30 EEST
+
+
+
+
+
 app.MapControllers();
+
+
 
 app.Run();
