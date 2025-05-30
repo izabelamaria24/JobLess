@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Alert from './Alert';
-import { useAlert } from '../utils/useAlert'; 
+import { useAlert } from '../utils/useAlert';
 
 const ResumeForm = ({ onSubmit, initialData, userId }) => {
   const [description, setDescription] = useState('');
@@ -9,7 +9,7 @@ const ResumeForm = ({ onSubmit, initialData, userId }) => {
   const [github, setGithub] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { alert, showAlert, closeAlert } = useAlert(); 
+  const { alert, showAlert, closeAlert } = useAlert();
 
   useEffect(() => {
     if (initialData) {
@@ -38,7 +38,6 @@ const ResumeForm = ({ onSubmit, initialData, userId }) => {
         github,
       });
       setIsLoading(false);
-      showAlert('success', 'Resume submitted successfully!');
     } catch (err) {
       setIsLoading(false);
       showAlert('error', 'Failed to submit the resume. Please try again.');
@@ -46,45 +45,50 @@ const ResumeForm = ({ onSubmit, initialData, userId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="resume-form">
-      <div>
+    <form onSubmit={handleSubmit} className="profile-card resume-form">
+      <h2 className="profile-section-title">Add New Resume</h2>
+      <div className="profile-form-group">
         <label>Description:</label>
         <input
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
+          className="profile-input"
         />
       </div>
-      <div>
+      <div className="profile-form-group">
         <label>Experience:</label>
         <input
           type="text"
           value={experience}
           onChange={(e) => setExperience(e.target.value)}
           required
+          className="profile-input"
         />
       </div>
-      <div>
+      <div className="profile-form-group">
         <label>Linkedin:</label>
         <input
           type="url"
           value={linkedin}
           onChange={(e) => setLinkedin(e.target.value)}
           required
+          className="profile-input"
         />
       </div>
-      <div>
+      <div className="profile-form-group">
         <label>Github:</label>
         <input
           type="text"
           value={github}
           onChange={(e) => setGithub(e.target.value)}
           required
+          className="profile-input"
         />
       </div>
 
-      <button type="submit" disabled={isLoading}>
+      <button type="submit" disabled={isLoading} className="profile-button">
         {isLoading ? 'Submitting...' : 'Submit'}
       </button>
 
