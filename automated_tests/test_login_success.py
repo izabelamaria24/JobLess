@@ -1,5 +1,5 @@
 def test_login_success(driver):
-    driver.get("https://example.com/login")
+    driver.get("http://localhost:3000/login")
 
     # locate elements using XPath
     username_input = driver.find_element("xpath", '//input[@name="username"]')
