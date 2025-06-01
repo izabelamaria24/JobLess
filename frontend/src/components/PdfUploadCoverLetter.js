@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Alert from './Alert'; 
 import { useAlert } from '../utils/useAlert'; 
 
-const PdfUpload = ({ resumeId }) => {
+const PdfUploadCoverLetter = ({ applicationId }) => {
   const [pdfFile, setPdfFile] = useState(null);
   const { alert, showAlert, closeAlert } = useAlert();
 
@@ -19,11 +19,11 @@ const PdfUpload = ({ resumeId }) => {
     }
 
     const formData = new FormData();
-    formData.append('PdfFile', pdfFile);
+    formData.append('Path', pdfFile);
 
     try {
       const token = JSON.parse(localStorage.getItem('token'));
-      const response = await fetch(`/api/Resumes/upload?id=${resumeId}`, {
+      const response = await fetch(`/api/Applications/upload?id=${applicationId}`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -32,8 +32,7 @@ const PdfUpload = ({ resumeId }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        showAlert('success', `Upload successful! Resume ID: ${result.id}`);
+        showAlert('success', 'Cover letter uploaded successfully!');
       } else {
         const error = await response.json();
         showAlert('error', `Error: ${error.message || 'Upload failed'}`);
@@ -45,7 +44,7 @@ const PdfUpload = ({ resumeId }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Upload PDF Resume</h2>
+      <h2>Upload PDF Cover Letter</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Select PDF: </label>
@@ -56,7 +55,7 @@ const PdfUpload = ({ resumeId }) => {
             required
           />
         </div>
-        <button type="submit">Upload</button>
+        <button type="submit">Upload Cover Letter</button>
       </form>
 
       {alert.show && (
@@ -66,4 +65,4 @@ const PdfUpload = ({ resumeId }) => {
   );
 };
 
-export default PdfUpload;
+export default PdfUploadCoverLetter;
