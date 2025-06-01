@@ -2,7 +2,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 def test_upload_cv_button(driver):
-    driver.get("https://example.com")
+    driver.get("http://localhost:3000/profile")
 
     # test form for uploading CV appears when clicking 'Add CV' link
     about_link = driver.find_element("xpath", '//a[text()="Add Cv"]')
