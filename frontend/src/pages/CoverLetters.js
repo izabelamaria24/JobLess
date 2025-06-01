@@ -16,6 +16,7 @@ const CoverLetters = () => {
         const fetchApplications = async () => {
             try {
                 const res = await axiosInstance.get('/api/Applications/index');
+                console.log('Fetched applications:', res.data);
                 setApplications(res.data);
                 showAlert('success', 'Applications fetched successfully.');
             } catch (err) {
@@ -29,7 +30,7 @@ const CoverLetters = () => {
 
     const handleDeleteCoverLetter = async (application) => {
         try {
-            const updatedApp = { ...application, Path: null };
+            const updatedApp = { ...application, path: null };
             await axiosInstance.put(`/api/Applications/edit/${application.id}`, updatedApp);
             setApplications(applications.map(app => app.id === application.id ? { ...app, Path: null } : app));
             showAlert('success', 'Cover letter deleted successfully.');
@@ -40,7 +41,7 @@ const CoverLetters = () => {
 
     if (loading) return <div className="p-4">Loading cover letters...</div>;
 
-    const coverLetterApps = applications.filter(app => app.Path);
+    const coverLetterApps = applications.filter(app => app.path);
 
     return (
         <div className="resumes-container">
@@ -53,11 +54,10 @@ const CoverLetters = () => {
                         <div key={app.id} className="resume-card">
                             <h2>Cover Letter for {app.company} - {app.jobTitle}</h2>
                             <p><strong>Email:</strong> {app.user?.email}</p>
-                            <p><strong>Phone:</strong> {app.user?.phone || 'N/A'}</p>
                             <div className="resume-card-actions">
                                 <button
                                     className="view-button"
-                                    onClick={() => navigate('/viewer', { state: { pdfUrl: app.Path } })}
+                                    onClick={() => navigate('/viewer', { state: { pdfUrl: app.path } })}
                                 >
                                     View Cover Letter
                                 </button>

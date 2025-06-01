@@ -199,6 +199,7 @@ const Profile = () => {
                             <button className="profile-button" onClick={() => setIsFormVisible(true)}>Change Password</button>
                             <button className="profile-button" onClick={() => setIsResumeFormVisible(true)}>Add CV</button>
                             <Link to={`/resumes`}><button className="profile-button">View Resumes</button></Link>
+                            <Link to={`/cover-letters`}><button className="profile-button">View Cover Letters</button></Link>
                             <button className="logout-button" onClick={handleLogout}>Logout</button>
                         </div>
                     </div>

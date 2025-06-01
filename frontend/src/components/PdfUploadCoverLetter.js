@@ -19,7 +19,7 @@ const PdfUploadCoverLetter = ({ applicationId }) => {
     }
 
     const formData = new FormData();
-    formData.append('Path', pdfFile);
+    formData.append('PdfFile', pdfFile);
 
     try {
       const token = JSON.parse(localStorage.getItem('token'));
