@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useCallback, useRef } from 'rea
 import { ApplicationContext } from '../context/ApplicationContext';
 import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
-import '../design/JobApplication.css';
+import '../design/ApplicationComponent.css';
 import { useNavigate } from 'react-router-dom';
 
 const statusSteps = ['Applied', 'Online Assessment', 'Interview', 'Offer', 'Hired'];

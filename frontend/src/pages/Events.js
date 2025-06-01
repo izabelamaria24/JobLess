@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ApplicationContext } from '../context/ApplicationContext';
-import '../design/Home.css';
+import '../design/Events.css';
 import axios from 'axios';
 import Alert from '../components/Alert'; 
 import { useAlert } from '../utils/useAlert'; 

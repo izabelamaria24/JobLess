@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
-import '../design/JobApplicationForm.css';
+import '../design/ApplicationForm.css';
 
 const ApplicationForm = ({ onSubmit, initialData }) => {
   const getTodayFormatted = () => {
