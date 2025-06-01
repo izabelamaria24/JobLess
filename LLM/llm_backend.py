@@ -64,7 +64,8 @@ def interviewQuestions():
 @app.route("/compareSalary", methods=["GET", "POST"])
 def compareSalary():
     try:
-        data = request.get_json()
+        data = request.get_json().get("data")
+        print(data)
         companies = data.get("companies")
         jobTitles = data.get("jobTitles")
         locations = data.get("locations")
