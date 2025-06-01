@@ -16,7 +16,6 @@ const CoverLetters = () => {
         const fetchApplications = async () => {
             try {
                 const res = await axiosInstance.get('/api/Applications/index');
-                console.log('Fetched applications:', res.data);
                 setApplications(res.data);
                 showAlert('success', 'Applications fetched successfully.');
             } catch (err) {
@@ -39,6 +38,18 @@ const CoverLetters = () => {
         }
     };
 
+    const handleCoverLetterTips = async (coverLetterPath) => {
+        try {
+
+            navigate('/cover-letter-tips', { state: { coverLetterPath: coverLetterPath } });
+
+            showAlert('success', 'Redirecting to cover letter tips.');
+        } catch (error) {
+            console.error('Error fetching cover letter tips:', error);
+            showAlert('error', 'Failed to fetch cover letter tips.');
+        }
+    }
+
     if (loading) return <div className="p-4">Loading cover letters...</div>;
 
     const coverLetterApps = applications.filter(app => app.path);
@@ -60,6 +71,13 @@ const CoverLetters = () => {
                                     onClick={() => navigate('/viewer', { state: { pdfUrl: app.path } })}
                                 >
                                     View Cover Letter
+                                </button>
+                                <button 
+                                    className="view-button"
+                                    onClick={() => handleCoverLetterTips(app.path)}
+
+                                >
+                                    Get Tips
                                 </button>
                                 <button
                                     className="delete-button"

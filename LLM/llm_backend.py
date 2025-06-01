@@ -153,7 +153,7 @@ def suggestionsCV():
     "path": "/path/to/cover_letter.pdf"
 }
 '''
-@app.route("/suggestionsCoverLetter", methods=["GET"])
+@app.route("/suggestionsCoverLetter", methods=["POST"])
 def suggestionsCoverLetter():
     try:
         data = request.get_json()

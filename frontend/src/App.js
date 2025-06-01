@@ -14,6 +14,7 @@ import ResumeTips from "./pages/ResumeTips";
 import CompareSalary from "./pages/CompareSalary";
 import InterviewQuestions from "./pages/InterviewQuestions";
 import CoverLetters from "./pages/CoverLetters";
+import CoverLetterTips from "./pages/CoverLetterTips";
 
 const ProtectedLayoutRoute = ({ element }) => (
     <ProtectedRoute>
@@ -38,6 +39,7 @@ function App() {
                         <Route path="/cover-letters" element={<ProtectedLayoutRoute element={<CoverLetters />} />} />
                         <Route path="/viewer" element={<ProtectedLayoutRoute element={<PdfViewer />} />} />
                         <Route path="/resume-tips" element={<ProtectedLayoutRoute element={<ResumeTips />} />} />
+                        <Route path="/cover-letter-tips" element={<ProtectedLayoutRoute element={<CoverLetterTips />} />} />
                     </Routes>
                 </Router>
             </JobApplicationsProvider>
