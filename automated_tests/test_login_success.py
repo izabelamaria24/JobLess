@@ -6,8 +6,8 @@ def test_login_success(driver):
     password_input = driver.find_element("xpath", '//input[@name="password"]')
     submit_button = driver.find_element("xpath", '//button[@type="submit"]')
 
-    username_input.send_keys("testuser")
-    password_input.send_keys("securepassword")
+    username_input.send_keys("user@test.com")
+    password_input.send_keys("UserPa55!")
     submit_button.click()
 
     # assert dashboard title after successful login
