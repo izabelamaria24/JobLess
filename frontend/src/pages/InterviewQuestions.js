@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import { ApplicationContext } from '../context/ApplicationContext';
 import { Box, Typography, Button, Card, CardContent, Select, MenuItem, FormControl, InputLabel, Divider, List, ListItem, Link, CircularProgress, Grid } from '@mui/material';
 
 const InterviewQuestions = () => {
-  const { applications, getInterviewQuestions } = useContext(JobApplicationsContext);
+  const { applications, getInterviewQuestions } = useContext(ApplicationContext);
   const [selectedApp, setSelectedApp] = useState('');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);

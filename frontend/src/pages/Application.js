@@ -5,13 +5,13 @@ import Modal from '../components/Modal';
 import ResponseForm from '../components/AddResponseForm';
 import Alert from '../components/Alert';
 import { useAlert } from '../utils/useAlert'; 
-import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import { ApplicationContext } from '../context/ApplicationContext';
 import { JobTypeMap, StatusMap, AvailabilityMap } from '../utils/EnumMappings';
 
 const Application = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { fetchApplication, deleteApplication, addResponse, getInterviewQuestions, fetchApplicationResponses, deleteResponse, editResponse } = useContext(JobApplicationsContext);
+    const { fetchApplication, deleteApplication, addResponse, getInterviewQuestions, fetchApplicationResponses, deleteResponse, editResponse } = useContext(ApplicationContext);
 
     const [application, setApplication] = useState(null);
     const [responses, setResponses] = useState([]);

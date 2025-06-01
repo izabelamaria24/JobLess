@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import { ApplicationContext } from '../context/ApplicationContext';
 import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
 import '../design/JobApplication.css';
@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 const statusSteps = ['Applied', 'Online Assessment', 'Interview', 'Offer', 'Hired'];
 
-const JobApplication = ({ applicationId, company, jobTitle, location, availability, link, date, isStale, onEdit }) => {
-  const { fetchApplicationResponses } = useContext(JobApplicationsContext);
+const ApplicationComponent = ({ applicationId, company, jobTitle, location, availability, link, date, isStale, onEdit }) => {
+  const { fetchApplicationResponses } = useContext(ApplicationContext);
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState([]);
   const { alert, showAlert, closeAlert } = useAlert(); 
@@ -92,4 +92,4 @@ const JobApplication = ({ applicationId, company, jobTitle, location, availabili
   );
 };
 
-export default JobApplication;
+export default ApplicationComponent;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { JobApplicationsProvider } from '../../context/JobApplicationsContext';
+import { JobApplicationsProvider } from '../../context/ApplicationContext';
 import Applications from '../Applications';
 
 test('renders applications page and adds a new job application', async () => {

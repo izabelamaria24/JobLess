@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AuthProvider } from '../../context/AuthContext';
-import AuthPage from '../AuthPage';
+import Auth from '../Auth';
 
 test('renders login form and switches to register form', () => {
   render(
     <AuthProvider>
-      <AuthPage />
+      <Auth />
     </AuthProvider>
   );
 

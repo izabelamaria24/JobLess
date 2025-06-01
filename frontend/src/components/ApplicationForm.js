@@ -3,7 +3,7 @@ import Alert from './Alert';
 import { useAlert } from '../utils/useAlert';
 import '../design/JobApplicationForm.css';
 
-const JobApplicationForm = ({ onSubmit, initialData }) => {
+const ApplicationForm = ({ onSubmit, initialData }) => {
   const getTodayFormatted = () => {
     const today = new Date();
     return today.toISOString().split('T')[0];
@@ -157,4 +157,4 @@ const JobApplicationForm = ({ onSubmit, initialData }) => {
   );
 };
 
-export default JobApplicationForm;
+export default ApplicationForm;

@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { JobApplicationsProvider } from "./context/JobApplicationsContext";
+import { JobApplicationsProvider } from "./context/ApplicationContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AuthPage from "./pages/AuthPage";
+import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
 import Layout from "./components/Layout";
 import Application from "./pages/Application";
-import Root from "./pages/Root";
+import Home from "./pages/Home";
 import Resumes from "./pages/Resumes";
 import PdfViewer from "./components/PdfViewer";
 import ResumeTips from "./pages/ResumeTips";
@@ -28,13 +28,13 @@ function App() {
             <JobApplicationsProvider>
                 <Router>
                     <Routes>
-                        <Route path="/login" element={<AuthPage />} />
+                        <Route path="/login" element={<Auth />} />
                         <Route path="/*" element={<ProtectedLayoutRoute element={<Dashboard />} />} />
                         <Route path="/applications" element={<ProtectedLayoutRoute element={<Applications />} />} />
                         <Route path="/applications/:id" element={<ProtectedLayoutRoute element={<Application />} />} />
                         <Route path="/compare-salary" element={<ProtectedLayoutRoute element={<CompareSalary />} />} />
                         <Route path="/interview-questions" element={<ProtectedLayoutRoute element={<InterviewQuestions />} />} />
-                        <Route path="/" element={<ProtectedLayoutRoute element={<Root />} />} />
+                        <Route path="/" element={<ProtectedLayoutRoute element={<Home />} />} />
                         <Route path="/resumes" element={<ProtectedLayoutRoute element={<Resumes />} />} />
                         <Route path="/cover-letters" element={<ProtectedLayoutRoute element={<CoverLetters />} />} />
                         <Route path="/viewer" element={<ProtectedLayoutRoute element={<PdfViewer />} />} />

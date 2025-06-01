@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import { ApplicationContext } from '../context/ApplicationContext';
 import { Box, Typography, Button, Card, CardContent, Checkbox, FormControlLabel, Divider, List, ListItem, Link, CircularProgress } from '@mui/material';
 
 const CompareSalary = () => {
-  const { applications, compareSalary } = useContext(JobApplicationsContext);
+  const { applications, compareSalary } = useContext(ApplicationContext);
   const [selectedApps, setSelectedApps] = useState([]);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);

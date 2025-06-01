@@ -5,7 +5,7 @@ import "../design/AuthPage.css";
 import Alert from "../components/Alert";
 import { useAlert } from "../utils/useAlert"; 
 
-const AuthPage = () => {
+const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({ email: "", password: "" });
     const navigate = useNavigate();
@@ -97,4 +97,4 @@ const AuthPage = () => {
     );
 };
 
-export default AuthPage;
+export default Auth;

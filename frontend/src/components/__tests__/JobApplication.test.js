@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import JobApplication from '../JobApplication';
+import ApplicationComponent from '../ApplicationComponent';
 
 test('renders job application with company name, link, date, and status', () => {
   const application = {
@@ -10,7 +10,7 @@ test('renders job application with company name, link, date, and status', () => 
     status: 'Applied'
   };
 
-  render(<JobApplication {...application} />);
+  render(<ApplicationComponent {...application} />);
 
   expect(screen.getByText('Company A')).toBeInTheDocument();
   expect(screen.getByText('Company Link')).toBeInTheDocument();

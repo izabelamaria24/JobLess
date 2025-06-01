@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import axiosInstance2 from '../utils/axiosInstance2';
 import '../design/Resumes.css';
-import PdfUpload from '../components/PdfUpload';
+import PdfUploadResume from '../components/PdfUploadResume';
 import Alert from '../components/Alert'; 
 import { useAlert } from '../utils/useAlert'; 
 import { useNavigate } from 'react-router-dom';
@@ -83,7 +83,7 @@ const Resumes = () => {
                                         View Resume
                                     </button>
                                 ) : (
-                                    <PdfUpload resumeId={resume.id} />
+                                    <PdfUploadResume resumeId={resume.id} />
                                 )}
                                 <button 
                                     className="view-button"

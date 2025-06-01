@@ -5,7 +5,7 @@ import { ActionTypes } from '../utils/ActionTypes';
 import { useAlert } from '../utils/useAlert'; 
 import { AuthContext } from './AuthContext';
 
-const JobApplicationsContext = createContext();
+const ApplicationContext = createContext();
 
 const JobApplicationsProvider = ({ children }) => {
   const [applications, setApplications] = useState([]);
@@ -205,7 +205,7 @@ const JobApplicationsProvider = ({ children }) => {
   };
 
   return (
-    <JobApplicationsContext.Provider
+    <ApplicationContext.Provider
       value={{
         applications,
         addApplication,
@@ -222,8 +222,8 @@ const JobApplicationsProvider = ({ children }) => {
       }}
     >
       {children}
-    </JobApplicationsContext.Provider>
+    </ApplicationContext.Provider>
   );
 };
 
-export { JobApplicationsContext, JobApplicationsProvider };
+export { ApplicationContext, JobApplicationsProvider };

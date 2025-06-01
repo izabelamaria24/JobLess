@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Alert from './Alert'; 
 import { useAlert } from '../utils/useAlert'; 
 
-const PdfUpload = ({ resumeId }) => {
+const PdfUploadResume = ({ resumeId }) => {
   const [pdfFile, setPdfFile] = useState(null);
   const { alert, showAlert, closeAlert } = useAlert();
 
@@ -66,4 +66,4 @@ const PdfUpload = ({ resumeId }) => {
   );
 };
 
-export default PdfUpload;
+export default PdfUploadResume;

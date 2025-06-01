@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import JobApplication from '../components/JobApplication';
-import JobApplicationForm from '../components/JobApplicationForm';
+import ApplicationComponent from '../components/ApplicationComponent';
+import ApplicationForm from '../components/ApplicationForm';
 import Modal from '../components/Modal';
-import { JobApplicationsContext } from '../context/JobApplicationsContext';
+import { ApplicationContext } from '../context/ApplicationContext';
 import "../design/Applications.css"; 
 import { Link, useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert'; 
@@ -11,7 +11,7 @@ import axiosInstance from '../utils/axiosInstance';
 
 
 const Applications = () => {
-  const { applications, addApplication, updateApplication, compareSalary, fetchApplications } = useContext(JobApplicationsContext);
+  const { applications, addApplication, updateApplication, compareSalary, fetchApplications } = useContext(ApplicationContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
   const [staleApplications, setStaleApplications] = useState([]);
@@ -77,7 +77,7 @@ const Applications = () => {
 
       
       <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
-        <JobApplicationForm
+        <ApplicationForm
           onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
           initialData={currentApplication}
         />
@@ -85,7 +85,7 @@ const Applications = () => {
 
       {applications.map((app, index) => (
         <div key={index}>
-          <JobApplication
+          <ApplicationComponent
             applicationId={app.id}
             company={app.company}
             jobTitle={app.jobTitle}

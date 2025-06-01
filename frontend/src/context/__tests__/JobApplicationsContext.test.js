@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { JobApplicationsProvider, JobApplicationsContext } from '../JobApplicationsContext';
+import { JobApplicationsProvider, ApplicationContext } from '../ApplicationContext';
 
 jest.mock('axios');
 
@@ -16,7 +16,7 @@ test('fetches and provides job applications', async () => {
 
   let applications;
   const TestComponent = () => {
-    const context = React.useContext(JobApplicationsContext);
+    const context = React.useContext(ApplicationContext);
     applications = context.applications;
     return null;
   };
