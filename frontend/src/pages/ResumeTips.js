@@ -1,51 +1,60 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import Alert from "../components/Alert"; 
-import { useAlert } from "../utils/useAlert"; 
+import Alert from "../components/Alert";
+import { useAlert } from "../utils/useAlert";
+import { Box, Typography, Card, CardContent, Divider, List, ListItem, Button } from '@mui/material';
 
 // import '../design/ResumeTips.css';
 
 const ResumeTips = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const resumeTips = location.state?.resumeTips;
-    const { alert, showAlert, closeAlert } = useAlert(); 
+    const tips = location.state?.tips;
+    const { alert, showAlert, closeAlert } = useAlert();
 
-    useEffect(() => {
-        if (!resumeTips) {
+    React.useEffect(() => {
+        if (!tips) {
             showAlert('error', 'No resume tips available.');
         }
-    }, [resumeTips, showAlert]);
+    }, [tips, showAlert]);
 
-    if (!resumeTips) {
+    if (!tips) {
         return (
-            <div className="resume-tips-container">
-                <h1>Resume Tips</h1>
-                <div>No resume tips available.</div>
-                <button onClick={() => navigate(-1)}>Go Back</button>
+            <Box p={3} className="resume-tips-container">
+                <Typography variant="h4" gutterBottom>Resume Tips</Typography>
+                <Typography>No resume tips available.</Typography>
+                <Button variant="contained" onClick={() => navigate(-1)} sx={{ mt: 2 }}>Go Back</Button>
                 {alert.show && (
                     <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
                 )}
-            </div>
+            </Box>
         );
     }
 
     return (
-        <div className="resume-tips-container">
-            <h1>Resume Tips</h1>
-            <div>
-                <h2>Here are your personalized resume tips:</h2>
-                <ul>
-                    {resumeTips.map((tip, index) => (
-                        <li key={index}>{tip}</li>
-                    ))}
-                </ul>
-            </div>
-
+        <Box p={3} className="resume-tips-container">
+            <Typography variant="h4" gutterBottom>Resume Tips</Typography>
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant="h6" gutterBottom>Here are your personalized resume tips:</Typography>
+                    <List>
+                        {Array.isArray(tips)
+                            ? tips.map((tip, idx) => (
+                                <ListItem key={idx}>{tip}</ListItem>
+                            ))
+                            : tips.split('\n').map((tip, idx) => (
+                                <ListItem key={idx}>{tip}</ListItem>
+                            ))
+                        }
+                    </List>
+                    <Divider sx={{ my: 2 }} />
+                    <Button variant="contained" onClick={() => navigate(-1)}>Go Back</Button>
+                </CardContent>
+            </Card>
             {alert.show && (
                 <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
             )}
-        </div>
+        </Box>
     );
 };
 

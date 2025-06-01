@@ -34,6 +34,7 @@ function App() {
                         <Route path="/interview-questions" element={<ProtectedLayoutRoute element={<InterviewQuestions />} />} />
                         <Route path="/" element={<ProtectedLayoutRoute element={<Root />} />} />
                         <Route path="/resumes" element={<ProtectedLayoutRoute element={<Resumes />} />} />
+                        <Route path="/cover-letters" element={<ProtectedLayoutRoute element={<CoverLetters />} />} />
                         <Route path="/viewer" element={<ProtectedLayoutRoute element={<PdfViewer />} />} />
                         <Route path="/resume-tips" element={<ProtectedLayoutRoute element={<ResumeTips />} />} />
                     </Routes>

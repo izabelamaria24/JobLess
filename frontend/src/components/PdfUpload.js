@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Alert from './Alert'; 
 import { useAlert } from '../utils/useAlert'; 
 
-const PdfUpload = ({ resumeId }) => {
+const PdfUpload = ({ applicationId, isCoverLetter = false }) => {
   const [pdfFile, setPdfFile] = useState(null);
   const { alert, showAlert, closeAlert } = useAlert();
 
@@ -23,7 +23,10 @@ const PdfUpload = ({ resumeId }) => {
 
     try {
       const token = JSON.parse(localStorage.getItem('token'));
-      const response = await fetch(`/api/Resumes/upload?id=${resumeId}`, {
+      // Always use Applications/upload endpoint for cover letters
+      const endpoint = `/api/Applications/upload?id=${applicationId}`;
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
         headers: {
@@ -32,8 +35,7 @@ const PdfUpload = ({ resumeId }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        showAlert('success', `Upload successful! Resume ID: ${result.id}`);
+        showAlert('success', `Upload successful!`);
       } else {
         const error = await response.json();
         showAlert('error', `Error: ${error.message || 'Upload failed'}`);
@@ -44,21 +46,16 @@ const PdfUpload = ({ resumeId }) => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Upload PDF Resume</h2>
+    <div style={{ padding: '10px' }}>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Select PDF: </label>
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleFileChange}
-            required
-          />
-        </div>
-        <button type="submit">Upload</button>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          required
+        />
+        <button type="submit">Upload Cover Letter</button>
       </form>
-
       {alert.show && (
         <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
       )}
