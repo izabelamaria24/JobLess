@@ -1,10 +1,5 @@
 import requests
-
-BASE_URL = "http://localhost:5000/api"
-LOGIN_ROUTE = "/Account/login"
-USERNAME = "user@test.com"
-PASSWORD = "UserPa55!"
-
+from config import BASE_URL, LOGIN_ROUTE, USERNAME, PASSWORD
 
 def login():
     url = BASE_URL + LOGIN_ROUTE
@@ -215,6 +210,39 @@ def test_responses(token):
     )
     delete_application(token, app_id)
 
+
+def test_applications_summary(token):
+    headers = get_headers(token)
+    url = f"{BASE_URL}/Applications/summary"
+    response = requests.get(url, headers=headers)
+    print(f"[GET] /Applications/summary => Status: {response.status_code}")
+    print("Response:", response.json() if response.content else "No content")
+
+
+def test_response_history(token):
+    app_id = create_application(token)
+    headers = get_headers(token)
+
+    response_data_1 = {
+        "ApplicationId": app_id,
+        "Action": 2 
+    }
+    response_data_2 = {
+        "ApplicationId": app_id,
+        "Action": 3 
+    }
+
+    requests.post(f"{BASE_URL}/Responses/new", json=response_data_1, headers=headers)
+    requests.post(f"{BASE_URL}/Responses/new", json=response_data_2, headers=headers)
+
+    url = f"{BASE_URL}/Responses/history/{app_id}"
+    response = requests.get(url, headers=headers)
+    print(f"[GET] /Responses/history/{app_id} => Status: {response.status_code}")
+
+    test_applications_summary(token)
+    delete_application(token, app_id)
+
+
 def test_all_routes(token):
     endpoints = [
         # {"method": "GET", "route": "/users"},
@@ -231,13 +259,15 @@ def test_all_routes(token):
         test_route(ep["method"], ep["route"], token, data=ep.get("data"))
     
     # Test Controllers
-
     test_statistics(token)
     test_resumes(token)
     test_technologies(token)
     test_applications(token)
     test_responses(token)
 
+
+    test_response_history(token)
+    
     print("Everything went exceptionally well! Your backend has been thoroughly tested, and all endpoints, controllers, and functionalities are working perfectly as expected. Great job!")
    
 
