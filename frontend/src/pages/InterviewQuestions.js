@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { ApplicationContext } from '../context/ApplicationContext';
 import { Box, Typography, Button, Card, CardContent, Select, MenuItem, FormControl, InputLabel, Divider, List, ListItem, Link, CircularProgress, Grid } from '@mui/material';
+import '../design/InterviewQuestions.css';
 
 const InterviewQuestions = () => {
   const { applications, getInterviewQuestions } = useContext(ApplicationContext);
@@ -48,23 +49,19 @@ const InterviewQuestions = () => {
     }
 
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="questions-grid">
         {questions.map((question, index) => (
           <Grid item xs={12} md={6} key={index}>
-            <Card variant="outlined">
+            <Card variant="outlined" className="question-card">
               <CardContent>
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 'bold', color: '#1976d2' }}
-                  gutterBottom
-                >
+                <Typography variant="h6" className="question-title">
                   {question.title}
                 </Typography>
-                <Typography variant="caption" display="block" gutterBottom>
+                <Typography variant="caption" className="question-category" display="block" gutterBottom>
                   Category: {question.category}
                 </Typography>
                 <Divider sx={{ my: 1 }} />
-                <Typography variant="body1">
+                <Typography variant="body1" className="question-content">
                   {question.contents}
                 </Typography>
               </CardContent>
@@ -76,10 +73,10 @@ const InterviewQuestions = () => {
   };
 
   return (
-    <Box p={3}>
+    <Box p={3} className="interview-container">
       <Typography variant="h4" gutterBottom>Interview Questions</Typography>
-      
-      <Box mb={4}>
+ 
+      <Box className="selection-container" mb={4}>
         <Typography variant="h6" gutterBottom>Select a job application:</Typography>
         <Card variant="outlined">
           <CardContent>
@@ -114,7 +111,7 @@ const InterviewQuestions = () => {
       </Box>
 
       {results && (
-        <Box mb={4}>
+        <Box className="results-container" mb={4}>
           <Typography variant="h6" gutterBottom>Interview Questions:</Typography>
           <Card variant="outlined">
             <CardContent>

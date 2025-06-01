@@ -1,6 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { ApplicationContext } from '../context/ApplicationContext';
-import { Box, Typography, Button, Card, CardContent, Checkbox, FormControlLabel, Divider, List, ListItem, Link, CircularProgress } from '@mui/material';
+import { 
+  Box, Typography, Button, Card, CardContent, Checkbox, FormControlLabel, Divider, List, ListItem, Link, CircularProgress 
+} from '@mui/material';
+import '../design/CompareSalary.css';
 
 const CompareSalary = () => {
   const { applications, compareSalary } = useContext(ApplicationContext);
@@ -17,9 +20,7 @@ const CompareSalary = () => {
   };
 
   const handleCompare = async () => {
-    if (selectedApps.length < 2) {
-      return;
-    }
+    if (selectedApps.length < 2) return;
     
     setLoading(true);
     try {
@@ -32,59 +33,43 @@ const CompareSalary = () => {
     }
   };
 
-  const formatSalaryText = (text) => {
-    let formatted = text
-      .replace(/•/g, '')
-      .replace(/\*/g, '')
-      .replace(/^\s*[-–]\s*/gm, '');
-    
-    formatted = formatted.replace(/\$[\d,.]+\s*(-|to|–)\s*\$[\d,.]+/g, match => 
-      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
-    );
-    
-    formatted = formatted.replace(/\$[\d,.]+(\s*per\s*year|\s*per\s*annum|\s*annually)/g, match => 
-      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
-    );
-    
-    const lines = formatted.split('\n');
-    let inList = false;
-    let result = '';
-    
-    lines.forEach(line => {
-      if (line.trim() === '') {
-        result += '\n';
-        return;
+  // A new helper function that parses the JSON response and renders cards for each job.
+  const renderComparisonResults = () => {
+    let jobs = [];
+    try {
+      let answer = results.answer.trim();
+      if (answer.startsWith("```json")) {
+        answer = answer.replace(/^```json\s*/, "").replace(/\s*```$/, "");
       }
-      
-      if (line.match(/^[A-Z][\w\s&]+:/) || line.match(/^[A-Z][\w\s&]+\s*-/)) {
-        if (!inList) {
-          result += '<ul>';
-          inList = true;
-        }
-        result += `<li><strong>${line}</strong></li>`;
-      } else if (inList && !line.startsWith('<')) {
-        result += `<li>${line}</li>`;
-      } else {
-        if (inList) {
-          result += '</ul>';
-          inList = false;
-        }
-        result += line + '\n';
-      }
-    });
-    
-    if (inList) {
-      result += '</ul>';
+      jobs = JSON.parse(answer);
+    } catch (e) {
+      console.error("Error parsing results:", e);
+      return <Typography color="error">Failed to parse salary comparison results.</Typography>;
     }
     
-    return <div dangerouslySetInnerHTML={{ __html: result }} />;
+    return (
+      <Box className="results-cards">
+        {jobs.map((job, index) => (
+          <Card key={index} variant="outlined" className="result-card">
+            <CardContent>
+              <Typography variant="h6">{job.company}</Typography>
+              <Typography variant="subtitle1">{job.jobTitle}</Typography>
+              <Typography variant="body2" color="textSecondary">{job.location}</Typography>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="body1" className="job-salary">{job.salary}</Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    );
   };
 
   return (
-    <Box p={3}>
+    <Box p={3} className="compare-container">
       <Typography variant="h4" gutterBottom>Compare Salaries</Typography>
-      
-      <Box mb={4}>
+
+      {/* Selection container */}
+      <Box className="selection-container">
         <Typography variant="h6" gutterBottom>Select applications to compare:</Typography>
         <Card variant="outlined">
           <CardContent>
@@ -117,19 +102,13 @@ const CompareSalary = () => {
         </Card>
       </Box>
 
+      {/* Results container */}
       {results && (
-        <Box>
+        <Box className="results-container">
           <Typography variant="h6" gutterBottom>Comparison Results:</Typography>
           <Card variant="outlined">
             <CardContent>
-              <Box sx={{ 
-                whiteSpace: 'pre-line',
-                '& ul': { pl: 2, mb: 2 },
-                '& li': { mb: 1 }
-              }}>
-                {formatSalaryText(results.answer)}
-              </Box>
-              
+              {renderComparisonResults()}
               {results.links && results.links.length > 0 && (
                 <>
                   <Divider sx={{ my: 2 }} />

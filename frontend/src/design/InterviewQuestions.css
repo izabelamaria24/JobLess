@@ -1,0 +1,40 @@
+.interview-container {
+  
+}
+
+.selection-container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.results-container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.questions-grid {
+  gap: 16px;
+}
+
+.question-card {
+ 
+}
+
+.question-title {
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.question-category {
+  margin-bottom: 8px;
+}
+
+.question-content {
+  margin-top: 8px;
+}
