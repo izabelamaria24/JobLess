@@ -1,7 +1,7 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-def test_upload_cv_button(driver):
+def test_add_response_button(driver):
     driver.get("http://localhost:3000/applications/1")  # test on application with id 1
 
     # test form for adding response appears when clicking 'Add esponse' button
