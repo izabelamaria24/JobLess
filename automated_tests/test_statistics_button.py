@@ -1,5 +1,5 @@
 def test_statistics_button(driver):
-    driver.get("https://example.com")
+    driver.get("http://localhost:3000/")
 
     # Click 'Statistics' link and verify it goes to the Statistics page
     about_link = driver.find_element("xpath", '//a[text()="Statistics"]')
