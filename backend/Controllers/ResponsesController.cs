@@ -103,9 +103,6 @@ namespace JoblessAPI.Controllers
         [HttpPost("new")]
         public async Task<IActionResult> New([FromBody] Response response)
         {
-            // Validate the request model
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -126,6 +123,16 @@ namespace JoblessAPI.Controllers
                 }
             }
 
+            // Validate the request model
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Validate the deadline (if provided)
+            if (response.Deadline.HasValue && response.Deadline.Value < DateTime.UtcNow)
+            {
+                return BadRequest(new { Message = "Deadline cannot be in the past." });
+            }
+
             // Set the response date to the current UTC time
             response.Date = DateTime.UtcNow;
 
@@ -142,10 +149,13 @@ namespace JoblessAPI.Controllers
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(int id, [FromBody] Response updatedResponse)
         {
-            // Ensure the response ID matches the updated response ID
-            if (id != updatedResponse.Id)
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if the user is authenticated
+            if (userId is null)
             {
-                return BadRequest(new { Message = "Response Id mismatch" });
+                return Unauthorized(new { Message = "User not authenticated" });
             }
 
             // Fetch the response by ID
@@ -159,19 +169,21 @@ namespace JoblessAPI.Controllers
                 return NotFound(new { Message = "Response not found" });
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Check if the user is authenticated
-            if (userId is null)
-            {
-                return Unauthorized(new { Message = "User not authenticated" });
-            }
-
             // Ensure the response belongs to the user
             if (response.Application == null || response.Application.UserId != userId)
             {
                 return Unauthorized(new { Message = "You are not allowed to edit this response" });
             }
+
+            // Ensure the response ID matches the updated response ID
+            if (id != updatedResponse.Id)
+            {
+                return BadRequest(new { Message = "Response Id mismatch" });
+            }
+
+            // Validate the request model
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             // Update the response action and date
             response.Action = updatedResponse.Action;
@@ -194,6 +206,14 @@ namespace JoblessAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Check if the user is authenticated
+            if (userId is null)
+            {
+                return Unauthorized(new { Message = "User not authenticated" });
+            }
+
             // Fetch the response by ID
             var response = await db.Responses
                 .Include(r => r.Application)
@@ -203,14 +223,6 @@ namespace JoblessAPI.Controllers
             if (response == null)
             {
                 return NotFound(new { Message = "Response not found" });
-            }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Check if the user is authenticated
-            if (userId is null)
-            {
-                return Unauthorized(new { Message = "User not authenticated" });
             }
 
             // Ensure the response belongs to the user

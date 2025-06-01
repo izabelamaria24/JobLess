@@ -89,20 +89,24 @@ namespace JoblessAPI.Controllers
         [HttpPost("new")]
         public async Task<IActionResult> New([FromBody] Application application)
         {
-            // Validate the incoming model
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             // Retrieve the authenticated user's ID
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId is null)
             {
-                return Unauthorized(new
-                {
-                    Message = "User not authenticated"
-                });
+                return Unauthorized(new { Message = "User not authenticated" });
             }
+
+            // Validate the incoming model
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (string.IsNullOrWhiteSpace(application.JobTitle) || string.IsNullOrWhiteSpace(application.Company))
+                return BadRequest(new { Message = "JobTitle and Company are required." });
+
+            if (application.Date > DateTime.Now)
+                return BadRequest(new { Message = "Date cannot be in the future." });
+
 
             // Set the user ID and fetch the user details
             application.UserId = userId;
@@ -214,6 +218,17 @@ namespace JoblessAPI.Controllers
             {
                 return Unauthorized(new { Message = "You are not allowed to edit this application" });
             }
+
+            //// Validate the updated application model
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (string.IsNullOrWhiteSpace(updatedApplication.JobTitle) || string.IsNullOrWhiteSpace(updatedApplication.Company))
+                return BadRequest(new { Message = "JobTitle and Company are required." });
+
+            if (updatedApplication.Date > DateTime.Now)
+                return BadRequest(new { Message = "Date cannot be in the future." });
+
 
             // Update application details
             application.JobTitle = updatedApplication.JobTitle;

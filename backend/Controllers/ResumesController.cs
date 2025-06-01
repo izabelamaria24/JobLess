@@ -83,8 +83,6 @@ namespace JoblessAPI.Controllers
         [HttpPost("new")]
         public async Task<IActionResult> New([FromBody] Resume resume)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -92,6 +90,16 @@ namespace JoblessAPI.Controllers
             {
                 return Unauthorized(new { Message = "User not authenticated" });
             }
+
+            // Validate required fields
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (string.IsNullOrWhiteSpace(resume.Description))
+                return BadRequest(new { Message = "Description is required." });
+
+            if (string.IsNullOrWhiteSpace(resume.Experience))
+                return BadRequest(new { Message = "Experience is required." });
 
             resume.UserId = userId;
             resume.User = db.Users.Find(userId); // Associates the resume with the user.
@@ -192,7 +200,15 @@ namespace JoblessAPI.Controllers
                 return Unauthorized(new { Message = "You are not allowed to edit this resume" });
             }
 
-            // Updates resume properties.
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(updatedResume.Description))
+                return BadRequest(new { Message = "Description is required." });
+
+            if (string.IsNullOrWhiteSpace(updatedResume.Experience))
+                return BadRequest(new { Message = "Experience is required." });
+
+
+            // Updates resume properties
             resume.Description = updatedResume.Description;
             resume.Experience = updatedResume.Experience;
             resume.Path = updatedResume.Path;
