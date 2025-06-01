@@ -31,7 +31,7 @@
 }
 
 .add-response-button {
-    background-color: #2196F3;
+    background-color: #6a5acd;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -140,7 +140,7 @@
 }
 
 .edit-response-button {
-    color: #2196f3;
+    color: #6a5acd;
 }
 
 .delete-response-button:hover,

@@ -60,13 +60,13 @@
 }
 
 .profile-input:focus {
-  border-color: #2196F3;
+  border-color: #6a5acd;
   outline: none;
 }
 
 
 .profile-button {
-  background-color: #2196F3;
+  background-color: #6a5acd;
   color: white;
   border: none;
   border-radius: 4px;
@@ -77,7 +77,7 @@
 }
 
 .profile-button:hover {
-  background-color: #1976D2;
+  background-color: #483d8b;
 }
 
 .profile-button.secondary {
