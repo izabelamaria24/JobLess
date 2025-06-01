@@ -1,5 +1,5 @@
 def test_navbar_links_exist(driver):
-    driver.get("https://example.com")
+    driver.get("http://localhost:3000/")
 
     # Check that expected navbar links are present by text
     assert driver.find_element("xpath", '//a[text()="Dashboard"]')
