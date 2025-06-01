@@ -16,7 +16,7 @@ CORS(app)
 }
 '''
 
-@app.route("/interviewQuestions", methods=["GET"])
+@app.route("/interviewQuestions", methods=["POST"])
 def interviewQuestions():
     try:
         data = request.get_json()

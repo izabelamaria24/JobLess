@@ -46,8 +46,9 @@ const Resumes = () => {
 
     const handleResumeTips = async (resumePath) => {
         try {
-            const res = await axiosInstance2.post('suggestionsCV', { path: resumePath });
-            navigate('/resume-tips', { state: { tips: res.data } });
+            // const res = await axiosInstance2.post('suggestionsCV', { path: resumePath });
+            // navigate('/resume-tips', { state: { tips: res.data } });
+            navigate('/resume-tips', { state: { resumePath: resumePath } });
 
             showAlert('success', 'Redirecting to resume tips.');
         } catch (error) {

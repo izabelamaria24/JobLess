@@ -13,6 +13,7 @@ import PdfViewer from "./components/PdfViewer";
 import ResumeTips from "./pages/ResumeTips";
 import CompareSalary from "./pages/CompareSalary";
 import InterviewQuestions from "./pages/InterviewQuestions";
+import CoverLetters from "./pages/CoverLetters";
 
 const ProtectedLayoutRoute = ({ element }) => (
     <ProtectedRoute>

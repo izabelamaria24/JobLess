@@ -9,8 +9,9 @@ import Alert from '../components/Alert';
 import { useAlert } from '../utils/useAlert'; 
 import axiosInstance from '../utils/axiosInstance';
 
+
 const Applications = () => {
-  const { applications, addApplication, updateApplication, compareSalary } = useContext(JobApplicationsContext);
+  const { applications, addApplication, updateApplication, compareSalary, fetchApplications } = useContext(JobApplicationsContext);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
   const [staleApplications, setStaleApplications] = useState([]);
@@ -23,6 +24,7 @@ const Applications = () => {
       await addApplication(application);
       setIsFormVisible(false);
       showAlert('success', 'Job application added successfully.');
+      if (fetchApplications) await fetchApplications();
     } catch (err) {
       showAlert('error', err.message || 'Failed to add job application.');
     }
@@ -39,6 +41,7 @@ const Applications = () => {
       setIsFormVisible(false);
       setCurrentApplication(null);
       showAlert('success', 'Job application updated successfully.');
+      if (fetchApplications) await fetchApplications();
     } catch (err) {
       showAlert('error', err.message || 'Failed to update job application.');
     }
