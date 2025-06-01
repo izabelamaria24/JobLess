@@ -4,6 +4,7 @@ import PdfUpload from '../components/PdfUpload';
 import Alert from '../components/Alert';
 import { useAlert } from '../utils/useAlert';
 import { useNavigate } from 'react-router-dom';
+import PdfUploadCoverLetter from '../components/PdfUploadCoverLetter';
 
 const CoverLetters = () => {
     const [applications, setApplications] = useState([]);
@@ -39,7 +40,7 @@ const CoverLetters = () => {
 
     if (loading) return <div className="p-4">Loading cover letters...</div>;
 
-    const coverLetterApps = applications.filter(app => app.path);
+    const coverLetterApps = applications.filter(app => app.Path);
 
     return (
         <div className="resumes-container">
@@ -56,7 +57,7 @@ const CoverLetters = () => {
                             <div className="resume-card-actions">
                                 <button
                                     className="view-button"
-                                    onClick={() => navigate('/viewer', { state: { pdfUrl: app.path } })}
+                                    onClick={() => navigate('/viewer', { state: { pdfUrl: app.Path } })}
                                 >
                                     View Cover Letter
                                 </button>
@@ -76,7 +77,7 @@ const CoverLetters = () => {
                 {applications.map(app => (
                     <div key={app.id} className="resume-card">
                         <h3>{app.company} - {app.jobTitle}</h3>
-                        <PdfUpload applicationId={app.id} isCoverLetter />
+                        <PdfUploadCoverLetter applicationId={app.id}  />
                     </div>
                 ))}
             </div>
