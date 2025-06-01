@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
-import { Box, Typography, Button, Card, CardContent, Checkbox, FormControlLabel, Divider, List, ListItem, Link, CircularProgress, Grid } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, Checkbox, FormControlLabel, Divider, List, ListItem, Link, CircularProgress } from '@mui/material';
 
 const CompareSalary = () => {
   const { applications, compareSalary } = useContext(JobApplicationsContext);
@@ -32,43 +32,52 @@ const CompareSalary = () => {
     }
   };
 
-  const cleanAnswer = (answer) => {
-    let cleaned = answer.trim();
-    if (cleaned.startsWith("```json")) {
-      cleaned = cleaned.replace(/^```json\s*/, "").replace(/\s*```$/, "");
-    }
-    return cleaned;
-  };
-
-  const renderComparisonResults = () => {
-    let jobs = [];
-    try {
-      const cleanedAnswer = cleanAnswer(results.answer);
-      jobs = JSON.parse(cleanedAnswer);
-    } catch (e) {
-      console.error("Error parsing salary results:", e);
-      return <Typography color="error">Failed to parse results.</Typography>;
-    }
-
-    return (
-      <Grid container spacing={2}>
-        {jobs.map((job, index) => (
-          <Grid item xs={12} md={6} key={index}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6" gutterBottom>{job.company}</Typography>
-                <Typography variant="subtitle1">{job.jobTitle}</Typography>
-                <Typography variant="body2" color="textSecondary">{job.location}</Typography>
-                <Divider sx={{ my: 1 }} />
-                <Typography variant="body1" sx={{ color: '#2e7d32', fontWeight: 500 }}>
-                  {job.salary}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+  const formatSalaryText = (text) => {
+    let formatted = text
+      .replace(/•/g, '')
+      .replace(/\*/g, '')
+      .replace(/^\s*[-–]\s*/gm, '');
+    
+    formatted = formatted.replace(/\$[\d,.]+\s*(-|to|–)\s*\$[\d,.]+/g, match => 
+      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
     );
+    
+    formatted = formatted.replace(/\$[\d,.]+(\s*per\s*year|\s*per\s*annum|\s*annually)/g, match => 
+      `<span style="color: #2e7d32; font-weight: 500;">${match}</span>`
+    );
+    
+    const lines = formatted.split('\n');
+    let inList = false;
+    let result = '';
+    
+    lines.forEach(line => {
+      if (line.trim() === '') {
+        result += '\n';
+        return;
+      }
+      
+      if (line.match(/^[A-Z][\w\s&]+:/) || line.match(/^[A-Z][\w\s&]+\s*-/)) {
+        if (!inList) {
+          result += '<ul>';
+          inList = true;
+        }
+        result += `<li><strong>${line}</strong></li>`;
+      } else if (inList && !line.startsWith('<')) {
+        result += `<li>${line}</li>`;
+      } else {
+        if (inList) {
+          result += '</ul>';
+          inList = false;
+        }
+        result += line + '\n';
+      }
+    });
+    
+    if (inList) {
+      result += '</ul>';
+    }
+    
+    return <div dangerouslySetInnerHTML={{ __html: result }} />;
   };
 
   return (
@@ -109,11 +118,18 @@ const CompareSalary = () => {
       </Box>
 
       {results && (
-        <Box mb={4}>
+        <Box>
           <Typography variant="h6" gutterBottom>Comparison Results:</Typography>
           <Card variant="outlined">
             <CardContent>
-              {renderComparisonResults()}
+              <Box sx={{ 
+                whiteSpace: 'pre-line',
+                '& ul': { pl: 2, mb: 2 },
+                '& li': { mb: 1 }
+              }}>
+                {formatSalaryText(results.answer)}
+              </Box>
+              
               {results.links && results.links.length > 0 && (
                 <>
                   <Divider sx={{ my: 2 }} />
