@@ -218,6 +218,7 @@ const JobApplicationsProvider = ({ children }) => {
         deleteApplication,
         compareSalary,
         getInterviewQuestions,
+        fetchApplications,
       }}
     >
       {children}

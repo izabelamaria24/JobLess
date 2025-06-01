@@ -16,7 +16,7 @@ CORS(app)
 }
 '''
 
-@app.route("/interviewQuestions", methods=["GET"])
+@app.route("/interviewQuestions", methods=["POST"])
 def interviewQuestions():
     try:
         data = request.get_json()
@@ -65,6 +65,7 @@ def interviewQuestions():
 def compareSalary():
     try:
         data = request.get_json().get("data")
+        print(data)
         companies = data.get("companies")
         jobTitles = data.get("jobTitles")
         locations = data.get("locations")
@@ -152,7 +153,7 @@ def suggestionsCV():
     "path": "/path/to/cover_letter.pdf"
 }
 '''
-@app.route("/suggestionsCoverLetter", methods=["GET"])
+@app.route("/suggestionsCoverLetter", methods=["POST"])
 def suggestionsCoverLetter():
     try:
         data = request.get_json()

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { JobApplicationsContext } from '../context/JobApplicationsContext';
-import { Box, Typography, Button, Card, CardContent, Select, MenuItem, FormControl, InputLabel, Divider, List, ListItem, Link, CircularProgress } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, Select, MenuItem, FormControl, InputLabel, Divider, List, ListItem, Link, CircularProgress, Grid } from '@mui/material';
 
 const InterviewQuestions = () => {
   const { applications, getInterviewQuestions } = useContext(JobApplicationsContext);
@@ -14,10 +14,10 @@ const InterviewQuestions = () => {
 
   const handleGetQuestions = async () => {
     if (!selectedApp) return;
-    
+
     const application = applications.find(app => app.id === selectedApp);
     if (!application) return;
-    
+
     setLoading(true);
     try {
       const result = await getInterviewQuestions(application.company, application.jobTitle);
@@ -27,6 +27,52 @@ const InterviewQuestions = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const cleanAnswer = (answer) => {
+    let cleaned = answer.trim();
+    if (cleaned.startsWith("```json")) {
+      cleaned = cleaned.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+    }
+    return cleaned;
+  };
+
+  const renderInterviewQuestions = () => {
+    let questions = [];
+    try {
+      const cleanedAnswer = cleanAnswer(results.answer);
+      questions = JSON.parse(cleanedAnswer);
+    } catch (e) {
+      console.error("Error parsing interview questions:", e);
+      return <Typography color="error">Failed to parse results.</Typography>;
+    }
+
+    return (
+      <Grid container spacing={2}>
+        {questions.map((question, index) => (
+          <Grid item xs={12} md={6} key={index}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 'bold', color: '#1976d2' }}
+                  gutterBottom
+                >
+                  {question.title}
+                </Typography>
+                <Typography variant="caption" display="block" gutterBottom>
+                  Category: {question.category}
+                </Typography>
+                <Divider sx={{ my: 1 }} />
+                <Typography variant="body1">
+                  {question.contents}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
   };
 
   return (
@@ -68,35 +114,16 @@ const InterviewQuestions = () => {
       </Box>
 
       {results && (
-        <Box>
+        <Box mb={4}>
           <Typography variant="h6" gutterBottom>Interview Questions:</Typography>
           <Card variant="outlined">
             <CardContent>
-              {results.answer.split(/\d+\.\s+\*\*/).map((section, index) => {
-                if (index === 0) return null; // Skip the first empty split
-                
-                const questionMatch = section.match(/^(.*?)\.*\*\*\s+(.*)/s);
-                if (questionMatch) {
-                  const [, question, explanation] = questionMatch;
-                  return (
-                    <Box key={index} mb={3}>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        {index}. {question}
-                      </Typography>
-                      <Typography variant="body2">
-                        {explanation.replace(/\[\d+(,\s*\d+)*\]/g, '')}
-                      </Typography>
-                    </Box>
-                  );
-                }
-                return <Typography key={index} variant="body1">{section}</Typography>;
-              })}
-              
+              {renderInterviewQuestions()}
               {results.links && results.links.length > 0 && (
                 <>
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="subtitle1">Sources:</Typography>
-                  <List>
+                  <List dense>
                     {results.links.map((link, index) => (
                       <ListItem key={index}>
                         <Link href={link} target="_blank" rel="noopener noreferrer">

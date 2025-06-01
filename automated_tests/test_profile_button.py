@@ -1,5 +1,5 @@
 def test_profile_button(driver):
-    driver.get("https://example.com")
+    driver.get("http://localhost:3000/")
 
     # Click 'Profile' link and verify it goes to the Profile page
     about_link = driver.find_element("xpath", '//a[text()="Profile"]')
