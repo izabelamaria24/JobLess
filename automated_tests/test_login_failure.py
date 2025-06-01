@@ -6,8 +6,8 @@ def test_login_failure(driver):
     password_input = driver.find_element("xpath", '//input[@name="password"]')
     submit_button = driver.find_element("xpath", '//button[@type="submit"]')
 
-    username_input.send_keys("testusergresit")
-    password_input.send_keys("securepasswordgresit")
+    username_input.send_keys("user@test.com")
+    password_input.send_keys("parolagresita")
     submit_button.click()
 
 
