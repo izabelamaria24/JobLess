@@ -1,9 +1,36 @@
 .applications-page {
-  max-width: 1500px;
+  max-width: 100vw;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(to right, #f8fafc, #e6e6fa);
-  color: #232946;
+  min-height: 100vh;
+  background: 
+    radial-gradient(ellipse at 80% 10%, #b4aee8 0%, #e6e6fa 40%, transparent 80%),
+    radial-gradient(ellipse at 20% 80%, #ede9fe 0%, #f5f3ff 60%, transparent 100%),
+    linear-gradient(135deg, #f5f3ff 0%, #e6e6fa 50%, #f8fafc 100%);
+  position: relative;
+  z-index: 1;
+}
+
+.applications-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  background: 
+    repeating-linear-gradient(
+      135deg,
+      #b4aee8 0px,
+      #b4aee8 2px,
+      transparent 2px,
+      transparent 20px
+    );
+}
+
+.applications-page > * {
+  position: relative;
+  z-index: 1;
 }
 
 .applications-page h1 {
@@ -17,9 +44,14 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(106, 90, 205, 0.08);
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
   border: 1px solid #e6e6fa;
+  max-width: 1200px;
+  width: 100%;
+  min-width: 260px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .job-application-header {
@@ -60,7 +92,6 @@
   padding-top: 40px;
   align-items: flex-start;
 }
-
 
 .progress-step {
   text-align: center;
@@ -189,4 +220,94 @@ button:hover,
   background-color: #f3f0ff;
   border-radius: 8px;
   margin: 20px 0;
+}
+
+.applications-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.application-form-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.application-form-container .job-application-form {
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.application-form-container .job-application-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  max-width: 100%;
+}
+
+.application-form-container .profile-section-title {
+  margin-top: 0;
+  color: #6a5acd;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.application-form-container .profile-form-group {
+  margin-bottom: 15px;
+  max-width: 100%;
+}
+
+.application-form-container .profile-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e6e6fa;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.application-form-container .profile-input:focus {
+  border-color: #6a5acd;
+  outline: none;
+}
+
+.application-form-container .profile-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.application-form-container .profile-button:hover {
+  background-color: #483d8b;
+}
+
+@media (max-width: 768px) {
+  .application-form-container .job-application-form-grid {
+    grid-template-columns: 1fr;
+  }
 }

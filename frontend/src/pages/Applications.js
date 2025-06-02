@@ -1,14 +1,12 @@
 import React, { useState, useContext } from 'react';
 import ApplicationComponent from '../components/ApplicationComponent';
 import ApplicationForm from '../components/ApplicationForm';
-import Modal from '../components/Modal';
 import { ApplicationContext } from '../context/ApplicationContext';
 import "../design/Applications.css"; 
 import { Link, useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert'; 
 import { useAlert } from '../utils/useAlert'; 
 import axiosInstance from '../utils/axiosInstance';
-
 
 const Applications = () => {
   const { applications, addApplication, updateApplication, compareSalary, fetchApplications } = useContext(ApplicationContext);
@@ -58,9 +56,7 @@ const Applications = () => {
   const highlightStaleApplications = async () => {
     try {
       const response = await axiosInstance.get('/api/Responses/stale-actions');
-
       let staleApplicationIds = response.data.map(app => app.id);
-    
       setStaleApplications(staleApplicationIds);
     } catch (err) {
       console.error('Error fetching stale applications:', err);
@@ -69,19 +65,22 @@ const Applications = () => {
 
   return (
     <div className="applications-page">
-      <h1>Job Applications</h1>
-      <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
-      <button className="compare-salary-button" onClick={handleCompareSalary}>Compare Salaries</button>
-      <button className="add-application-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
-      <button className="add-application-button" onClick={ highlightStaleApplications }>Highlight Stale Applications</button>
-
+      <h1 className='applications-title'>Job Applications</h1>
+      <div className='applications-actions'>
+        <button className="add-application-button" onClick={() => { setIsFormVisible(true); setCurrentApplication(null); }}>Add New Job Application</button>
+        <button className="add-application-button" onClick={handleCompareSalary}>Compare Salaries</button>
+        <button className="add-application-button" onClick={handleGetInterviewQuestions}>Get Interview Questions</button>
+        <button className="add-application-button" onClick={highlightStaleApplications}>Highlight Stale Applications</button>
+      </div>
       
-      <Modal isVisible={isFormVisible} onClose={() => setIsFormVisible(false)}>
-        <ApplicationForm
-          onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
-          initialData={currentApplication}
-        />
-      </Modal>
+      {isFormVisible && (
+        <div className="application-form-container">
+          <ApplicationForm
+            onSubmit={currentApplication ? handleUpdateApplication : handleAddApplication}
+            initialData={currentApplication}
+          />
+        </div>
+      )}
 
       {applications.map((app, index) => (
         <div key={index}>
