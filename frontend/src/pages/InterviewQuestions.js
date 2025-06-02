@@ -3,6 +3,7 @@ import { ApplicationContext } from '../context/ApplicationContext';
 import { Box, Typography, Button, Card, CardContent, Select, MenuItem, FormControl, InputLabel, Divider, List, ListItem, Link, CircularProgress, Grid } from '@mui/material';
 import '../design/InterviewQuestions.css';
 
+
 const InterviewQuestions = () => {
   const { applications, getInterviewQuestions } = useContext(ApplicationContext);
   const [selectedApp, setSelectedApp] = useState('');
@@ -37,6 +38,7 @@ const InterviewQuestions = () => {
     }
     return cleaned;
   };
+
 
   const renderInterviewQuestions = () => {
     let questions = [];

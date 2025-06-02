@@ -26,7 +26,7 @@ const Auth = () => {
                 await register(formData);
                 showAlert("success", "Registration successful!");
             }
-            navigate("/dashboard");
+            navigate("/");
         } catch (err) {
             showAlert("error", "Authentication failed. Check your credentials.");
         }
