@@ -33,7 +33,6 @@ const CompareSalary = () => {
     }
   };
 
-  // A new helper function that parses the JSON response and renders cards for each job.
   const renderComparisonResults = () => {
     let jobs = [];
     try {
@@ -68,7 +67,6 @@ const CompareSalary = () => {
     <Box p={3} className="compare-container">
       <Typography variant="h4" gutterBottom>Compare Salaries</Typography>
 
-      {/* Selection container */}
       <Box className="selection-container">
         <Typography variant="h6" gutterBottom>Select applications to compare:</Typography>
         <Card variant="outlined">
@@ -102,7 +100,6 @@ const CompareSalary = () => {
         </Card>
       </Box>
 
-      {/* Results container */}
       {results && (
         <Box className="results-container">
           <Typography variant="h6" gutterBottom>Comparison Results:</Typography>
