@@ -1,4 +1,7 @@
+from login import *
+
 def test_navbar_links_exist(driver):
+    login(driver)
     driver.get("http://localhost:3000/")
 
     # Check that expected navbar links are present by text

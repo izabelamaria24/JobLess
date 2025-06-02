@@ -1,4 +1,7 @@
+from login import *
+
 def test_profile_button(driver):
+    login(driver)
     driver.get("http://localhost:3000/")
 
     # Click 'Profile' link and verify it goes to the Profile page
