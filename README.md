@@ -45,7 +45,6 @@ A real-life situation that many of us are going through right now—job hunting.
 10. As a user, I want the app to provide AI-powered resume suggestions based on the job description I’m applying to.
 11. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
 12. As a user, I want to filer my applications based on technologies.
-13. As an admin, I want to 
 
 # Backlog creation - Jira:
 We used Jira to plan, track, and manage our project and tasks. This **[link](https://izabelajilavu.atlassian.net/jira/software/projects/JBLS/boards/1)** redirects to our backlog creation.
@@ -59,9 +58,9 @@ All of our project can be accessed on github, **[commits](https://github.com/iza
 
 # **[UML diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess_UML.png)**
 
-# **[Workflow Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessWorkflowDiagram.png)
+# **[Workflow Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessWorkflowDiagram.png)**
 
-# **[States Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessStatesDiagram.png)
+# **[States Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessStatesDiagram.png)**
 
 # Bug reporting: 
 Issues 
