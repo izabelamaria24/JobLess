@@ -43,14 +43,15 @@ A real-life situation that many of us are going through right now—job hunting.
 8. As a user, I want a visual dashboard with statistics including the number of jobs applied, interviews scheduled, and offers received.
 9. As a user, I want to upload and manage different versions of my CV so I can quickly tailor applications.
 10. As a user, I want the app to provide AI-powered resume suggestions based on the job description I’m applying to.
-11. As a user, I want to receive tips based on my job applications and feedback to strengthen specific skills.
-12. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
+11. As a user, I want to compare salary offers and benefits from multiple companies to make an informed decision.
+12. As a user, I want to filer my applications based on technologies.
+13. As an admin, I want to 
 
 # Backlog creation - Jira:
 We used Jira to plan, track, and manage our project and tasks. This **[link](https://izabelajilavu.atlassian.net/jira/software/projects/JBLS/boards/1)** redirects to our backlog creation.
 
 # Source control: 
-All of our project can be accessed on github, **[commits](https://github.com/izabelamaria24/JobLess/commits/develop/)** și **[branches](https://github.com/izabelamaria24/JobLess/branches)** can be found here.
+All of our project can be accessed on github, **[commits](https://github.com/izabelamaria24/JobLess/commits/develop/)** and **[branches](https://github.com/izabelamaria24/JobLess/branches)** can be found here.
 
 # **[Conceptual diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess.png)**
 
@@ -58,13 +59,24 @@ All of our project can be accessed on github, **[commits](https://github.com/iza
 
 # **[UML diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JobLess_UML.png)**
 
+# **[Workflow Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessWorkflowDiagram.png)
+
+# **[States Diagram](https://github.com/izabelamaria24/JobLess/blob/develop/Diagrams/JoblessStatesDiagram.png)
+
 # Bug reporting: 
 Issues 
 - **[commit 7f6e2b1](https://explore-flask.readthedocs.io/en/latest/conventions.html)**
 - **[commit ae453ae](https://github.com/izabelamaria24/JobLess/commit/ae453aeec54071335681104a5446697b533e927d)**
 - **[commit 23eae44](https://github.com/izabelamaria24/JobLess/commit/23eae44d7235a04e0e22aa346eff3b74b19c3e54)**
 - **[commit 44853b7](https://github.com/izabelamaria24/JobLess/commit/44853b70063850faeb1a9dff3d16a7599e5e661a)**
-- **[commit 78deaf1](https://github.com/izabelamaria24/JobLess/commit/78deaf1a603cf18b109bd81d682f16c284ed5792)**.
+- **[commit 78deaf1](https://github.com/izabelamaria24/JobLess/commit/78deaf1a603cf18b109bd81d682f16c284ed5792)**
+- **[commit 949da6b](https://github.com/izabelamaria24/JobLess/commit/949da6b9e577c1f4be8b6d212d5466f452c36b1d)**
+- **[commit 542e713](https://github.com/izabelamaria24/JobLess/commit/542e713551c7fb8aaeb9d828f21acbc5d2d21143)**.
+
+# Bugs solved with pull request:
+- [Solved Interview Questions response from API - more specific](https://github.com/izabelamaria24/JobLess/commit/56b9fa7a40720380c7baa6df33aee1ed6c700d8a)
+- [Path bug solved](https://github.com/izabelamaria24/JobLess/commit/f98528376142fa8cf5d33e250bb2552db296b9df)
+- [Solved Salary Comparison  response from API - more specific](https://github.com/izabelamaria24/JobLess/commit/fee6a7d637e12c26e6b74e64962ec65eb21edff8).
 
 # **[AI use process documentation](https://github.com/izabelamaria24/JobLess/blob/develop/AI%20use%20documentation.pdf)**
 # Code standards:
@@ -98,3 +110,4 @@ Factory Class *(Creational Pattern)*
 
 # Automated tests:
 **[Unit tests](https://github.com/izabelamaria24/JobLess/blob/develop/backend_test.py)**
+**[Automated tests frontend using Selenium](https://github.com/izabelamaria24/JobLess/tree/develop/automated_tests)**
