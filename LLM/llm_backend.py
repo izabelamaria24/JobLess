@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from helpers import *
 from api_key import API_key
+import re
 app = Flask(__name__)
 CORS(app)
 
@@ -45,6 +46,12 @@ def interviewQuestions():
         )
 
         grounding = answer.candidates[0].grounding_metadata
+
+        print({
+            "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
+            "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
+        })
+
         return jsonify({
             "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
             "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,
@@ -91,6 +98,7 @@ def compareSalary():
         contents=prompt,
         config=config_with_search)
         grounding = answer.candidates[0].grounding_metadata
+
         return jsonify({
             "answer": "\n".join([answer.candidates[0].content.parts[i].text for i in range(len(answer.candidates[0].content.parts))]),
             "links": [s.web.uri for s in grounding.grounding_chunks] if grounding.grounding_supports else None,

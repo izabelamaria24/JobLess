@@ -35,15 +35,16 @@ const CompareSalary = () => {
 
   const renderComparisonResults = () => {
     let jobs = [];
+    let answer = "";
     try {
-      let answer = results.answer.trim();
+      answer = results.answer.trim();
       if (answer.startsWith("```json")) {
         answer = answer.replace(/^```json\s*/, "").replace(/\s*```$/, "");
       }
       jobs = JSON.parse(answer);
     } catch (e) {
       console.error("Error parsing results:", e);
-      return <Typography color="error">Failed to parse salary comparison results.</Typography>;
+      return <Typography color="error">{answer}</Typography>;
     }
     
     return (

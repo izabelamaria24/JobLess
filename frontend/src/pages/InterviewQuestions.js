@@ -47,7 +47,7 @@ const InterviewQuestions = () => {
       questions = JSON.parse(cleanedAnswer);
     } catch (e) {
       console.error("Error parsing interview questions:", e);
-      return <Typography color="error">Failed to parse results.</Typography>;
+      return <Typography color="error">{cleanAnswer(results.answer)}</Typography>;
     }
 
     return (
@@ -142,3 +142,4 @@ const InterviewQuestions = () => {
 };
 
 export default InterviewQuestions;
+
